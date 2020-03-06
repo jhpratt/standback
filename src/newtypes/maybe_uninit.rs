@@ -1,15 +1,18 @@
-use core::mem::{self, ManuallyDrop};
+use core::mem;
 
+// There is no good way to reimplement `core::mem::MaybeUninit` without untagged unions, which
+// cannot be created for non-`Copy` types in 1.31, meaning that the interface to `MaybeUninit` in
+// this crate needs to be `unsafe`.
 #[repr(transparent)]
 #[derive(Copy)]
 pub struct MaybeUninit<T> {
-    value: ManuallyDrop<T>,
+    value: mem::MaybeUninit<T>,
 }
 
 impl<T: Copy> Clone for MaybeUninit<T> {
     #[inline(always)]
     fn clone(&self) -> Self {
-        *self
+        MaybeUninit { value: self.value.clone() }
     }
 }
 
@@ -17,38 +20,36 @@ impl<T> MaybeUninit<T> {
     #[inline(always)]
     pub fn new(val: T) -> MaybeUninit<T> {
         MaybeUninit {
-            value: ManuallyDrop::new(val),
+            value: mem::MaybeUninit::new(val),
         }
     }
 
     #[inline(always)]
     pub unsafe fn uninit() -> MaybeUninit<T> {
         MaybeUninit {
-            value: unsafe { mem::uninitialized() },
+            value: mem::MaybeUninit::uninit(),
         }
     }
 
     #[inline]
     pub unsafe fn zeroed() -> MaybeUninit<T> {
-        let mut u = MaybeUninit::<T>::uninit();
-        unsafe {
-            u.as_mut_ptr().write_bytes(0u8, 1);
+        MaybeUninit {
+            value: mem::MaybeUninit::zeroed(),
         }
-        u
     }
 
     #[inline(always)]
     pub fn as_ptr(&self) -> *const T {
-        &*self.value as *const T
+        self.value.as_ptr()
     }
 
     #[inline(always)]
     pub fn as_mut_ptr(&mut self) -> *mut T {
-        &mut *self.value as *mut T
+        self.value.as_mut_ptr()
     }
 
     #[inline(always)]
     pub unsafe fn assume_init(self) -> T {
-        ManuallyDrop::into_inner(self.value)
+        self.value.assume_init()
     }
 }

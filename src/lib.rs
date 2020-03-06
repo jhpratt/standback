@@ -385,6 +385,8 @@ mod v1_40;
 #[cfg(before_1_41)]
 mod v1_41;
 
+mod newtypes;
+
 pub mod prelude {
     #[cfg(before_1_32)]
     pub use crate::v1_32::{
@@ -426,7 +428,7 @@ pub mod mem {
     #[cfg(before_1_36)]
     pub use crate::v1_36::MaybeUninit;
     #[cfg(since_1_36)]
-    pub use core::mem::MaybeUninit;
+    pub use crate::newtypes::maybe_uninit::MaybeUninit;
 }
 pub mod convert {
     #[cfg(before_1_33)]
