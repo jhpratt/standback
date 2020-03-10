@@ -1,8 +1,8 @@
-use core::mem::{self, ManuallyDrop};
+use core::mem::ManuallyDrop;
 
-#[repr(transparent)]
 #[derive(Copy)]
-pub struct MaybeUninit<T> {
+pub union MaybeUninit<T: Copy> {
+    uninit: (),
     value: ManuallyDrop<T>,
 }
 
@@ -13,7 +13,7 @@ impl<T: Copy> Clone for MaybeUninit<T> {
     }
 }
 
-impl<T> MaybeUninit<T> {
+impl<T: Copy> MaybeUninit<T> {
     #[inline(always)]
     pub fn new(val: T) -> MaybeUninit<T> {
         MaybeUninit {
@@ -23,9 +23,7 @@ impl<T> MaybeUninit<T> {
 
     #[inline(always)]
     pub fn uninit() -> MaybeUninit<T> {
-        MaybeUninit {
-            value: unsafe { mem::uninitialized() },
-        }
+        MaybeUninit { uninit: () }
     }
 
     #[inline]
@@ -39,12 +37,12 @@ impl<T> MaybeUninit<T> {
 
     #[inline(always)]
     pub fn as_ptr(&self) -> *const T {
-        &*self.value as *const T
+        unsafe { &*self.value as *const T }
     }
 
     #[inline(always)]
     pub fn as_mut_ptr(&mut self) -> *mut T {
-        &mut *self.value as *mut T
+        unsafe { &mut *self.value as *mut T }
     }
 
     #[inline(always)]
