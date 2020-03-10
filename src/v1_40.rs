@@ -200,9 +200,3 @@ impl<T: Copy> slice_v1_40<T> for [T] {
         buf
     }
 }
-
-#[macro_export]
-macro_rules! todo {
-    () => (panic!("not yet implemented"));
-    ($($arg:tt)+) => (panic!("not yet implemented: {}", ::core::format_args!($($arg)+)));
-}

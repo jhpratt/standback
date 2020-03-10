@@ -359,7 +359,7 @@
 //! # Macros
 //!
 //! ```rust,ignore
-//! todo! // 1.40
+//! todo! // 1.39
 //! ```
 
 #![deny(rust_2018_idioms, unused_qualifications)]
@@ -415,6 +415,8 @@ pub mod prelude {
     pub use crate::v1_40::{f32_v1_40, f64_v1_40, slice_v1_40, Option_v1_40, Option_v1_40_};
     #[cfg(before_1_41)]
     pub use crate::v1_41::Result_v1_41;
+    #[cfg(before_1_39)]
+    pub use core::unimplemented as todo;
 }
 
 pub mod mem {
