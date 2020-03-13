@@ -42,6 +42,11 @@
 //! The following methods are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.42
+//! CondVar::wait_while
+//! CondVar::wait_timeout_while
+//! ManuallyDrop::take
+//!
 //! // 1.41
 //! Result::map_or
 //! Result::map_or_else
@@ -358,8 +363,11 @@
 //!
 //! # Macros
 //!
+//! Macros should not be imported directly, but rather through the prelude.
+//!
 //! ```rust,ignore
 //! todo! // 1.39
+//! matches! // 1.42
 //! ```
 
 #![deny(rust_2018_idioms, unused_qualifications)]
@@ -384,8 +392,12 @@ mod v1_39;
 mod v1_40;
 #[cfg(before_1_41)]
 mod v1_41;
+#[cfg(before_1_42)]
+mod v1_42;
 
 pub mod prelude {
+    #[cfg(before_1_42)]
+    pub use crate::matches;
     #[cfg(before_1_32)]
     pub use crate::v1_32::{
         i128_v1_32, i16_v1_32, i32_v1_32, i64_v1_32, i8_v1_32, isize_v1_32, u128_v1_32, u16_v1_32,
@@ -415,6 +427,8 @@ pub mod prelude {
     pub use crate::v1_40::{f32_v1_40, f64_v1_40, slice_v1_40, Option_v1_40, Option_v1_40_};
     #[cfg(before_1_41)]
     pub use crate::v1_41::Result_v1_41;
+    #[cfg(before_1_42)]
+    pub use crate::v1_42::{Condvar_v1_42, ManuallyDrop_v1_42};
     #[cfg(before_1_39)]
     pub use core::unimplemented as todo;
 }

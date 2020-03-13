@@ -20,6 +20,7 @@ jobs:
           - 1.39.0
           - 1.40.0
           - 1.41.0
+          - 1.42.0
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
