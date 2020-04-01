@@ -1,6 +1,6 @@
 # Standback
 
-![build status](https://github.com/jhpratt/standback/workflows/Build/badge.svg)
+![build status](https://github.com/jhpratt/standback/workflows/Build/badge.svg?branch=master&event=push)
 ![license](https://img.shields.io/badge/license-MIT%20or%20Apache--2-brightgreen)
 ![version](https://img.shields.io/crates/v/standback)
 ![rustc 1.31.0](https://img.shields.io/badge/rustc-1.31.0-blue)

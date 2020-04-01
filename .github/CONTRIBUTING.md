@@ -24,17 +24,7 @@ std-compat uses [GitHub Actions] for continuous integration. Types are checked a
 
 ## Formatting
 
-std-compat uses rustfmt for formatting, and uses a number of nightly features. As such, you will need to run `cargo +nightly fmt` before committing. Formatting is important, so not doing this may cause CI to fail!
-
-## Linting
-
-std-compat uses both rustc and clippy for linting. Linting is _very_ strict; this is to ensure correctness! Any rustc lints that are for behavior being phased out are denied for future-proofing, while edition lints are denied for clarity. Most clippy lints are either deny or warn, while a few are explicitly allowed due to being overly pedantic or not relevant to the time crate.
-
-If you are overriding a lint with `#[allow()]`, it is recommended to document why you are doing so if it's not immediately obvious.
-
-## Unsafe code
-
-Unsafe is forbidden. Period. If you submit a pull request that alters the `#![forbid(unsafe_code)]` declaration, it will be closed without review.
+std-compat uses rustfmt for formatting, and uses a number of nightly features. As such, you will need to run `cargo +nightly-2020-03-19 fmt` before committing. Formatting is important, so not doing this may cause CI to fail!
 
 [issue tracker]: https://github.com/jhpratt/std-compat/issues/new
 [GitHub Actions]: https://github.com/features/actions

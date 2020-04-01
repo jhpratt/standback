@@ -57,7 +57,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly # various unstable options are used
+          toolchain: nightly-2020-03-19
           override: true
 
       - name: Install rustfmt
