@@ -1,9 +1,10 @@
-use std::{env, process::Command, time::SystemTime};
+use std::{env, ffi::OsString, process::Command, time::SystemTime};
 
 /// Return the minor version of the compiler currently in use.
 /// `None` is returned if a version cannot be determined.
 fn compiler_in_use() -> Option<usize> {
-    let raw_output = Command::new("rustc")
+    let rustc = env::var_os("RUSTC").unwrap_or_else(|| OsString::from("rustc"));
+    let raw_output = Command::new(rustc)
         .args(&["--version", "--verbose"])
         .output()
         .ok()?
