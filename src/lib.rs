@@ -1,4 +1,5 @@
 #![allow(non_camel_case_types, unstable_name_collisions)]
+#![cfg_attr(not(std), no_std)]
 
 //! Standback backports a number of methods, structs, and macros that have been
 //! stabilized in the Rust standard library since 1.31.0. This allows crate
