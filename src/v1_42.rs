@@ -1,12 +1,8 @@
 use core::{mem::ManuallyDrop, ptr};
-
-#[cfg(std)]
-use core::time::Duration;
-
 #[cfg(std)]
 use std::{
     sync::{Condvar, LockResult, MutexGuard, WaitTimeoutResult},
-    time::Instant,
+    time::{Duration, Instant},
 };
 
 #[cfg(std)]
