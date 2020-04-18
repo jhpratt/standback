@@ -424,8 +424,10 @@ pub mod prelude {
     pub use crate::v1_38::{
         ConstPtr_v1_38, Duration_v1_38, EuclidFloat_v1_38, Euclid_v1_38, MutPtr_v1_38,
     };
+    #[cfg(all(std, before_1_40))]
+    pub use crate::v1_40::slice_v1_40;
     #[cfg(before_1_40)]
-    pub use crate::v1_40::{f32_v1_40, f64_v1_40, slice_v1_40, Option_v1_40, Option_v1_40_};
+    pub use crate::v1_40::{f32_v1_40, f64_v1_40, Option_v1_40, Option_v1_40_};
     #[cfg(before_1_41)]
     pub use crate::v1_41::Result_v1_41;
     #[cfg(all(before_1_42, std))]
