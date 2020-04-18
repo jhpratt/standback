@@ -1,6 +1,9 @@
 #[cfg(before_1_32)]
 use crate::v1_32::{u32_v1_32, u64_v1_32};
-use core::{ops::DerefMut, ptr};
+use core::ops::DerefMut;
+
+#[cfg(std)]
+use core::ptr;
 
 mod private_option {
     pub trait Sealed {}
@@ -138,12 +141,14 @@ mod private_slice {
     impl<T> Sealed for [T] {}
 }
 
+#[cfg(std)]
 pub trait slice_v1_40<T>: private_slice::Sealed {
     fn repeat(&self, n: usize) -> Vec<T>
     where
         T: Copy;
 }
 
+#[cfg(std)]
 impl<T: Copy> slice_v1_40<T> for [T] {
     fn repeat(&self, n: usize) -> Vec<T> {
         if n == 0 {

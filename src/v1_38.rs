@@ -306,6 +306,7 @@ pub trait EuclidFloat_v1_38: private_euclid_float::Sealed {
     fn div_euclid(self, rhs: Self) -> Self;
 }
 
+#[cfg(std)]
 impl EuclidFloat_v1_38 for f32 {
     #[must_use = "method returns a new number and does not mutate the original value"]
     #[inline]
@@ -329,6 +330,7 @@ impl EuclidFloat_v1_38 for f32 {
     }
 }
 
+#[cfg(std)]
 impl EuclidFloat_v1_38 for f64 {
     #[must_use = "method returns a new number and does not mutate the original value"]
     #[inline]

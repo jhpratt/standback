@@ -1,9 +1,11 @@
-use core::{mem::ManuallyDrop, ptr, time::Duration};
+use core::{mem::ManuallyDrop, ptr};
+#[cfg(std)]
 use std::{
     sync::{Condvar, LockResult, MutexGuard, WaitTimeoutResult},
-    time::Instant,
+    time::{Duration, Instant},
 };
 
+#[cfg(std)]
 #[inline(always)]
 fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
     // Safety: WaitTimeoutResult is a thin wrapper around a boolean. As the
@@ -13,11 +15,13 @@ fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
     unsafe { core::mem::transmute(value) }
 }
 
+#[cfg(std)]
 mod private_condvar {
     pub trait Sealed {}
     impl Sealed for super::Condvar {}
 }
 
+#[cfg(std)]
 pub trait Condvar_v1_42: private_condvar::Sealed {
     fn wait_while<'a, T, F>(
         &self,
@@ -36,6 +40,7 @@ pub trait Condvar_v1_42: private_condvar::Sealed {
         F: FnMut(&mut T) -> bool;
 }
 
+#[cfg(std)]
 impl Condvar_v1_42 for Condvar {
     fn wait_while<'a, T, F>(
         &self,
