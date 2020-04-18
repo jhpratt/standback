@@ -428,8 +428,10 @@ pub mod prelude {
     pub use crate::v1_40::{f32_v1_40, f64_v1_40, slice_v1_40, Option_v1_40, Option_v1_40_};
     #[cfg(before_1_41)]
     pub use crate::v1_41::Result_v1_41;
+    #[cfg(all(before_1_42, std))]
+    pub use crate::v1_42::Condvar_v1_42;
     #[cfg(before_1_42)]
-    pub use crate::v1_42::{Condvar_v1_42, ManuallyDrop_v1_42};
+    pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(before_1_39)]
     pub use core::unimplemented as todo;
 }

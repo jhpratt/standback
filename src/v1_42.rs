@@ -1,4 +1,7 @@
-use core::{mem::ManuallyDrop, ptr, time::Duration};
+use core::{mem::ManuallyDrop, ptr};
+
+#[cfg(std)]
+use core::time::Duration;
 
 #[cfg(std)]
 use std::{
