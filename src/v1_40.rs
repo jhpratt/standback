@@ -1,6 +1,6 @@
 #[cfg(before_1_32)]
 use crate::v1_32::{u32_v1_32, u64_v1_32};
-use core::{ops::DerefMut};
+use core::ops::DerefMut;
 
 #[cfg(std)]
 use core::ptr;
