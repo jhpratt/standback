@@ -461,9 +461,15 @@ pub mod convert {
     pub use core::convert::Infallible;
 
     #[cfg(before_1_34)]
-    pub use crate::v1_34::{TryFrom, TryFromIntError, TryInto};
-    #[cfg(after_1_34)]
-    pub use core::convert::{TryFrom, TryFromIntError, TryInto};
+    pub use crate::v1_34::{TryFrom, TryInto};
+    #[cfg(since_1_34)]
+    pub use core::convert::{TryFrom, TryInto};
+}
+pub mod num {
+    #[cfg(before_1_34)]
+    pub use crate::v1_34::TryFromIntError;
+    #[cfg(since_1_34)]
+    pub use core::num::TryFromIntError;
 }
 pub mod iter {
     #[cfg(before_1_36)]

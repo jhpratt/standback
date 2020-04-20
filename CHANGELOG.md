@@ -11,11 +11,14 @@ Versioning].
 
 Nothing yet.
 
+## 0.2.5 [2020-04-20]
+
+- `TryFrom`, `TryInto` and correctly re-exported.
+- `TryFromIntError` has been moved to `mod num`.
+
 ## 0.2.4 [2020-04-20]
 
 - `TryFrom` identity is implemented for some primitives.
-- `TryFrom`, `TryInto` and correctly re-exported.
-- `TryFromIntError` has been moved to `mod num`.
 
 ## 0.2.3 [2020-04-18]
 
