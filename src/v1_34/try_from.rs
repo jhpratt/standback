@@ -262,3 +262,39 @@ impl_length_at_most_32![
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
     26, 27, 28, 29, 30, 31, 32
 ];
+
+// Although we aren't able to `impl<T, U: Into<T>> TryFrom<U> for T`, we are
+// able to implement it for any given type.
+macro_rules! impl_identity {
+    ($($type:ty),*) => {$(
+        impl TryFrom<$type> for $type {
+            type Error = Infallible;
+
+            fn try_from(value: $type) -> Result<Self, Self::Error> {
+                Ok(value)
+            }
+        }
+    )*}
+}
+
+// Implement for some primitives. Other types can be trivially added upon
+// request.
+impl_identity![
+    (),
+    bool,
+    char,
+    i8,
+    i16,
+    i32,
+    i64,
+    i128,
+    isize,
+    u8,
+    u16,
+    u32,
+    u64,
+    u128,
+    usize,
+    f32,
+    f64
+];
