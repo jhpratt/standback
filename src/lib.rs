@@ -43,6 +43,13 @@
 //! The following methods are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.43
+//! f32::LOG10_2
+//! f32::LOG2_10
+//! f64::LOG10_2
+//! f64::LOG2_10
+//! iter::once_with
+//!
 //! // 1.42
 //! CondVar::wait_while
 //! CondVar::wait_timeout_while
@@ -395,6 +402,8 @@ mod v1_40;
 mod v1_41;
 #[cfg(before_1_42)]
 mod v1_42;
+#[cfg(before_1_43)]
+mod v1_43;
 
 pub mod prelude {
     #[cfg(before_1_42)]
@@ -481,6 +490,11 @@ pub mod iter {
     pub use crate::v1_34::{from_fn, successors};
     #[cfg(since_1_34)]
     pub use core::iter::{from_fn, successors};
+
+    #[cfg(before_1_43)]
+    pub use crate::v1_43::{once_with, OnceWith};
+    #[cfg(since_1_43)]
+    pub use core::iter::{once_with, OnceWith};
 }
 pub mod marker {
     #[cfg(before_1_33)]
@@ -512,4 +526,20 @@ pub mod array {
     pub use crate::v1_36::TryFromSliceError;
     #[cfg(since_1_36)]
     pub use core::array::TryFromSliceError;
+}
+pub mod f32 {
+    pub mod consts {
+        #[cfg(before_1_43)]
+        pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
+        #[cfg(since_1_43)]
+        pub use core::f32::consts::{LOG10_2, LOG2_10};
+    }
+}
+pub mod f64 {
+    pub mod consts {
+        #[cfg(before_1_43)]
+        pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
+        #[cfg(since_1_43)]
+        pub use core::f64::consts::{LOG10_2, LOG2_10};
+    }
 }

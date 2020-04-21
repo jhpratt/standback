@@ -11,6 +11,10 @@ Versioning].
 
 Nothing yet.
 
+## 0.2.6 [2020-04-21]
+
+Support for Rust 1.43.0 APIs has been added.
+
 ## 0.2.5 [2020-04-20]
 
 - `TryFrom`, `TryInto` and correctly re-exported.
