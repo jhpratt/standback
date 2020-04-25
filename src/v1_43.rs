@@ -51,25 +51,23 @@ impl<A, F: FnOnce() -> A> FusedIterator for OnceWith<F> {}
 
 #[cfg(since_1_32)]
 pub mod primitive {
-    pub use {
-        u8,
-        u16,
-        u32,
-        u64,
-        u128,
-        usize,
-        i8,
-        i16,
-        i32,
-        i64,
-        i128,
-        isize,
-        f32,
-        f64,
-        bool,
-        char,
-        str,
-    };
+    pub use bool;
+    pub use char;
+    pub use f32;
+    pub use f64;
+    pub use i128;
+    pub use i16;
+    pub use i32;
+    pub use i64;
+    pub use i8;
+    pub use isize;
+    pub use str;
+    pub use u128;
+    pub use u16;
+    pub use u32;
+    pub use u64;
+    pub use u8;
+    pub use usize;
 }
 
 mod private_f32 {
@@ -95,20 +93,20 @@ pub trait f32_v1_43: private_f32::Sealed {
 }
 
 impl f32_v1_43 for f32 {
-    const RADIX: u32 = 2;
-    const MANTISSA_DIGITS: u32 = 24;
     const DIGITS: u32 = 6;
     const EPSILON: f32 = 1.19209290e-07_f32;
-    const MIN: f32 = -3.40282347e+38_f32;
-    const MIN_POSITIVE: f32 = 1.17549435e-38_f32;
-    const MAX: f32 = 3.40282347e+38_f32;
-    const MIN_EXP: i32 = -125;
-    const MAX_EXP: i32 = 128;
-    const MIN_10_EXP: i32 = -37;
-    const MAX_10_EXP: i32 = 38;
-    const NAN: f32 = 0.0_f32 / 0.0_f32;
     const INFINITY: f32 = 1.0_f32 / 0.0_f32;
+    const MANTISSA_DIGITS: u32 = 24;
+    const MAX: f32 = 3.40282347e+38_f32;
+    const MAX_10_EXP: i32 = 38;
+    const MAX_EXP: i32 = 128;
+    const MIN: f32 = -3.40282347e+38_f32;
+    const MIN_10_EXP: i32 = -37;
+    const MIN_EXP: i32 = -125;
+    const MIN_POSITIVE: f32 = 1.17549435e-38_f32;
+    const NAN: f32 = 0.0_f32 / 0.0_f32;
     const NEG_INFINITY: f32 = -1.0_f32 / 0.0_f32;
+    const RADIX: u32 = 2;
 }
 
 mod private_f64 {
@@ -134,20 +132,20 @@ pub trait f64_v1_43: private_f64::Sealed {
 }
 
 impl f64_v1_43 for f64 {
-    const RADIX: u32 = 2;
-    const MANTISSA_DIGITS: u32 = 53;
     const DIGITS: u32 = 15;
-    const EPSILON: f64 =2.2204460492503131e-16_f64;
-    const MIN: f64 = -1.7976931348623157e+308_f64;
-    const MIN_POSITIVE: f64 = 2.2250738585072014e-308_f64;
-    const MAX: f64 = 1.7976931348623157e+308_f64;
-    const MIN_EXP: i32 = -1021;
-    const MAX_EXP: i32 = 1024;
-    const MIN_10_EXP: i32 = -307;
-    const MAX_10_EXP: i32 = 308;
-    const NAN: f64 = 0.0_f64 / 0.0_f64;
+    const EPSILON: f64 = 2.2204460492503131e-16_f64;
     const INFINITY: f64 = 1.0_f64 / 0.0_f64;
+    const MANTISSA_DIGITS: u32 = 53;
+    const MAX: f64 = 1.7976931348623157e+308_f64;
+    const MAX_10_EXP: i32 = 308;
+    const MAX_EXP: i32 = 1024;
+    const MIN: f64 = -1.7976931348623157e+308_f64;
+    const MIN_10_EXP: i32 = -307;
+    const MIN_EXP: i32 = -1021;
+    const MIN_POSITIVE: f64 = 2.2250738585072014e-308_f64;
+    const NAN: f64 = 0.0_f64 / 0.0_f64;
     const NEG_INFINITY: f64 = -1.0_f64 / 0.0_f64;
+    const RADIX: u32 = 2;
 }
 
 mod private_int {

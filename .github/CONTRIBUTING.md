@@ -20,11 +20,11 @@ Commits will almost certainly be squashed when merged, so don't stress about hav
 
 ## Continuous Integration
 
-std-compat uses [GitHub Actions] for continuous integration. Types are checked and the full test suite is run on Windows, Mac, and Linux on both the minimum supported Rust version and the most recent stable. Formatting is verified, as are clippy lints.
+standback uses [GitHub Actions] for continuous integration. Types are checked and the full test suite is run on Windows, Mac, and Linux on both the minimum supported Rust version and the most recent stable. Formatting is verified, as are clippy lints.
 
 ## Formatting
 
-std-compat uses rustfmt for formatting, and uses a number of nightly features. As such, you will need to run `cargo +nightly-2020-03-19 fmt` before committing. Formatting is important, so not doing this may cause CI to fail!
+standback uses rustfmt for formatting, and uses a number of nightly features. As such, you will need to run `cargo +nightly fmt` before committing. Formatting is important, so not doing this may cause CI to fail!
 
-[issue tracker]: https://github.com/jhpratt/std-compat/issues/new
+[issue tracker]: https://github.com/jhpratt/standback/issues/new
 [GitHub Actions]: https://github.com/features/actions

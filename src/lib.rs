@@ -496,10 +496,10 @@ pub mod prelude {
     pub use crate::v1_42::Condvar_v1_42;
     #[cfg(before_1_42)]
     pub use crate::v1_42::ManuallyDrop_v1_42;
-    #[cfg(before_1_39)]
-    pub use core::unimplemented as todo;
     #[cfg(before_1_43)]
     pub use crate::v1_43::{f32_v1_43, f64_v1_43, int_v1_43};
+    #[cfg(before_1_39)]
+    pub use core::unimplemented as todo;
 }
 
 pub mod mem {
