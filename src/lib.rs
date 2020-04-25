@@ -40,15 +40,62 @@
 //!
 //! # Methods on existing structs
 //!
-//! The following methods are available via the prelude:
+//! The following methods and constants are available via the prelude:
 //!
 //! ```rust,ignore
 //! // 1.43
-//! f32::LOG10_2
-//! f32::LOG2_10
-//! f64::LOG10_2
-//! f64::LOG2_10
-//! iter::once_with
+//! f32::RADIX
+//! f32::MANTISSA_DIGITS
+//! f32::DIGITS
+//! f32::EPSILON
+//! f32::MIN
+//! f32::MIN_POSITIVE
+//! f32::MAX
+//! f32::MIN_EXP
+//! f32::MAX_EXP
+//! f32::MIN_10_EXP
+//! f32::MAX_10_EXP
+//! f32::NAN
+//! f32::INFINITY
+//! f32::NEG_INFINITY
+//! f64::RADIX
+//! f64::MANTISSA_DIGITS
+//! f64::DIGITS
+//! f64::EPSILON
+//! f64::MIN
+//! f64::MIN_POSITIVE
+//! f64::MAX
+//! f64::MIN_EXP
+//! f64::MAX_EXP
+//! f64::MIN_10_EXP
+//! f64::MAX_10_EXP
+//! f64::NAN
+//! f64::INFINITY
+//! f64::NEG_INFINITY
+//! u8::MIN
+//! u8::MAX
+//! u16::MIN
+//! u16::MAX
+//! u32::MIN
+//! u32::MAX
+//! u64::MIN
+//! u64::MAX
+//! u128::MIN
+//! u128::MAX
+//! usize::MIN
+//! usize::MAX
+//! i8::MIN
+//! i8::MAX
+//! i16::MIN
+//! i16::MAX
+//! i32::MIN
+//! i32::MAX
+//! i64::MIN
+//! i64::MAX
+//! i128::MIN
+//! i128::MAX
+//! isize::MIN
+//! isize::MAX
 //!
 //! // 1.42
 //! CondVar::wait_while
@@ -356,6 +403,12 @@
 //! # Other APIs implemented
 //!
 //! ```rust,ignore
+//! primitive // 1.43 — requires rustc 1.32.0
+//! f32::LOG10_2 // 1.43
+//! f32::LOG2_10 // 1.43
+//! f64::LOG10_2 // 1.43
+//! f64::LOG2_10 // 1.43
+//! iter::once_with // 1.43
 //! mem::take // 1.40
 //! iterator::Copied // 1.36
 //! array::TryFromSliceError // 1.36
@@ -445,6 +498,8 @@ pub mod prelude {
     pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(before_1_39)]
     pub use core::unimplemented as todo;
+    #[cfg(before_1_43)]
+    pub use crate::v1_43::{f32_v1_43, f64_v1_43, int_v1_43};
 }
 
 pub mod mem {
@@ -542,4 +597,11 @@ pub mod f64 {
         #[cfg(since_1_43)]
         pub use core::f64::consts::{LOG10_2, LOG2_10};
     }
+}
+#[cfg(since_1_32)]
+pub mod primitive {
+    #[cfg(before_1_43)]
+    pub use crate::v1_43::primitive::*;
+    #[cfg(since_1_43)]
+    pub use core::primitive::*;
 }
