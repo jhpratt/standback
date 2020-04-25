@@ -1,3 +1,4 @@
+use crate::{Float, Integer};
 use core::iter::FusedIterator;
 
 pub mod f32 {
@@ -70,29 +71,24 @@ pub mod primitive {
     pub use usize;
 }
 
-mod private_f32 {
-    pub trait Sealed {}
-    impl Sealed for f32 {}
-}
-
-pub trait f32_v1_43: private_f32::Sealed {
+pub trait float_v1_43: Float {
     const RADIX: u32;
     const MANTISSA_DIGITS: u32;
     const DIGITS: u32;
-    const EPSILON: f32;
-    const MIN: f32;
-    const MIN_POSITIVE: f32;
-    const MAX: f32;
+    const EPSILON: Self;
+    const MIN: Self;
+    const MIN_POSITIVE: Self;
+    const MAX: Self;
     const MIN_EXP: i32;
     const MAX_EXP: i32;
     const MIN_10_EXP: i32;
     const MAX_10_EXP: i32;
-    const NAN: f32;
-    const INFINITY: f32;
-    const NEG_INFINITY: f32;
+    const NAN: Self;
+    const INFINITY: Self;
+    const NEG_INFINITY: Self;
 }
 
-impl f32_v1_43 for f32 {
+impl float_v1_43 for f32 {
     const DIGITS: u32 = 6;
     const EPSILON: f32 = 1.19209290e-07_f32;
     const INFINITY: f32 = 1.0_f32 / 0.0_f32;
@@ -109,29 +105,7 @@ impl f32_v1_43 for f32 {
     const RADIX: u32 = 2;
 }
 
-mod private_f64 {
-    pub trait Sealed {}
-    impl Sealed for f64 {}
-}
-
-pub trait f64_v1_43: private_f64::Sealed {
-    const RADIX: u32;
-    const MANTISSA_DIGITS: u32;
-    const DIGITS: u32;
-    const EPSILON: f64;
-    const MIN: f64;
-    const MIN_POSITIVE: f64;
-    const MAX: f64;
-    const MIN_EXP: i32;
-    const MAX_EXP: i32;
-    const MIN_10_EXP: i32;
-    const MAX_10_EXP: i32;
-    const NAN: f64;
-    const INFINITY: f64;
-    const NEG_INFINITY: f64;
-}
-
-impl f64_v1_43 for f64 {
+impl float_v1_43 for f64 {
     const DIGITS: u32 = 15;
     const EPSILON: f64 = 2.2204460492503131e-16_f64;
     const INFINITY: f64 = 1.0_f64 / 0.0_f64;
@@ -148,23 +122,7 @@ impl f64_v1_43 for f64 {
     const RADIX: u32 = 2;
 }
 
-mod private_int {
-    pub trait Sealed {}
-    impl Sealed for u8 {}
-    impl Sealed for u16 {}
-    impl Sealed for u32 {}
-    impl Sealed for u64 {}
-    impl Sealed for u128 {}
-    impl Sealed for usize {}
-    impl Sealed for i8 {}
-    impl Sealed for i16 {}
-    impl Sealed for i32 {}
-    impl Sealed for i64 {}
-    impl Sealed for i128 {}
-    impl Sealed for isize {}
-}
-
-pub trait int_v1_43: private_int::Sealed {
+pub trait int_v1_43: Integer {
     const MIN: Self;
     const MAX: Self;
 }

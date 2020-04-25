@@ -1,3 +1,4 @@
+use crate::Sealed;
 use core::{
     cell::RefCell,
     hash::{Hash, Hasher},
@@ -5,12 +6,7 @@ use core::{
     ops::{Bound, RangeBounds},
 };
 
-mod private_ref_cell {
-    pub trait Sealed {}
-    impl<T> Sealed for super::RefCell<T> {}
-}
-
-pub trait RefCell_v1_35<T>: private_ref_cell::Sealed {
+pub trait RefCell_v1_35<T>: Sealed<RefCell<T>> {
     fn replace_with<F: FnOnce(&mut T) -> T>(&self, f: F) -> T;
 }
 
@@ -23,16 +19,11 @@ impl<T> RefCell_v1_35<T> for RefCell<T> {
     }
 }
 
-mod private_option {
-    pub trait Sealed {}
-    impl<T> Sealed for Option<T> {}
-}
-
-pub trait Option_v1_35<T>: private_option::Sealed {
+pub trait Option_v1_35<'a, T: Copy + 'a>: Sealed<Option<&'a T>> {
     fn copied(self) -> Option<T>;
 }
 
-impl<T: Copy> Option_v1_35<T> for Option<&T> {
+impl<'a, T: Copy + 'a> Option_v1_35<'a, T> for Option<&'a T> {
     fn copied(self) -> Option<T> {
         self.map(|&t| t)
     }

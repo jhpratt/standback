@@ -433,6 +433,28 @@
 
 #![deny(rust_2018_idioms, unused_qualifications)]
 
+// A few traits to make sealing other traits simpler.
+pub trait Sealed<T: ?Sized> {}
+impl<T: ?Sized> Sealed<T> for T {}
+
+pub trait Integer: Sized {}
+impl Integer for i8 {}
+impl Integer for i16 {}
+impl Integer for i32 {}
+impl Integer for i64 {}
+impl Integer for i128 {}
+impl Integer for isize {}
+impl Integer for u8 {}
+impl Integer for u16 {}
+impl Integer for u32 {}
+impl Integer for u64 {}
+impl Integer for u128 {}
+impl Integer for usize {}
+
+pub trait Float {}
+impl Float for f32 {}
+impl Float for f64 {}
+
 #[cfg(before_1_32)]
 mod v1_32;
 #[cfg(before_1_33)]
@@ -497,7 +519,7 @@ pub mod prelude {
     #[cfg(before_1_42)]
     pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(before_1_43)]
-    pub use crate::v1_43::{f32_v1_43, f64_v1_43, int_v1_43};
+    pub use crate::v1_43::{float_v1_43, int_v1_43};
     #[cfg(before_1_39)]
     pub use core::unimplemented as todo;
 }

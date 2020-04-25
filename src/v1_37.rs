@@ -1,15 +1,11 @@
+use crate::Sealed;
 use core::{
     cell::Cell,
     ops::{Bound, RangeBounds},
     ptr,
 };
 
-mod private_cell {
-    pub trait Sealed {}
-    impl<T> Sealed for super::Cell<T> {}
-}
-
-pub trait Cell_v1_37<T>: private_cell::Sealed {
+pub trait Cell_v1_37<T>: Sealed<Cell<T>> {
     fn from_mut(t: &mut T) -> &Cell<T>;
 }
 
@@ -20,12 +16,7 @@ impl<T> Cell_v1_37<T> for Cell<T> {
     }
 }
 
-mod private_cell_ {
-    pub trait Sealed {}
-    impl<T> Sealed for super::Cell<[T]> {}
-}
-
-pub trait Cell_v1_37_<T>: private_cell_::Sealed {
+pub trait Cell_v1_37_<T>: Sealed<Cell<[T]>> {
     fn as_slice_of_cells(&self) -> &[Cell<T>];
 }
 
@@ -35,12 +26,7 @@ impl<T> Cell_v1_37_<T> for Cell<[T]> {
     }
 }
 
-mod private_option {
-    pub trait Sealed {}
-    impl<T> Sealed for Option<T> {}
-}
-
-pub trait Option_v1_37<T>: private_option::Sealed {
+pub trait Option_v1_37<T>: Sealed<Option<T>> {
     fn xor(self, optb: Option<T>) -> Option<T>;
 }
 
@@ -55,12 +41,7 @@ impl<T> Option_v1_37<T> for Option<T> {
     }
 }
 
-mod private_slice {
-    pub trait Sealed {}
-    impl<T> Sealed for [T] {}
-}
-
-pub trait Slice_v1_37<T>: private_slice::Sealed {
+pub trait Slice_v1_37<T>: Sealed<[T]> {
     fn copy_within<R: RangeBounds<usize>>(&mut self, src: R, dest: usize)
     where
         T: Copy;

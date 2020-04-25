@@ -1,24 +1,9 @@
+use crate::Sealed;
 use core::mem::{size_of, transmute};
-
-mod private {
-    pub trait Sealed {}
-    impl Sealed for u8 {}
-    impl Sealed for u16 {}
-    impl Sealed for u32 {}
-    impl Sealed for u64 {}
-    impl Sealed for u128 {}
-    impl Sealed for usize {}
-    impl Sealed for i8 {}
-    impl Sealed for i16 {}
-    impl Sealed for i32 {}
-    impl Sealed for i64 {}
-    impl Sealed for i128 {}
-    impl Sealed for isize {}
-}
 
 macro_rules! impl_int_v1_32 {
     ($(($trait:ident, $type:ty)),+) => {$(
-        pub trait $trait: private::Sealed {
+        pub trait $trait: Sealed<$type> {
             fn to_be_bytes(self) -> [u8; size_of::<$type>()];
             fn to_le_bytes(self) -> [u8; size_of::<$type>()];
             fn to_ne_bytes(self) -> [u8; size_of::<$type>()];

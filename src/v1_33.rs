@@ -1,6 +1,7 @@
 mod pin;
 
 pub use self::pin::Pin;
+use crate::Sealed;
 use core::time::Duration;
 #[cfg(std)]
 use std::collections::VecDeque;
@@ -65,13 +66,7 @@ pub trait UnixFileExt_v1_33: unix::fs::FileExt {
 #[cfg(all(std, target_family = "unix"))]
 impl<F: unix::fs::FileExt> UnixFileExt_v1_33 for F {}
 
-mod private_transpose {
-    pub trait Sealed {}
-    impl<T, E> Sealed for Option<Result<T, E>> {}
-    impl<T, E> Sealed for Result<Option<T>, E> {}
-}
-
-pub trait Option_v1_33<T, E>: private_transpose::Sealed {
+pub trait Option_v1_33<T, E>: Sealed<Option<Result<T, E>>> {
     fn transpose(self) -> Result<Option<T>, E>;
 }
 
@@ -86,7 +81,7 @@ impl<T, E> Option_v1_33<T, E> for Option<Result<T, E>> {
     }
 }
 
-pub trait Result_v1_33<T, E>: private_transpose::Sealed {
+pub trait Result_v1_33<T, E>: Sealed<Result<Option<T>, E>> {
     fn transpose(self) -> Option<Result<T, E>>;
 }
 
@@ -102,13 +97,7 @@ impl<T, E> Result_v1_33<T, E> for Result<Option<T>, E> {
 }
 
 #[cfg(std)]
-mod private_vec_deque {
-    pub trait Sealed {}
-    impl<T> Sealed for super::VecDeque<T> {}
-}
-
-#[cfg(std)]
-pub trait VecDeque_v1_33<T>: private_vec_deque::Sealed {
+pub trait VecDeque_v1_33<T>: Sealed<VecDeque<T>> {
     fn resize_with(&mut self, new_len: usize, generator: impl FnMut() -> T);
 }
 
@@ -125,12 +114,7 @@ impl<T> VecDeque_v1_33<T> for VecDeque<T> {
     }
 }
 
-mod private_duration {
-    pub trait Sealed {}
-    impl Sealed for super::Duration {}
-}
-
-pub trait Duration_v1_33: private_duration::Sealed {
+pub trait Duration_v1_33: Sealed<Duration> {
     fn as_millis(&self) -> u128;
     fn as_micros(&self) -> u128;
     fn as_nanos(&self) -> u128;

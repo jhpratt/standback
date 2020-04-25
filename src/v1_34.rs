@@ -2,6 +2,7 @@ mod try_from;
 
 pub use self::try_from::{TryFrom, TryFromIntError, TryInto};
 pub use crate::array::TryFromSliceError;
+use crate::{Integer, Sealed};
 use core::{fmt, iter::FusedIterator};
 
 #[cfg(std)]
@@ -97,12 +98,7 @@ impl<T: fmt::Debug, F> fmt::Debug for Successors<T, F> {
     }
 }
 
-mod private_slice {
-    pub trait Sealed {}
-    impl<T> Sealed for [T] {}
-}
-
-pub trait Slice_v1_34<T>: private_slice::Sealed {
+pub trait Slice_v1_34<T>: Sealed<[T]> {
     fn sort_by_cached_key<K, F>(&mut self, f: F)
     where
         F: FnMut(&T) -> K,
@@ -159,23 +155,7 @@ impl<T> Slice_v1_34<T> for [T] {
     }
 }
 
-mod private_pow {
-    pub trait Sealed: Sized {}
-    impl Sealed for i8 {}
-    impl Sealed for i16 {}
-    impl Sealed for i32 {}
-    impl Sealed for i64 {}
-    impl Sealed for i128 {}
-    impl Sealed for isize {}
-    impl Sealed for u8 {}
-    impl Sealed for u16 {}
-    impl Sealed for u32 {}
-    impl Sealed for u64 {}
-    impl Sealed for u128 {}
-    impl Sealed for usize {}
-}
-
-pub trait Pow_v1_34: private_pow::Sealed {
+pub trait Pow_v1_34: Integer {
     fn checked_pow(self, exp: u32) -> Option<Self>;
     fn saturating_pow(self, exp: u32) -> Self;
     fn wrapping_pow(self, exp: u32) -> Self;

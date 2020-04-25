@@ -1,3 +1,4 @@
+use crate::Sealed;
 use core::{mem::ManuallyDrop, ptr};
 #[cfg(std)]
 use std::{
@@ -16,13 +17,7 @@ fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
 }
 
 #[cfg(std)]
-mod private_condvar {
-    pub trait Sealed {}
-    impl Sealed for super::Condvar {}
-}
-
-#[cfg(std)]
-pub trait Condvar_v1_42: private_condvar::Sealed {
+pub trait Condvar_v1_42: Sealed<Condvar> {
     fn wait_while<'a, T, F>(
         &self,
         guard: MutexGuard<'a, T>,
@@ -79,12 +74,7 @@ impl Condvar_v1_42 for Condvar {
     }
 }
 
-mod private_manually_drop {
-    pub trait Sealed {}
-    impl<T> Sealed for super::ManuallyDrop<T> {}
-}
-
-pub trait ManuallyDrop_v1_42<T>: private_manually_drop::Sealed {
+pub trait ManuallyDrop_v1_42<T>: Sealed<ManuallyDrop<T>> {
     unsafe fn take(slot: &mut ManuallyDrop<T>) -> T;
 }
 

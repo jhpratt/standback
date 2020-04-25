@@ -11,6 +11,10 @@ Versioning].
 
 Nothing yet.
 
+## 0.2.7 [2020-04-25]
+
+Additional modules and constants were added for Rust 1.43.0.
+
 ## 0.2.6 [2020-04-21]
 
 Support for Rust 1.43.0 APIs has been added.

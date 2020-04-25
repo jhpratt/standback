@@ -1,43 +1,29 @@
+use crate::{Float, Integer, Sealed};
 use core::time::Duration;
 
-mod private_const_ptr {
-    pub trait Sealed {}
-    impl<T> Sealed for *const T {}
-}
-
-pub trait ConstPtr_v1_38: private_const_ptr::Sealed {
+pub trait ConstPtr_v1_38<T>: Sealed<*const T> {
     fn cast<U>(self) -> *const U;
 }
 
-impl<T> ConstPtr_v1_38 for *const T {
+impl<T> ConstPtr_v1_38<T> for *const T {
     #[inline]
     fn cast<U>(self) -> *const U {
         self as _
     }
 }
 
-mod private_mut_ptr {
-    pub trait Sealed {}
-    impl<T> Sealed for *mut T {}
-}
-
-pub trait MutPtr_v1_38 {
+pub trait MutPtr_v1_38<T>: Sealed<*mut T> {
     fn cast<U>(self) -> *mut U;
 }
 
-impl<T> MutPtr_v1_38 for *mut T {
+impl<T> MutPtr_v1_38<T> for *mut T {
     #[inline]
     fn cast<U>(self) -> *mut U {
         self as _
     }
 }
 
-mod private_duration {
-    pub trait Sealed {}
-    impl Sealed for super::Duration {}
-}
-
-pub trait Duration_v1_38: private_duration::Sealed {
+pub trait Duration_v1_38: Sealed<Duration> {
     fn as_secs_f32(&self) -> f32;
     fn as_secs_f64(&self) -> f64;
     fn div_f32(&self, rhs: f32) -> Self;
@@ -120,23 +106,7 @@ impl Duration_v1_38 for Duration {
     }
 }
 
-mod private_euclid {
-    pub trait Sealed: Sized {}
-    impl Sealed for i8 {}
-    impl Sealed for i16 {}
-    impl Sealed for i32 {}
-    impl Sealed for i64 {}
-    impl Sealed for i128 {}
-    impl Sealed for isize {}
-    impl Sealed for u8 {}
-    impl Sealed for u16 {}
-    impl Sealed for u32 {}
-    impl Sealed for u64 {}
-    impl Sealed for u128 {}
-    impl Sealed for usize {}
-}
-
-pub trait Euclid_v1_38: private_euclid::Sealed {
+pub trait Euclid_v1_38: Integer {
     fn rem_euclid(self, rhs: Self) -> Self;
     fn checked_rem_euclid(self, rhs: Self) -> Option<Self>;
     fn wrapping_rem_euclid(self, rhs: Self) -> Self;
@@ -296,12 +266,7 @@ macro_rules! impl_euclid_for_unsigned {
 
 impl_euclid_for_unsigned![u8 u16 u32 u64 u128 usize];
 
-mod private_euclid_float {
-    pub trait Sealed: Sized {}
-    impl Sealed for f32 {}
-    impl Sealed for f64 {}
-}
-pub trait EuclidFloat_v1_38: private_euclid_float::Sealed {
+pub trait EuclidFloat_v1_38: Float {
     fn rem_euclid(self, rhs: Self) -> Self;
     fn div_euclid(self, rhs: Self) -> Self;
 }

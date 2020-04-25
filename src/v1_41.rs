@@ -1,9 +1,6 @@
-mod private {
-    pub trait Sealed {}
-    impl<T, E> Sealed for Result<T, E> {}
-}
+use crate::Sealed;
 
-pub trait Result_v1_41<T, E>: private::Sealed {
+pub trait Result_v1_41<T, E>: Sealed<Result<T, E>> {
     fn map_or<U, F: FnOnce(T) -> U>(self, default: U, f: F) -> U;
     fn map_or_else<U, D: FnOnce(E) -> U, F: FnOnce(T) -> U>(self, default: D, f: F) -> U;
 }

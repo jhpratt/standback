@@ -3,6 +3,7 @@ mod maybe_uninit;
 mod poll;
 mod waker;
 
+use crate::Sealed;
 use core::fmt;
 
 pub use self::{
@@ -12,12 +13,7 @@ pub use self::{
     waker::{Context, RawWaker, RawWakerVTable, Waker},
 };
 
-mod private {
-    pub trait Sealed {}
-    impl Sealed for str {}
-}
-
-pub trait str_v1_36: private::Sealed {
+pub trait str_v1_36: Sealed<str> {
     fn as_mut_ptr(&mut self) -> *mut u8;
 }
 
