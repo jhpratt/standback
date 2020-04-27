@@ -50,27 +50,6 @@ impl<A, F: FnOnce() -> A> ExactSizeIterator for OnceWith<F> {
 
 impl<A, F: FnOnce() -> A> FusedIterator for OnceWith<F> {}
 
-#[cfg(since_1_32)]
-pub mod primitive {
-    pub use bool;
-    pub use char;
-    pub use f32;
-    pub use f64;
-    pub use i128;
-    pub use i16;
-    pub use i32;
-    pub use i64;
-    pub use i8;
-    pub use isize;
-    pub use str;
-    pub use u128;
-    pub use u16;
-    pub use u32;
-    pub use u64;
-    pub use u8;
-    pub use usize;
-}
-
 pub trait float_v1_43: Float {
     const RADIX: u32;
     const MANTISSA_DIGITS: u32;

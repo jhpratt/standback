@@ -7,11 +7,14 @@ Versioning].
 
 ---
 
-## Unreleased
+## 0.2.8 [2020-04-27]
 
-Nothing yet.
+Removed the `primitive` module, as it caused internal compiler errors in older
+compilers.
 
 ## 0.2.7 [2020-04-25]
+
+_This version has been yanked from crates.io._
 
 Additional modules and constants were added for Rust 1.43.0.
 

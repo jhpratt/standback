@@ -620,10 +620,3 @@ pub mod f64 {
         pub use core::f64::consts::{LOG10_2, LOG2_10};
     }
 }
-#[cfg(since_1_32)]
-pub mod primitive {
-    #[cfg(before_1_43)]
-    pub use crate::v1_43::primitive::*;
-    #[cfg(since_1_43)]
-    pub use core::primitive::*;
-}
