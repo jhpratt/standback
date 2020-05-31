@@ -3,7 +3,11 @@ mod try_from;
 pub use self::try_from::{TryFrom, TryFromIntError, TryInto};
 pub use crate::array::TryFromSliceError;
 use crate::{Integer, Sealed};
-use core::{fmt, iter::FusedIterator};
+use core::{
+    fmt,
+    hash::{Hash, Hasher},
+    iter::FusedIterator,
+};
 
 #[cfg(std)]
 use core::mem;
@@ -19,6 +23,12 @@ impl fmt::Debug for Infallible {
 
 impl fmt::Display for Infallible {
     fn fmt(&self, _: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {}
+    }
+}
+
+impl Hash for Infallible {
+    fn hash<H: Hasher>(&self, _: &mut H) {
         match *self {}
     }
 }

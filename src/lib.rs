@@ -43,6 +43,18 @@
 //! The following methods and constants are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.44
+//! PathBuf::with_capacity
+//! PathBuf::capacity
+//! PathBuf::clear
+//! PathBuf::reserve
+//! PathBuf::reserve_exact
+//! PathBuf::shrink_to_fit
+//! Layout::align_to
+//! Layout::pad_to_align
+//! Layout::array
+//! Layout::extend
+//!
 //! // 1.43
 //! f32::RADIX
 //! f32::MANTISSA_DIGITS
@@ -479,6 +491,8 @@ mod v1_41;
 mod v1_42;
 #[cfg(before_1_43)]
 mod v1_43;
+#[cfg(before_1_44)]
+mod v1_44;
 
 pub mod prelude {
     #[cfg(before_1_42)]
@@ -520,6 +534,10 @@ pub mod prelude {
     pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(before_1_43)]
     pub use crate::v1_43::{float_v1_43, int_v1_43};
+    #[cfg(before_1_44)]
+    pub use crate::v1_44::Layout_v1_44;
+    #[cfg(all(before_1_44, std))]
+    pub use crate::v1_44::PathBuf_v1_44;
     #[cfg(before_1_39)]
     pub use core::unimplemented as todo;
 }
@@ -597,7 +615,6 @@ pub mod ptr {
     #[cfg(since_1_35)]
     pub use core::ptr::hash;
 }
-
 pub mod array {
     #[cfg(before_1_36)]
     pub use crate::v1_36::TryFromSliceError;
