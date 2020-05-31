@@ -1,52 +1,43 @@
-use std::{env, ffi::OsString, process::Command, time::SystemTime};
+use version_check::{Channel, Version};
 
-/// Return the minor version of the compiler currently in use.
-/// `None` is returned if a version cannot be determined.
-fn compiler_in_use() -> Option<usize> {
-    let rustc = env::var_os("RUSTC").unwrap_or_else(|| OsString::from("rustc"));
-    let raw_output = Command::new(rustc)
-        .args(&["--version", "--verbose"])
-        .output()
-        .ok()?
-        .stdout;
-    let output = std::str::from_utf8(&raw_output).ok()?;
-
-    let release_str =
-        &output.lines().find(|line| line.starts_with("release: "))?["release: ".len()..];
-
-    release_str.split('.').nth(1)?.parse().ok()
-}
+// We assume that features are never stabilized in patch versions.
+// If a "Rust 2.0" is ever released, we'll have to handle that explicitly.
+const MSRV_MINOR: u16 = 31;
+const CURRENT_MINOR: u16 = 44;
 
 fn main() {
-    const MSRV: usize = 31;
+    let msrv = Version::from_mmp(1, MSRV_MINOR, 0);
 
-    let seconds_since_epoch = SystemTime::now()
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .unwrap()
-        .as_secs();
-    let seconds_since_v1_0 = seconds_since_epoch - 1_431_648_000;
-    let current_rustc_release = (seconds_since_v1_0 / (6 * 604_800)) as usize;
-
-    let compiler_used = match compiler_in_use() {
+    let mut minor_used = match Version::read() {
         Some(version) => version,
         None => {
             println!(
-                "cargo:warning=Unable to determine rustc version. Assuming rustc 1.{}.0.",
-                MSRV
+                "cargo:warning=Unable to determine rustc version. Assuming rustc {}.",
+                msrv
             );
-            MSRV
+            msrv
         }
-    };
+    }
+    .to_mmp()
+    .1;
 
-    for minor in (MSRV + 1)..=current_rustc_release {
-        if minor <= compiler_used {
+    // Treat as the stable release, even if not on it.
+    let channel = Channel::read();
+    match channel {
+        Some(channel) if channel.is_beta() => minor_used -= 1,
+        Some(channel) if channel.is_nightly() => minor_used -= 2,
+        Some(channel) if channel.is_dev() => minor_used -= 3,
+        _ => {}
+    }
+
+    for minor in (MSRV_MINOR + 1)..=CURRENT_MINOR {
+        if minor <= minor_used {
             println!("cargo:rustc-cfg=since_1_{}", minor);
         } else {
             println!("cargo:rustc-cfg=before_1_{}", minor);
         }
     }
 
-    if env::var("CARGO_FEATURE_STD").is_ok() {
-        println!("cargo:rustc-cfg=std");
-    }
+    #[cfg(feature = "std")]
+    println!("cargo:rustc-cfg=std");
 }
