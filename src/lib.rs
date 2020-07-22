@@ -50,6 +50,8 @@
 //! PathBuf::reserve
 //! PathBuf::reserve_exact
 //! PathBuf::shrink_to_fit
+//! f32::to_int_unchecked
+//! f64::to_int_unchecked
 //! Layout::align_to
 //! Layout::pad_to_align
 //! Layout::array
@@ -534,10 +536,10 @@ pub mod prelude {
     pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(before_1_43)]
     pub use crate::v1_43::{float_v1_43, int_v1_43};
-    #[cfg(before_1_44)]
-    pub use crate::v1_44::Layout_v1_44;
     #[cfg(all(before_1_44, std))]
     pub use crate::v1_44::PathBuf_v1_44;
+    #[cfg(before_1_44)]
+    pub use crate::v1_44::{float_v_1_44, Layout_v1_44};
     #[cfg(before_1_39)]
     pub use core::unimplemented as todo;
 }

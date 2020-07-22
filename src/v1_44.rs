@@ -1,4 +1,5 @@
-use crate::Sealed;
+use self::float_to_int::FloatToInt;
+use crate::{Float, Sealed};
 use core::{
     alloc::{Layout, LayoutErr},
     cmp,
@@ -8,6 +9,52 @@ use core::{
 use std::ffi::OsString;
 #[cfg(std)]
 use std::path::PathBuf;
+
+mod float_to_int {
+    pub trait FloatToInt<Int> {
+        unsafe fn to_int_unchecked(self) -> Int;
+    }
+
+    macro_rules! impl_float_to_int {
+        ( $Float: ident => $( $Int: ident )+ ) => {
+            $(
+                impl FloatToInt<$Int> for $Float {
+                    #[inline]
+                    unsafe fn to_int_unchecked(self) -> $Int {
+                        self as $Int
+                    }
+                }
+            )+
+        }
+    }
+
+    impl_float_to_int!(f32 => u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize);
+    impl_float_to_int!(f64 => u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize);
+}
+
+pub trait float_v_1_44: Float {
+    unsafe fn to_int_unchecked<Int>(self) -> Int
+    where
+        Self: FloatToInt<Int>;
+}
+
+impl float_v_1_44 for f32 {
+    unsafe fn to_int_unchecked<Int>(self) -> Int
+    where
+        f32: FloatToInt<Int>,
+    {
+        FloatToInt::to_int_unchecked(self)
+    }
+}
+
+impl float_v_1_44 for f64 {
+    unsafe fn to_int_unchecked<Int>(self) -> Int
+    where
+        f64: FloatToInt<Int>,
+    {
+        FloatToInt::to_int_unchecked(self)
+    }
+}
 
 #[cfg(std)]
 pub trait PathBuf_v1_44: Sealed<PathBuf> {
