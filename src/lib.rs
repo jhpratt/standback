@@ -483,8 +483,6 @@ mod v1_36;
 mod v1_37;
 #[cfg(before_1_38)]
 mod v1_38;
-#[cfg(before_1_39)]
-mod v1_39;
 #[cfg(before_1_40)]
 mod v1_40;
 #[cfg(before_1_41)]
