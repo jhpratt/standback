@@ -1,5 +1,5 @@
 #![allow(non_camel_case_types, unstable_name_collisions)]
-#![cfg_attr(not(std), no_std)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 //! Standback backports a number of methods, structs, and macros that have been
 //! stabilized in the Rust standard library since 1.31.0. This allows crate
@@ -469,171 +469,171 @@ mod traits {
     impl Float for f64 {}
 }
 
-#[cfg(before_1_32)]
+#[cfg(__standback_before_1_32)]
 mod v1_32;
-#[cfg(before_1_33)]
+#[cfg(__standback_before_1_33)]
 mod v1_33;
-#[cfg(before_1_34)]
+#[cfg(__standback_before_1_34)]
 mod v1_34;
-#[cfg(before_1_35)]
+#[cfg(__standback_before_1_35)]
 mod v1_35;
-#[cfg(before_1_36)]
+#[cfg(__standback_before_1_36)]
 mod v1_36;
-#[cfg(before_1_37)]
+#[cfg(__standback_before_1_37)]
 mod v1_37;
-#[cfg(before_1_38)]
+#[cfg(__standback_before_1_38)]
 mod v1_38;
-#[cfg(before_1_40)]
+#[cfg(__standback_before_1_40)]
 mod v1_40;
-#[cfg(before_1_41)]
+#[cfg(__standback_before_1_41)]
 mod v1_41;
-#[cfg(before_1_42)]
+#[cfg(__standback_before_1_42)]
 mod v1_42;
-#[cfg(before_1_43)]
+#[cfg(__standback_before_1_43)]
 mod v1_43;
-#[cfg(before_1_44)]
+#[cfg(__standback_before_1_44)]
 mod v1_44;
 
 pub mod prelude {
-    #[cfg(before_1_42)]
+    #[cfg(__standback_before_1_42)]
     pub use crate::matches;
-    #[cfg(before_1_32)]
+    #[cfg(__standback_before_1_32)]
     pub use crate::v1_32::{
         i128_v1_32, i16_v1_32, i32_v1_32, i64_v1_32, i8_v1_32, isize_v1_32, u128_v1_32, u16_v1_32,
         u32_v1_32, u64_v1_32, u8_v1_32, usize_v1_32,
     };
-    #[cfg(all(std, before_1_33, target_family = "unix"))]
+    #[cfg(all(feature = "std", __standback_before_1_33, target_family = "unix"))]
     pub use crate::v1_33::UnixFileExt_v1_33;
-    #[cfg(all(std, before_1_33))]
+    #[cfg(all(feature = "std", __standback_before_1_33))]
     pub use crate::v1_33::VecDeque_v1_33;
-    #[cfg(before_1_33)]
+    #[cfg(__standback_before_1_33)]
     pub use crate::v1_33::{Duration_v1_33, Option_v1_33, Result_v1_33};
-    #[cfg(before_1_34)]
+    #[cfg(__standback_before_1_34)]
     pub use crate::v1_34::{Pow_v1_34, Slice_v1_34};
-    #[cfg(before_1_35)]
+    #[cfg(__standback_before_1_35)]
     pub use crate::v1_35::{Option_v1_35, RangeBounds_v1_35, RefCell_v1_35};
-    #[cfg(before_1_36)]
+    #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::{str_v1_36, Iterator_v1_36};
-    #[cfg(before_1_37)]
+    #[cfg(__standback_before_1_37)]
     pub use crate::v1_37::{
         Cell_v1_37, Cell_v1_37_, DoubleEndedIterator_v1_37, Option_v1_37, Slice_v1_37,
     };
-    #[cfg(before_1_38)]
+    #[cfg(__standback_before_1_38)]
     pub use crate::v1_38::{
         ConstPtr_v1_38, Duration_v1_38, EuclidFloat_v1_38, Euclid_v1_38, MutPtr_v1_38,
     };
-    #[cfg(all(std, before_1_40))]
+    #[cfg(all(feature = "std", __standback_before_1_40))]
     pub use crate::v1_40::slice_v1_40;
-    #[cfg(before_1_40)]
+    #[cfg(__standback_before_1_40)]
     pub use crate::v1_40::{f32_v1_40, f64_v1_40, Option_v1_40, Option_v1_40_};
-    #[cfg(before_1_41)]
+    #[cfg(__standback_before_1_41)]
     pub use crate::v1_41::Result_v1_41;
-    #[cfg(all(before_1_42, std))]
+    #[cfg(all(__standback_before_1_42, feature = "std"))]
     pub use crate::v1_42::Condvar_v1_42;
-    #[cfg(before_1_42)]
+    #[cfg(__standback_before_1_42)]
     pub use crate::v1_42::ManuallyDrop_v1_42;
-    #[cfg(before_1_43)]
+    #[cfg(__standback_before_1_43)]
     pub use crate::v1_43::{float_v1_43, int_v1_43};
-    #[cfg(before_1_44)]
+    #[cfg(__standback_before_1_44)]
     pub use crate::v1_44::Layout_v1_44;
-    #[cfg(all(before_1_44, std))]
+    #[cfg(all(__standback_before_1_44, feature = "std"))]
     pub use crate::v1_44::PathBuf_v1_44;
-    #[cfg(before_1_39)]
+    #[cfg(__standback_before_1_39)]
     pub use core::unimplemented as todo;
 }
 
 pub mod mem {
-    #[cfg(before_1_40)]
+    #[cfg(__standback_before_1_40)]
     pub use crate::v1_40::take;
-    #[cfg(since_1_40)]
+    #[cfg(__standback_since_1_40)]
     pub use core::mem::take;
 
-    #[cfg(before_1_36)]
+    #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::MaybeUninit;
-    #[cfg(since_1_36)]
+    #[cfg(__standback_since_1_36)]
     pub use core::mem::MaybeUninit;
 }
 pub mod convert {
-    #[cfg(before_1_33)]
+    #[cfg(__standback_before_1_33)]
     pub use crate::v1_33::identity;
-    #[cfg(since_1_33)]
+    #[cfg(__standback_since_1_33)]
     pub use core::convert::identity;
 
-    #[cfg(before_1_34)]
+    #[cfg(__standback_before_1_34)]
     pub use crate::v1_34::Infallible;
-    #[cfg(since_1_34)]
+    #[cfg(__standback_since_1_34)]
     pub use core::convert::Infallible;
 
-    #[cfg(before_1_34)]
+    #[cfg(__standback_before_1_34)]
     pub use crate::v1_34::{TryFrom, TryInto};
-    #[cfg(since_1_34)]
+    #[cfg(__standback_since_1_34)]
     pub use core::convert::{TryFrom, TryInto};
 }
 pub mod num {
-    #[cfg(before_1_34)]
+    #[cfg(__standback_before_1_34)]
     pub use crate::v1_34::TryFromIntError;
-    #[cfg(since_1_34)]
+    #[cfg(__standback_since_1_34)]
     pub use core::num::TryFromIntError;
 }
 pub mod iter {
-    #[cfg(before_1_36)]
+    #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::Copied;
-    #[cfg(since_1_36)]
+    #[cfg(__standback_since_1_36)]
     pub use core::iter::Copied;
 
-    #[cfg(before_1_34)]
+    #[cfg(__standback_before_1_34)]
     pub use crate::v1_34::{from_fn, successors};
-    #[cfg(since_1_34)]
+    #[cfg(__standback_since_1_34)]
     pub use core::iter::{from_fn, successors};
 
-    #[cfg(before_1_43)]
+    #[cfg(__standback_before_1_43)]
     pub use crate::v1_43::{once_with, OnceWith};
-    #[cfg(since_1_43)]
+    #[cfg(__standback_since_1_43)]
     pub use core::iter::{once_with, OnceWith};
 }
 pub mod marker {
-    #[cfg(before_1_33)]
+    #[cfg(__standback_before_1_33)]
     pub use crate::v1_33::Unpin;
-    #[cfg(since_1_33)]
+    #[cfg(__standback_since_1_33)]
     pub use core::marker::Unpin;
 }
 pub mod pin {
-    #[cfg(before_1_33)]
+    #[cfg(__standback_before_1_33)]
     pub use crate::v1_33::Pin;
-    #[cfg(since_1_33)]
+    #[cfg(__standback_since_1_33)]
     pub use core::pin::Pin;
 }
 pub mod task {
-    #[cfg(before_1_36)]
+    #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::{Context, Poll, RawWaker, RawWakerVTable, Waker};
-    #[cfg(since_1_36)]
+    #[cfg(__standback_since_1_36)]
     pub use core::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
 }
 pub mod ptr {
-    #[cfg(before_1_35)]
+    #[cfg(__standback_before_1_35)]
     pub use crate::v1_35::hash;
-    #[cfg(since_1_35)]
+    #[cfg(__standback_since_1_35)]
     pub use core::ptr::hash;
 }
 pub mod array {
-    #[cfg(before_1_36)]
+    #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::TryFromSliceError;
-    #[cfg(since_1_36)]
+    #[cfg(__standback_since_1_36)]
     pub use core::array::TryFromSliceError;
 }
 pub mod f32 {
     pub mod consts {
-        #[cfg(before_1_43)]
+        #[cfg(__standback_before_1_43)]
         pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
-        #[cfg(since_1_43)]
+        #[cfg(__standback_since_1_43)]
         pub use core::f32::consts::{LOG10_2, LOG2_10};
     }
 }
 pub mod f64 {
     pub mod consts {
-        #[cfg(before_1_43)]
+        #[cfg(__standback_before_1_43)]
         pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
-        #[cfg(since_1_43)]
+        #[cfg(__standback_since_1_43)]
         pub use core::f64::consts::{LOG10_2, LOG2_10};
     }
 }

@@ -3,14 +3,13 @@ mod try_from;
 pub use self::try_from::{TryFrom, TryFromIntError, TryInto};
 pub use crate::array::TryFromSliceError;
 use crate::traits::{Integer, Sealed};
+#[cfg(feature = "std")]
+use core::mem;
 use core::{
     fmt,
     hash::{Hash, Hasher},
     iter::FusedIterator,
 };
-
-#[cfg(std)]
-use core::mem;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Infallible {}
@@ -115,7 +114,7 @@ pub trait Slice_v1_34<T>: Sealed<[T]> {
         K: Ord;
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 impl<T> Slice_v1_34<T> for [T] {
     #[inline]
     fn sort_by_cached_key<K, F>(&mut self, f: F)

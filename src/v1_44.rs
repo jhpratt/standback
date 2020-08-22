@@ -4,12 +4,12 @@ use core::{
     cmp,
     mem::{self, transmute},
 };
-#[cfg(std)]
+#[cfg(feature = "std")]
 use std::ffi::OsString;
-#[cfg(std)]
+#[cfg(feature = "std")]
 use std::path::PathBuf;
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 pub trait PathBuf_v1_44: Sealed<PathBuf> {
     fn with_capacity(capacity: usize) -> PathBuf;
     fn capacity(&self) -> usize;
@@ -21,7 +21,7 @@ pub trait PathBuf_v1_44: Sealed<PathBuf> {
 
 // FIXME These transmutes technically aren't guaranteed. See
 // rust-lang/rust#72838 and rust-lang/rust#72841 for details.
-#[cfg(std)]
+#[cfg(feature = "std")]
 impl PathBuf_v1_44 for PathBuf {
     fn with_capacity(capacity: usize) -> PathBuf {
         OsString::with_capacity(capacity).into()

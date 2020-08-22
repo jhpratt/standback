@@ -1,9 +1,9 @@
 use crate::traits::Sealed;
-#[cfg(before_1_32)]
+#[cfg(__standback_before_1_32)]
 use crate::v1_32::{u32_v1_32, u64_v1_32};
 use core::ops::DerefMut;
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 use core::ptr;
 
 pub trait Option_v1_40<T: DerefMut>: Sealed<Option<T>> {
@@ -117,14 +117,14 @@ pub fn take<T: Default>(dest: &mut T) -> T {
     core::mem::replace(dest, T::default())
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 pub trait slice_v1_40<T>: Sealed<[T]> {
     fn repeat(&self, n: usize) -> Vec<T>
     where
         T: Copy;
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 impl<T: Copy> slice_v1_40<T> for [T] {
     fn repeat(&self, n: usize) -> Vec<T> {
         if n == 0 {

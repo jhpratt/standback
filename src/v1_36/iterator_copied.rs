@@ -1,4 +1,4 @@
-#[cfg(before_1_35)]
+#[cfg(__standback_before_1_35)]
 use crate::prelude::*;
 use core::iter::FusedIterator;
 

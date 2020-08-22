@@ -3,9 +3,9 @@ mod pin;
 pub use self::pin::Pin;
 use crate::traits::Sealed;
 use core::time::Duration;
-#[cfg(std)]
+#[cfg(feature = "std")]
 use std::collections::VecDeque;
-#[cfg(all(std, target_family = "unix"))]
+#[cfg(all(feature = "std", target_family = "unix"))]
 use std::{io, os::unix};
 
 #[inline]
@@ -17,7 +17,7 @@ pub trait Unpin {}
 impl<'a, T: ?Sized + 'a> Unpin for &'a T {}
 impl<'a, T: ?Sized + 'a> Unpin for &'a mut T {}
 
-#[cfg(all(std, target_family = "unix"))]
+#[cfg(all(feature = "std", target_family = "unix"))]
 pub trait UnixFileExt_v1_33: unix::fs::FileExt {
     fn read_exact_at(&self, mut buf: &mut [u8], mut offset: u64) -> io::Result<()> {
         while !buf.is_empty() {
@@ -63,7 +63,7 @@ pub trait UnixFileExt_v1_33: unix::fs::FileExt {
     }
 }
 
-#[cfg(all(std, target_family = "unix"))]
+#[cfg(all(feature = "std", target_family = "unix"))]
 impl<F: unix::fs::FileExt> UnixFileExt_v1_33 for F {}
 
 pub trait Option_v1_33<T, E>: Sealed<Option<Result<T, E>>> {
@@ -96,12 +96,12 @@ impl<T, E> Result_v1_33<T, E> for Result<Option<T>, E> {
     }
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 pub trait VecDeque_v1_33<T>: Sealed<VecDeque<T>> {
     fn resize_with(&mut self, new_len: usize, generator: impl FnMut() -> T);
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 impl<T> VecDeque_v1_33<T> for VecDeque<T> {
     fn resize_with(&mut self, new_len: usize, generator: impl FnMut() -> T) {
         let len = self.len();

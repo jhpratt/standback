@@ -32,12 +32,9 @@ fn main() {
 
     for minor in (MSRV_MINOR + 1)..=CURRENT_MINOR {
         if minor <= minor_used {
-            println!("cargo:rustc-cfg=since_1_{}", minor);
+            println!("cargo:rustc-cfg=__standback_since_1_{}", minor);
         } else {
-            println!("cargo:rustc-cfg=before_1_{}", minor);
+            println!("cargo:rustc-cfg=__standback_before_1_{}", minor);
         }
     }
-
-    #[cfg(feature = "std")]
-    println!("cargo:rustc-cfg=std");
 }

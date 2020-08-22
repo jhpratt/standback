@@ -1,12 +1,12 @@
 use crate::traits::Sealed;
 use core::{mem::ManuallyDrop, ptr};
-#[cfg(std)]
+#[cfg(feature = "std")]
 use std::{
     sync::{Condvar, LockResult, MutexGuard, WaitTimeoutResult},
     time::{Duration, Instant},
 };
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 #[inline(always)]
 fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
     // Safety: WaitTimeoutResult is a thin wrapper around a boolean. As the
@@ -16,7 +16,7 @@ fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
     unsafe { core::mem::transmute(value) }
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 pub trait Condvar_v1_42: Sealed<Condvar> {
     fn wait_while<'a, T, F>(
         &self,
@@ -35,7 +35,7 @@ pub trait Condvar_v1_42: Sealed<Condvar> {
         F: FnMut(&mut T) -> bool;
 }
 
-#[cfg(std)]
+#[cfg(feature = "std")]
 impl Condvar_v1_42 for Condvar {
     fn wait_while<'a, T, F>(
         &self,
