@@ -1,7 +1,7 @@
 mod pin;
 
 pub use self::pin::Pin;
-use crate::Sealed;
+use crate::traits::Sealed;
 use core::time::Duration;
 #[cfg(std)]
 use std::collections::VecDeque;

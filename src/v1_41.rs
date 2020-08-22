@@ -1,4 +1,4 @@
-use crate::Sealed;
+use crate::traits::Sealed;
 
 pub trait Result_v1_41<T, E>: Sealed<Result<T, E>> {
     fn map_or<U, F: FnOnce(T) -> U>(self, default: U, f: F) -> U;

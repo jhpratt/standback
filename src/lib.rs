@@ -446,26 +446,28 @@
 #![deny(rust_2018_idioms, unused_qualifications)]
 
 // A few traits to make sealing other traits simpler.
-pub trait Sealed<T: ?Sized> {}
-impl<T: ?Sized> Sealed<T> for T {}
+mod traits {
+    pub trait Sealed<T: ?Sized> {}
+    impl<T: ?Sized> Sealed<T> for T {}
 
-pub trait Integer: Sized {}
-impl Integer for i8 {}
-impl Integer for i16 {}
-impl Integer for i32 {}
-impl Integer for i64 {}
-impl Integer for i128 {}
-impl Integer for isize {}
-impl Integer for u8 {}
-impl Integer for u16 {}
-impl Integer for u32 {}
-impl Integer for u64 {}
-impl Integer for u128 {}
-impl Integer for usize {}
+    pub trait Integer: Sized {}
+    impl Integer for i8 {}
+    impl Integer for i16 {}
+    impl Integer for i32 {}
+    impl Integer for i64 {}
+    impl Integer for i128 {}
+    impl Integer for isize {}
+    impl Integer for u8 {}
+    impl Integer for u16 {}
+    impl Integer for u32 {}
+    impl Integer for u64 {}
+    impl Integer for u128 {}
+    impl Integer for usize {}
 
-pub trait Float {}
-impl Float for f32 {}
-impl Float for f64 {}
+    pub trait Float {}
+    impl Float for f32 {}
+    impl Float for f64 {}
+}
 
 #[cfg(before_1_32)]
 mod v1_32;

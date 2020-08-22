@@ -1,4 +1,4 @@
-use crate::{Float, Integer, Sealed};
+use crate::traits::{Float, Integer, Sealed};
 use core::time::Duration;
 
 pub trait ConstPtr_v1_38<T>: Sealed<*const T> {

@@ -2,7 +2,7 @@ mod try_from;
 
 pub use self::try_from::{TryFrom, TryFromIntError, TryInto};
 pub use crate::array::TryFromSliceError;
-use crate::{Integer, Sealed};
+use crate::traits::{Integer, Sealed};
 use core::{
     fmt,
     hash::{Hash, Hasher},

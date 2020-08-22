@@ -3,7 +3,7 @@ mod maybe_uninit;
 mod poll;
 mod waker;
 
-use crate::Sealed;
+use crate::traits::Sealed;
 use core::fmt;
 
 pub use self::{

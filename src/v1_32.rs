@@ -1,4 +1,4 @@
-use crate::Sealed;
+use crate::traits::Sealed;
 use core::mem::{size_of, transmute};
 
 macro_rules! impl_int_v1_32 {

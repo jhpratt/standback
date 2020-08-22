@@ -1,4 +1,4 @@
-use crate::{Float, Integer};
+use crate::traits::{Float, Integer};
 use core::iter::FusedIterator;
 
 pub mod f32 {

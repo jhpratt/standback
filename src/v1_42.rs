@@ -1,4 +1,4 @@
-use crate::Sealed;
+use crate::traits::Sealed;
 use core::{mem::ManuallyDrop, ptr};
 #[cfg(std)]
 use std::{
