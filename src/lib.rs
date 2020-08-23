@@ -68,6 +68,8 @@
 //! Layout::pad_to_align
 //! Layout::array
 //! Layout::extend
+//! f32::to_int_unchecked
+//! f64::to_int_unchecked
 //!
 //! // 1.43
 //! f32::RADIX

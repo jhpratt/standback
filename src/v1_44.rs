@@ -1,4 +1,4 @@
-use crate::traits::Sealed;
+use crate::traits::{Float, Sealed};
 use core::{
     alloc::{Layout, LayoutErr},
     cmp,
@@ -19,8 +19,6 @@ pub trait PathBuf_v1_44: Sealed<PathBuf> {
     fn shrink_to_fit(&mut self);
 }
 
-// FIXME These transmutes technically aren't guaranteed. See
-// rust-lang/rust#72838 and rust-lang/rust#72841 for details.
 #[cfg(feature = "std")]
 impl PathBuf_v1_44 for PathBuf {
     fn with_capacity(capacity: usize) -> PathBuf {
@@ -114,4 +112,48 @@ fn layout_err() -> LayoutErr {
     // representation. If `LayoutErr` ever has the addition of a field, this
     // will stop compiling (rather than creating undefined behavior).
     unsafe { transmute(()) }
+}
+
+mod sealed {
+    pub trait FloatToInt<Int> {
+        unsafe fn to_int_unchecked(self) -> Int;
+    }
+
+    macro_rules! impl_float_to_int {
+        ($float:ident => $($int:ident)+) => {$(
+            impl FloatToInt<$int> for $float {
+                #[inline]
+                unsafe fn to_int_unchecked(self) -> $int {
+                    self as $int
+                }
+            }
+        )+}
+    }
+
+    impl_float_to_int!(f32 => u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize);
+    impl_float_to_int!(f64 => u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize);
+}
+
+pub trait float_v1_44: Float {
+    unsafe fn to_int_unchecked<Int>(self) -> Int
+    where
+        Self: sealed::FloatToInt<Int>;
+}
+
+impl float_v1_44 for f32 {
+    unsafe fn to_int_unchecked<Int>(self) -> Int
+    where
+        f32: sealed::FloatToInt<Int>,
+    {
+        sealed::FloatToInt::to_int_unchecked(self)
+    }
+}
+
+impl float_v1_44 for f64 {
+    unsafe fn to_int_unchecked<Int>(self) -> Int
+    where
+        f64: sealed::FloatToInt<Int>,
+    {
+        sealed::FloatToInt::to_int_unchecked(self)
+    }
 }
