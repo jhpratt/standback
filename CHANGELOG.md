@@ -7,6 +7,17 @@ Versioning].
 
 ---
 
+## 0.2.10 [2020-08-23]
+
+- Support for Rust 1.45.0 and 1.46.0 APIs has been added.
+- `float::to_int_unchecked` has been added (stabilized in Rust 1.44.0).
+
+## 0.2.9 [2020-06-04]
+
+- Support for Rust 1.44.0 APIs has been added.
+- Non-stable releases are now supported. All releases are treated as equivalent
+  to the stable that was out at the time.
+
 ## 0.2.8 [2020-04-27]
 
 Removed the `primitive` module, as it caused internal compiler errors in older

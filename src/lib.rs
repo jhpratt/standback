@@ -459,7 +459,6 @@
 //!
 //! ```rust,ignore
 //! char::UNICODE_VERSION // 1.45
-//! primitive // 1.43 — requires rustc 1.32.0
 //! f32::LOG10_2 // 1.43
 //! f32::LOG2_10 // 1.43
 //! f64::LOG10_2 // 1.43
