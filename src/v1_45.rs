@@ -1,4 +1,6 @@
-use crate::{traits::SignedInteger, v1_43::int_v1_43};
+use crate::traits::SignedInteger;
+#[cfg(__standback_before_1_43)]
+use crate::v1_43::int_v1_43;
 
 pub trait int_v1_45: SignedInteger {
     fn saturating_neg(self) -> Self;
