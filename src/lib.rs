@@ -43,6 +43,20 @@
 //! The following methods and constants are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.45
+//! i8::saturating_abs
+//! i8::saturating_neg
+//! i16::saturating_abs
+//! i16::saturating_neg
+//! i32::saturating_abs
+//! i32::saturating_neg
+//! i64::saturating_abs
+//! i64::saturating_neg
+//! i128::saturating_abs
+//! i128::saturating_neg
+//! isize::saturating_abs
+//! isize::saturating_neg
+//!
 //! // 1.44
 //! PathBuf::with_capacity
 //! PathBuf::capacity
@@ -415,6 +429,7 @@
 //! # Other APIs implemented
 //!
 //! ```rust,ignore
+//! char::UNICODE_VERSION // 1.45
 //! primitive // 1.43 — requires rustc 1.32.0
 //! f32::LOG10_2 // 1.43
 //! f32::LOG2_10 // 1.43
@@ -450,23 +465,20 @@ mod traits {
     pub trait Sealed<T: ?Sized> {}
     impl<T: ?Sized> Sealed<T> for T {}
 
+    macro_rules! impl_trait_for_all {
+        ($trait:ident => $($type:ty)+) => {$(
+            impl $trait for $type {}
+        )+};
+    }
+
     pub trait Integer: Sized {}
-    impl Integer for i8 {}
-    impl Integer for i16 {}
-    impl Integer for i32 {}
-    impl Integer for i64 {}
-    impl Integer for i128 {}
-    impl Integer for isize {}
-    impl Integer for u8 {}
-    impl Integer for u16 {}
-    impl Integer for u32 {}
-    impl Integer for u64 {}
-    impl Integer for u128 {}
-    impl Integer for usize {}
+    impl_trait_for_all!(Integer => i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize);
+
+    pub trait SignedInteger {}
+    impl_trait_for_all!(SignedInteger => i8 i16 i32 i64 i128 isize);
 
     pub trait Float {}
-    impl Float for f32 {}
-    impl Float for f64 {}
+    impl_trait_for_all!(Float => f32 f64);
 }
 
 #[cfg(__standback_before_1_32)]
@@ -493,6 +505,8 @@ mod v1_42;
 mod v1_43;
 #[cfg(__standback_before_1_44)]
 mod v1_44;
+#[cfg(__standback_before_1_45)]
+mod v1_45;
 
 pub mod prelude {
     #[cfg(__standback_before_1_42)]
@@ -538,6 +552,8 @@ pub mod prelude {
     pub use crate::v1_44::Layout_v1_44;
     #[cfg(all(__standback_before_1_44, feature = "std"))]
     pub use crate::v1_44::PathBuf_v1_44;
+    #[cfg(__standback_before_1_45)]
+    pub use crate::v1_45::int_v1_45;
     #[cfg(__standback_before_1_39)]
     pub use core::unimplemented as todo;
 }
@@ -636,4 +652,14 @@ pub mod f64 {
         #[cfg(__standback_since_1_43)]
         pub use core::f64::consts::{LOG10_2, LOG2_10};
     }
+}
+pub mod char {
+    #[cfg(__standback_before_1_38)]
+    pub const UNICODE_VERSION: (u8, u8, u8) = (11, 0, 0);
+    #[cfg(all(__standback_since_1_38, __standback_before_1_44))]
+    pub const UNICODE_VERSION: (u8, u8, u8) = (12, 1, 0);
+    #[cfg(all(__standback_since_1_44, __standback_before_1_45))]
+    pub const UNICODE_VERSION: (u8, u8, u8) = (13, 0, 0);
+    #[cfg(__standback_since_1_45)]
+    pub use core::char::UNICODE_VERSION;
 }
