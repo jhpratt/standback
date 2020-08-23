@@ -43,6 +43,33 @@
 //! The following methods and constants are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.46
+//! i8::leading_ones
+//! i8::trailing_ones
+//! i16::leading_ones
+//! i16::trailing_ones
+//! i32::leading_ones
+//! i32::trailing_ones
+//! i64::leading_ones
+//! i64::trailing_ones
+//! i128::leading_ones
+//! i128::trailing_ones
+//! isize::leading_ones
+//! isize::trailing_ones
+//! u8::leading_ones
+//! u8::trailing_ones
+//! u16::leading_ones
+//! u16::trailing_ones
+//! u32::leading_ones
+//! u32::trailing_ones
+//! u64::leading_ones
+//! u64::trailing_ones
+//! u128::leading_ones
+//! u128::trailing_ones
+//! usize::leading_ones
+//! usize::trailing_ones
+//! Option::zip
+//!
 //! // 1.45
 //! i8::saturating_abs
 //! i8::saturating_neg
@@ -479,6 +506,9 @@ mod traits {
     pub trait SignedInteger {}
     impl_trait_for_all!(SignedInteger => i8 i16 i32 i64 i128 isize);
 
+    pub trait UnsignedInteger {}
+    impl_trait_for_all!(UnsignedInteger => u8 u16 u32 u64 u128 usize);
+
     pub trait Float {}
     impl_trait_for_all!(Float => f32 f64);
 }
@@ -509,6 +539,8 @@ mod v1_43;
 mod v1_44;
 #[cfg(__standback_before_1_45)]
 mod v1_45;
+#[cfg(__standback_before_1_46)]
+mod v1_46;
 
 pub mod prelude {
     #[cfg(__standback_before_1_42)]
@@ -556,6 +588,8 @@ pub mod prelude {
     pub use crate::v1_44::PathBuf_v1_44;
     #[cfg(__standback_before_1_45)]
     pub use crate::v1_45::int_v1_45;
+    #[cfg(__standback_before_1_46)]
+    pub use crate::v1_46::{int_v1_46, Option_v1_46};
     #[cfg(__standback_before_1_39)]
     pub use core::unimplemented as todo;
 }
