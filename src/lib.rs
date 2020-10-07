@@ -43,6 +43,14 @@
 //! The following methods and constants are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.47
+//! Range::is_empty
+//! Result::as_deref
+//! Result::as_deref_mut
+//! Vec::leak
+//! f32::TAU
+//! f64::TAU
+//!
 //! // 1.46
 //! i8::leading_ones
 //! i8::trailing_ones
@@ -540,6 +548,8 @@ mod v1_44;
 mod v1_45;
 #[cfg(__standback_before_1_46)]
 mod v1_46;
+#[cfg(__standback_before_1_47)]
+mod v1_47;
 
 pub mod prelude {
     #[cfg(__standback_before_1_42)]
@@ -589,6 +599,10 @@ pub mod prelude {
     pub use crate::v1_45::int_v1_45;
     #[cfg(__standback_before_1_46)]
     pub use crate::v1_46::{int_v1_46, Option_v1_46};
+    #[cfg(all(feature = "std", __standback_before_1_47))]
+    pub use crate::v1_47::Vec_v1_47;
+    #[cfg(__standback_before_1_47)]
+    pub use crate::v1_47::{Range_v1_47, Result_v1_47};
     #[cfg(__standback_before_1_39)]
     pub use core::unimplemented as todo;
 }
@@ -678,6 +692,11 @@ pub mod f32 {
         pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
         #[cfg(__standback_since_1_43)]
         pub use core::f32::consts::{LOG10_2, LOG2_10};
+
+        #[cfg(__standback_before_1_47)]
+        pub use crate::v1_47::f32::TAU;
+        #[cfg(__standback_since_1_47)]
+        pub use core::f32::consts::TAU;
     }
 }
 pub mod f64 {
@@ -686,6 +705,11 @@ pub mod f64 {
         pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
         #[cfg(__standback_since_1_43)]
         pub use core::f64::consts::{LOG10_2, LOG2_10};
+
+        #[cfg(__standback_before_1_47)]
+        pub use crate::v1_47::f64::TAU;
+        #[cfg(__standback_since_1_47)]
+        pub use core::f64::consts::TAU;
     }
 }
 pub mod char {
