@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog]. This project adheres to [Semantic
 Versioning].
 
 ---
+## 0.2.12 [2020-11-16]
+
+- Support for Rust 1.48.0 APIs have been added.
+
+## 0.2.11 [2020-10-07]
+
+- Support for Rust 1.47.0 APIs has been added.
 
 ## 0.2.10 [2020-08-23]
 
