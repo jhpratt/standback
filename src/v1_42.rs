@@ -100,5 +100,12 @@ macro_rules! matches {
             $( $pattern )|+ if $guard => true,
             _ => false
         }
-    }
+    };
+
+    ($expression:expr, $( $pattern:pat )|+ if $guard:expr ,) => {
+        match $expression {
+            $( $pattern )|+ if $guard => true,
+            _ => false
+        }
+    };
 }

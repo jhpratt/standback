@@ -43,6 +43,10 @@
 //! The following methods and constants are available via the prelude:
 //!
 //! ```rust,ignore
+//! // 1.48
+//! slice::as_ptr_range
+//! slice::as_mut_ptr_range
+//!
 //! // 1.47
 //! Range::is_empty
 //! Result::as_deref
@@ -466,6 +470,8 @@
 //! # Other APIs implemented
 //!
 //! ```rust,ignore
+//! future::pending // 1.48, requires rustc 1.36
+//! future::ready // 1.48, requires rustc 1.36
 //! char::UNICODE_VERSION // 1.45
 //! f32::LOG10_2 // 1.43
 //! f32::LOG2_10 // 1.43
@@ -550,6 +556,8 @@ mod v1_45;
 mod v1_46;
 #[cfg(__standback_before_1_47)]
 mod v1_47;
+#[cfg(__standback_before_1_48)]
+mod v1_48;
 
 pub mod prelude {
     #[cfg(__standback_before_1_42)]
@@ -603,6 +611,8 @@ pub mod prelude {
     pub use crate::v1_47::Vec_v1_47;
     #[cfg(__standback_before_1_47)]
     pub use crate::v1_47::{Range_v1_47, Result_v1_47};
+    #[cfg(__standback_before_1_48)]
+    pub use crate::v1_48::Slice_v1_48;
     #[cfg(__standback_before_1_39)]
     pub use core::unimplemented as todo;
 }
@@ -721,4 +731,12 @@ pub mod char {
     pub const UNICODE_VERSION: (u8, u8, u8) = (13, 0, 0);
     #[cfg(__standback_since_1_45)]
     pub use core::char::UNICODE_VERSION;
+}
+
+#[cfg(__standback_since_1_36)]
+pub mod future {
+    #[cfg(__standback_before_1_48)]
+    pub use crate::v1_48::future::{pending, ready, Pending, Ready};
+    #[cfg(__standback_since_1_48)]
+    pub use core::future::{pending, ready, Pending, Ready};
 }
