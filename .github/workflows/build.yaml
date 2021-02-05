@@ -41,6 +41,7 @@ jobs:
           - "1.46"
           - "1.47"
           - "1.48"
+          - "1.49"
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -89,6 +90,7 @@ jobs:
           - "1.46"
           - "1.47"
           - "1.48"
+          - "1.49"
         os: [ubuntu-latest]
         target: [thumbv7em-none-eabihf]
 
