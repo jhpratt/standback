@@ -3,48 +3,43 @@
 #![allow(non_camel_case_types, unstable_name_collisions)]
 
 /*!
-Standback backports a number of methods, structs, and macros that have been
-stabilized in the Rust standard library since 1.31.0. This allows crate
-authors to depend on Standback rather than forcing downstream users to
-upgrade their compiler (or not use the new feature at all).
+Standback backports a number of methods, structs, and macros that have been stabilized in the Rust
+standard library since 1.31.0. This allows crate authors to depend on Standback rather than forcing
+downstream users to upgrade their compiler (or not use the new feature at all).
 
-Due to a variety of restrictions in the Rust, it is not possible to
-implement everything that has been stabilized.
+Due to a variety of restrictions in the Rust, it is not possible to implement everything that has
+been stabilized.
 
 # Usage
 
-If you are using methods on already-existing structs, you should use the
-following:
+For most cases, importing the prelude should suffice.
 
 ```rust,no_run
 use standback::prelude::*;
 ```
 
-Additionally, if you are using newly stabilized structs, types, or anything
-else that would normally have to be imported, use `standback` instead of
-`std`:
+If you are using anything that would normally have to be imported, just use the `standback` crate
+instead of `core`, `alloc`, or `std`.
 
 ```rust,no_run
 use standback::mem::take;
 ```
 
-It is _highly_ recommended to use `#![allow(unstable_name_collisions)]`, as
-that's the whole point of this crate. Just be extra-careful to not do it for
-anything that _can't_ be backported.
+It is _highly_ recommended to use `#![allow(unstable_name_collisions)]`, as that's the whole point
+of this crate. Just be extra-careful to not do it for anything that _can't_ be backported.
 
 # `#![no_std]` support
 
-By default, there standard library is used where necessary. If support for
-`#![no_std]` is required, use `default-features = false`.
+By default, there standard library is used where necessary. If support for `#![no_std]` is required,
+use `default-features = false`.
 
-An allocator is not required for any backported item. If any require an
-allocator in the future, it will be gated under an `alloc` feature.
+An allocator is not required for any backported item. If any require an allocator in the future, it
+will be gated under an `alloc` feature.
 
 # Inherent and trait methods, associated constants
 
-The following methods and constants are available via the prelude. For
-brevity, `i*` is `i8`, `i16`, `i32`, `i64`, `i128`, and `isize`; `u*` is
-`u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
+The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
+`i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
 ## 1.50
 
@@ -357,6 +352,9 @@ mod v1_50;
 
 #[doc(hidden)]
 pub mod prelude {
+    #[cfg(__standback_before_1_39)]
+    pub use core::unimplemented as todo;
+
     #[cfg(__standback_before_1_42)]
     pub use crate::matches;
     #[cfg(__standback_before_1_32)]
@@ -418,123 +416,125 @@ pub mod prelude {
     pub use crate::v1_50::{
         Bool_v1_50, Float_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
     };
-    #[cfg(__standback_before_1_39)]
-    pub use core::unimplemented as todo;
 }
 #[doc(hidden)]
 pub mod mem {
-    #[cfg(__standback_before_1_40)]
-    pub use crate::v1_40::take;
     #[cfg(__standback_since_1_40)]
     pub use core::mem::take;
+    #[cfg(__standback_since_1_36)]
+    pub use core::mem::MaybeUninit;
 
     #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::MaybeUninit;
-    #[cfg(__standback_since_1_36)]
-    pub use core::mem::MaybeUninit;
+    #[cfg(__standback_before_1_40)]
+    pub use crate::v1_40::take;
 }
 #[doc(hidden)]
 pub mod convert {
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::identity;
     #[cfg(__standback_since_1_33)]
     pub use core::convert::identity;
-
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::Infallible;
     #[cfg(__standback_since_1_34)]
     pub use core::convert::Infallible;
-
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::{TryFrom, TryInto};
     #[cfg(__standback_since_1_34)]
     pub use core::convert::{TryFrom, TryInto};
+
+    #[cfg(__standback_before_1_33)]
+    pub use crate::v1_33::identity;
+    #[cfg(__standback_before_1_34)]
+    pub use crate::v1_34::Infallible;
+    #[cfg(__standback_before_1_34)]
+    pub use crate::v1_34::{TryFrom, TryInto};
 }
 #[doc(hidden)]
 pub mod num {
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::TryFromIntError;
     #[cfg(__standback_since_1_34)]
     pub use core::num::TryFromIntError;
+
+    #[cfg(__standback_before_1_34)]
+    pub use crate::v1_34::TryFromIntError;
 }
 #[doc(hidden)]
 pub mod iter {
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::Copied;
     #[cfg(__standback_since_1_36)]
     pub use core::iter::Copied;
+    #[cfg(__standback_since_1_34)]
+    pub use core::iter::{from_fn, successors};
+    #[cfg(__standback_since_1_43)]
+    pub use core::iter::{once_with, OnceWith};
 
     #[cfg(__standback_before_1_34)]
     pub use crate::v1_34::{from_fn, successors};
-    #[cfg(__standback_since_1_34)]
-    pub use core::iter::{from_fn, successors};
-
+    #[cfg(__standback_before_1_36)]
+    pub use crate::v1_36::Copied;
     #[cfg(__standback_before_1_43)]
     pub use crate::v1_43::{once_with, OnceWith};
-    #[cfg(__standback_since_1_43)]
-    pub use core::iter::{once_with, OnceWith};
 }
 #[doc(hidden)]
 pub mod marker {
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::Unpin;
     #[cfg(__standback_since_1_33)]
     pub use core::marker::Unpin;
+
+    #[cfg(__standback_before_1_33)]
+    pub use crate::v1_33::Unpin;
 }
 #[doc(hidden)]
 pub mod pin {
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::Pin;
     #[cfg(__standback_since_1_33)]
     pub use core::pin::Pin;
+
+    #[cfg(__standback_before_1_33)]
+    pub use crate::v1_33::Pin;
 }
 #[doc(hidden)]
 pub mod task {
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::{Context, Poll, RawWaker, RawWakerVTable, Waker};
     #[cfg(__standback_since_1_36)]
     pub use core::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
+
+    #[cfg(__standback_before_1_36)]
+    pub use crate::v1_36::{Context, Poll, RawWaker, RawWakerVTable, Waker};
 }
 #[doc(hidden)]
 pub mod ptr {
-    #[cfg(__standback_before_1_35)]
-    pub use crate::v1_35::hash;
     #[cfg(__standback_since_1_35)]
     pub use core::ptr::hash;
+
+    #[cfg(__standback_before_1_35)]
+    pub use crate::v1_35::hash;
 }
 #[doc(hidden)]
 pub mod array {
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::TryFromSliceError;
     #[cfg(__standback_since_1_36)]
     pub use core::array::TryFromSliceError;
+
+    #[cfg(__standback_before_1_36)]
+    pub use crate::v1_36::TryFromSliceError;
 }
 #[doc(hidden)]
 pub mod f32 {
     pub mod consts {
-        #[cfg(__standback_before_1_43)]
-        pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
+        #[cfg(__standback_since_1_47)]
+        pub use core::f32::consts::TAU;
         #[cfg(__standback_since_1_43)]
         pub use core::f32::consts::{LOG10_2, LOG2_10};
 
+        #[cfg(__standback_before_1_43)]
+        pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
         #[cfg(__standback_before_1_47)]
         pub use crate::v1_47::f32::TAU;
-        #[cfg(__standback_since_1_47)]
-        pub use core::f32::consts::TAU;
     }
 }
 #[doc(hidden)]
 pub mod f64 {
     pub mod consts {
-        #[cfg(__standback_before_1_43)]
-        pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
+        #[cfg(__standback_since_1_47)]
+        pub use core::f64::consts::TAU;
         #[cfg(__standback_since_1_43)]
         pub use core::f64::consts::{LOG10_2, LOG2_10};
 
+        #[cfg(__standback_before_1_43)]
+        pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
         #[cfg(__standback_before_1_47)]
         pub use crate::v1_47::f64::TAU;
-        #[cfg(__standback_since_1_47)]
-        pub use core::f64::consts::TAU;
     }
 }
 #[doc(hidden)]
@@ -551,8 +551,9 @@ pub mod char {
 #[doc(hidden)]
 #[cfg(__standback_since_1_36)]
 pub mod future {
-    #[cfg(__standback_before_1_48)]
-    pub use crate::v1_48::future::{pending, ready, Pending, Ready};
     #[cfg(__standback_since_1_48)]
     pub use core::future::{pending, ready, Pending, Ready};
+
+    #[cfg(__standback_before_1_48)]
+    pub use crate::v1_48::future::{pending, ready, Pending, Ready};
 }
