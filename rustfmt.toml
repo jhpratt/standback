@@ -8,6 +8,5 @@ error_on_line_overflow = true
 format_macro_matchers = true
 format_strings = true
 merge_imports = true
-normalize_comments = true
 normalize_doc_attributes = true
 reorder_impl_items = true
