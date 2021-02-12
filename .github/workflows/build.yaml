@@ -18,30 +18,13 @@ on:
 
 jobs:
   check:
-    name: Type checking
+    name: Type checking (${{ matrix.version.range }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        rust:
-          - "1.31"
-          - "1.32"
-          - "1.33"
-          - "1.34"
-          - "1.35"
-          - "1.36"
-          - "1.37"
-          - "1.38"
-          - "1.39"
-          - "1.40"
-          - "1.41"
-          - "1.42"
-          - "1.43"
-          - "1.44"
-          - "1.45"
-          - "1.46"
-          - "1.47"
-          - "1.48"
-          - "1.49"
+        version:
+          - { range: "1.31..1.40", first: "1.31" }
+          - { range: "1.41..1.50", first: "1.41" }
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -52,47 +35,50 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.rust }}
-          override: true
+          toolchain: ${{ matrix.version.first }}
 
-      - name: Run `cargo check --no-default-features`
+      - name: Install cargo-hack
+        shell: bash
+        run: |
+          host=$(rustc -Vv | grep host | sed 's/host: //')
+          if [[ $host =~ windows ]]; then
+              curl -LsSf https://github.com/taiki-e/cargo-hack/releases/latest/download/cargo-hack-${host}.zip -o cargo-hack.zip
+              7z x cargo-hack.zip -o$HOME/.cargo/bin
+          elif [[ $host =~ darwin|linux ]]; then
+              curl -LsSf https://github.com/taiki-e/cargo-hack/releases/latest/download/cargo-hack-${host}.tar.gz | tar xzf - -C ~/.cargo/bin
+          else
+              echo "unsupported operating system"
+              exit 1
+          fi
+
+      - name: Cache cargo output
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ matrix.version.range }}
+
+      - name: Check powerset
         uses: actions-rs/cargo@v1
         with:
-          command: check
-          args: --no-default-features
-
-      - name: Run `cargo check`
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
+          command: hack
+          args: |
+            check
+            --feature-powerset
+            --exclude-features default
+            --version-range ${{ matrix.version.range }}
 
   check-embedded:
-    name: Type checking on embedded
+    name: Type checking on embedded (${{ matrix.version.range }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        rust:
-          - "1.31"
-          - "1.32"
-          - "1.33"
-          - "1.34"
-          - "1.35"
-          - "1.36"
-          - "1.37"
-          - "1.38"
-          - "1.39"
-          - "1.40"
-          - "1.41"
-          - "1.42"
-          - "1.43"
-          - "1.44"
-          - "1.45"
-          - "1.46"
-          - "1.47"
-          - "1.48"
-          - "1.49"
+        version:
+          - { range: "1.31..1.40", first: "1.31" }
+          - { range: "1.41..1.50", first: "1.41" }
         os: [ubuntu-latest]
-        target: [thumbv7em-none-eabihf]
 
     steps:
       - name: Checkout sources
@@ -102,15 +88,34 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.target }}
+          toolchain: ${{ matrix.version.first }}
+          target: thumbv7em-none-eabihf
           override: true
 
-      - name: Run `cargo check --no-default-features`
+      - name: Install cargo-hack
+        shell: bash
+        run: |
+          curl -LsSf https://github.com/taiki-e/cargo-hack/releases/latest/download/cargo-hack-x86_64-unknown-linux-gnu.tar.gz | tar xzf - -C ~/.cargo/bin
+
+      - name: Cache cargo output
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ matrix.version.range }}-embedded
+
+      - name: Check powerset
         uses: actions-rs/cargo@v1
         with:
-          command: check
-          args: --no-default-features --target ${{ matrix.target }}
+          command: hack
+          args: |
+            check
+            --feature-powerset
+            --exclude-features default,std
+            --version-range ${{ matrix.version.range }}
+            --target thumbv7em-none-eabihf
 
   fmt:
     name: Formatting
