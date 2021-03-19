@@ -1,6 +1,10 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![deny(rust_2018_idioms, unused_qualifications)]
-#![allow(non_camel_case_types, unstable_name_collisions)]
+#![allow(
+    non_camel_case_types,
+    unstable_name_collisions,
+    clippy::missing_safety_doc
+)]
 
 /*!
 Standback backports a number of methods, structs, and macros that have been stabilized in the Rust
@@ -40,6 +44,25 @@ will be gated under an `alloc` feature.
 
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
+
+## 1.51
+
+```text
+Arc::decrement_strong_count
+Arc::increment_strong_count
+Peekable::next_if_eq
+Peekable::next_if
+Seek::stream_position
+slice::fill_with
+slice::split_inclusive_mut
+slice::split_inclusive
+slice::strip_prefix
+slice::strip_suffix
+task::Wake // requires rustc 1.33
+i*::unsigned_abs
+Poll::map_ok
+Poll::map_err
+```
 
 ## 1.50
 
@@ -349,6 +372,8 @@ mod v1_48;
 mod v1_49;
 #[cfg(__standback_before_1_50)]
 mod v1_50;
+#[cfg(__standback_before_1_51)]
+mod v1_51;
 
 #[doc(hidden)]
 pub mod prelude {
@@ -416,6 +441,10 @@ pub mod prelude {
     pub use crate::v1_50::{
         Bool_v1_50, Float_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
     };
+    #[cfg(all(__standback_before_1_51, feature = "std"))]
+    pub use crate::v1_51::{Arc_v1_51, Seek_v1_51};
+    #[cfg(__standback_before_1_51)]
+    pub use crate::v1_51::{Integer_v1_51, Peekable_v1_51, Poll_v1_51, Slice_v1_51};
 }
 #[doc(hidden)]
 pub mod mem {
@@ -487,11 +516,15 @@ pub mod pin {
 }
 #[doc(hidden)]
 pub mod task {
+    #[cfg(all(__standback_since_1_51, feature = "std"))]
+    pub use core::task::Wake;
     #[cfg(__standback_since_1_36)]
     pub use core::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
 
     #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::{Context, Poll, RawWaker, RawWakerVTable, Waker};
+    #[cfg(all(__standback_before_1_51, __standback_since_1_33, feature = "std"))]
+    pub use crate::v1_51::Wake;
 }
 #[doc(hidden)]
 pub mod ptr {
