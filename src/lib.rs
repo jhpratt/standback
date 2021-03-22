@@ -516,10 +516,10 @@ pub mod pin {
 }
 #[doc(hidden)]
 pub mod task {
-    #[cfg(all(__standback_since_1_51, feature = "std"))]
-    pub use core::task::Wake;
     #[cfg(__standback_since_1_36)]
     pub use core::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
+    #[cfg(all(__standback_since_1_51, feature = "std"))]
+    pub use std::task::Wake;
 
     #[cfg(__standback_before_1_36)]
     pub use crate::v1_36::{Context, Poll, RawWaker, RawWakerVTable, Waker};
