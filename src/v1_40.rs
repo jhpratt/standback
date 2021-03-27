@@ -1,5 +1,7 @@
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
 use core::ops::DerefMut;
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 use core::ptr;
 
 use crate::traits::Sealed;
@@ -115,14 +117,14 @@ pub fn take<T: Default>(dest: &mut T) -> T {
     core::mem::replace(dest, T::default())
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 pub trait slice_v1_40<T>: Sealed<[T]> {
     fn repeat(&self, n: usize) -> Vec<T>
     where
         T: Copy;
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 impl<T: Copy> slice_v1_40<T> for [T] {
     fn repeat(&self, n: usize) -> Vec<T> {
         if n == 0 {

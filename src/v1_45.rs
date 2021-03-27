@@ -1,6 +1,4 @@
 use crate::traits::SignedInteger;
-#[cfg(__standback_before_1_43)]
-use crate::v1_43::int_v1_43;
 
 pub trait int_v1_45: SignedInteger {
     fn saturating_neg(self) -> Self;
@@ -8,11 +6,11 @@ pub trait int_v1_45: SignedInteger {
 }
 
 macro_rules! impl_int_v1_45 {
-    ($($type:ty),*) => {$(
+    ($($type:ident),*) => {$(
         impl int_v1_45 for $type {
             fn saturating_neg(self) -> Self {
-                if self == Self::MIN {
-                    Self::MAX
+                if self == core::$type::MIN {
+                    core::$type::MAX
                 } else {
                     -self
                 }

@@ -1,6 +1,8 @@
 use core::time::Duration;
 
-use crate::traits::{Float, Integer, Sealed};
+#[cfg(feature = "std")]
+use crate::traits::Float;
+use crate::traits::{Integer, Sealed};
 
 pub trait ConstPtr_v1_38<T>: Sealed<*const T> {
     fn cast<U>(self) -> *const U;
@@ -267,6 +269,7 @@ macro_rules! impl_euclid_for_unsigned {
 
 impl_euclid_for_unsigned![u8 u16 u32 u64 u128 usize];
 
+#[cfg(feature = "std")]
 pub trait EuclidFloat_v1_38: Float {
     fn rem_euclid(self, rhs: Self) -> Self;
     fn div_euclid(self, rhs: Self) -> Self;

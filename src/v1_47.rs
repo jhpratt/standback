@@ -1,3 +1,7 @@
+#[cfg(feature = "alloc")]
+use alloc::boxed::Box;
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
 use core::ops::{DerefMut, Range};
 
 use crate::traits::Sealed;
@@ -27,14 +31,14 @@ impl<T: DerefMut, E> Result_v1_47<T, E> for Result<T, E> {
     }
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 pub trait Vec_v1_47<T>: Sealed<Vec<T>> {
     fn leak<'a>(self) -> &'a mut [T]
     where
         T: 'a;
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 impl<T> Vec_v1_47<T> for Vec<T> {
     #[inline]
     fn leak<'a>(self) -> &'a mut [T]

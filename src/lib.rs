@@ -37,8 +37,17 @@ of this crate. Just be extra-careful to not do it for anything that _can't_ be b
 By default, there standard library is used where necessary. If support for `#![no_std]` is required,
 use `default-features = false`.
 
-An allocator is not required for any backported item. If any require an allocator in the future, it
-will be gated under an `alloc` feature.
+Items that require an allocator are gated under the `alloc` feature, which is enabled by default via
+the `std` feature.
+
+# Minimum supported Rust version
+
+By default, this crate has a minimum supported Rust version of 1.36. If you do not require a MSRV
+this low, you can raise it by using `default-features = false` (be sure to re-enable `std` or
+`alloc` if you need it) and enabling a `msrv-1.XX` feature flag, substituting the appropriate
+version. All versions up to the most recent stable release of a compiler are supported.
+
+Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 
 # Inherent and trait methods, associated constants
 
@@ -58,7 +67,7 @@ slice::split_inclusive_mut
 slice::split_inclusive
 slice::strip_prefix
 slice::strip_suffix
-task::Wake // requires rustc 1.33
+task::Wake
 i*::unsigned_abs
 Poll::map_ok
 Poll::map_err
@@ -243,6 +252,10 @@ todo! // 1.39
 ```
 */
 
+#[allow(unused_extern_crates)]
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
 // A few traits to make sealing other traits simpler.
 mod traits {
     pub trait Sealed<T: ?Sized> {}
@@ -307,11 +320,11 @@ pub mod prelude {
     pub use crate::v1_37::{
         Cell_v1_37, Cell_v1_37_, DoubleEndedIterator_v1_37, Option_v1_37, Slice_v1_37,
     };
+    #[cfg(all(shim = "1.38", feature = "std"))]
+    pub use crate::v1_38::EuclidFloat_v1_38;
     #[cfg(shim = "1.38")]
-    pub use crate::v1_38::{
-        ConstPtr_v1_38, Duration_v1_38, EuclidFloat_v1_38, Euclid_v1_38, MutPtr_v1_38,
-    };
-    #[cfg(all(shim = "1.40", feature = "std"))]
+    pub use crate::v1_38::{ConstPtr_v1_38, Duration_v1_38, Euclid_v1_38, MutPtr_v1_38};
+    #[cfg(all(shim = "1.40", feature = "alloc"))]
     pub use crate::v1_40::slice_v1_40;
     #[cfg(shim = "1.40")]
     pub use crate::v1_40::{f32_v1_40, f64_v1_40, Option_v1_40, Option_v1_40_};
@@ -331,7 +344,7 @@ pub mod prelude {
     pub use crate::v1_45::int_v1_45;
     #[cfg(shim = "1.46")]
     pub use crate::v1_46::{int_v1_46, Option_v1_46};
-    #[cfg(all(shim = "1.47", feature = "std"))]
+    #[cfg(all(shim = "1.47", feature = "alloc"))]
     pub use crate::v1_47::Vec_v1_47;
     #[cfg(shim = "1.47")]
     pub use crate::v1_47::{Range_v1_47, Result_v1_47};
@@ -339,14 +352,18 @@ pub mod prelude {
     pub use crate::v1_48::Slice_v1_48;
     #[cfg(shim = "1.49")]
     pub use crate::v1_49::Slice_v1_49;
+    #[cfg(all(shim = "1.50", feature = "alloc"))]
+    pub use crate::v1_50::BTreeMapEntry_v1_50;
     #[cfg(all(shim = "1.50", feature = "std"))]
-    pub use crate::v1_50::{BTreeMapEntry_v1_50, HashMapEntry_v1_50};
+    pub use crate::v1_50::HashMapEntry_v1_50;
     #[cfg(shim = "1.50")]
     pub use crate::v1_50::{
         Bool_v1_50, Float_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
     };
+    #[cfg(all(shim = "1.51", feature = "alloc"))]
+    pub use crate::v1_51::Arc_v1_51;
     #[cfg(all(shim = "1.51", feature = "std"))]
-    pub use crate::v1_51::{Arc_v1_51, Seek_v1_51};
+    pub use crate::v1_51::Seek_v1_51;
     #[cfg(shim = "1.51")]
     pub use crate::v1_51::{Integer_v1_51, Peekable_v1_51, Poll_v1_51, Slice_v1_51};
 }
@@ -368,10 +385,10 @@ pub mod iter {
 }
 #[doc(hidden)]
 pub mod task {
-    #[cfg(all(reexport = "1.51", feature = "std"))]
-    pub use std::task::Wake;
+    #[cfg(all(reexport = "1.51", feature = "alloc"))]
+    pub use alloc::task::Wake;
 
-    #[cfg(all(shim = "1.51", feature = "std"))]
+    #[cfg(all(shim = "1.51", feature = "alloc"))]
     pub use crate::v1_51::Wake;
 }
 #[doc(hidden)]

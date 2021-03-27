@@ -1,26 +1,21 @@
 mod slice;
 
+#[cfg(feature = "alloc")]
+use alloc::sync::Arc;
 use core::iter::Peekable;
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 use core::mem;
+use core::task::Poll;
 #[cfg(feature = "std")]
 use std::io::{Seek, SeekFrom};
-#[cfg(feature = "std")]
-use std::sync::Arc;
 
-use core::task::Poll;
-#[cfg(__standback_before_1_40)]
-use crate::v1_40::Option_v1_40_;
-#[cfg(__standback_before_1_50)]
-use crate::v1_50::Bool_v1_50;
-
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 pub trait Arc_v1_51<T> {
     unsafe fn decrement_strong_count(ptr: *const T);
     unsafe fn increment_strong_count(ptr: *const T);
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 impl<T> Arc_v1_51<T> for Arc<T> {
     #[inline]
     unsafe fn decrement_strong_count(ptr: *const T) {
@@ -44,7 +39,11 @@ pub trait Peekable_v1_51<I: Iterator> {
 
 impl<I: Iterator> Peekable_v1_51<I> for Peekable<I> {
     fn next_if(&mut self, func: impl FnOnce(&I::Item) -> bool) -> Option<I::Item> {
-        func(self.peek()?).then(|| self.next()).flatten()
+        if func(self.peek()?) {
+            self.next()
+        } else {
+            None
+        }
     }
 
     fn next_if_eq<T>(&mut self, expected: &T) -> Option<I::Item>
@@ -143,10 +142,10 @@ impl<T> Slice_v1_51<T> for [T] {
     }
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 pub trait Wake {
     fn wake(self: Arc<Self>);
-    #[cfg(__standback_since_v1_41)]
+    #[cfg(reexport = "1.41")]
     fn wake_by_ref(self: &Arc<Self>) {
         self.clone().wake();
     }

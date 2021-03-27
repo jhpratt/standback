@@ -1,6 +1,8 @@
+#[cfg(feature = "alloc")]
+use alloc::collections::btree_map;
 use core::cell::{RefCell, UnsafeCell};
 #[cfg(feature = "std")]
-use std::collections::{btree_map, hash_map};
+use std::collections::hash_map;
 
 use crate::traits::{Float, Sealed};
 
@@ -15,13 +17,13 @@ impl Bool_v1_50 for bool {
     }
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 pub trait BTreeMapEntry_v1_50<'a, K: 'a, V: 'a>: Sealed<btree_map::Entry<'a, K, V>> {
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V;
 }
 
-#[cfg(feature = "std")]
-impl<'a, K: Ord, V> BTreeMapEntry_v1_50<'a, K, V> for btree_map::Entry<'a, K, V> {
+#[cfg(feature = "alloc")]
+impl<'a, K: Ord + 'a, V: 'a> BTreeMapEntry_v1_50<'a, K, V> for btree_map::Entry<'a, K, V> {
     #[inline]
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V {
         match self {
@@ -40,7 +42,7 @@ pub trait HashMapEntry_v1_50<'a, K: 'a, V: 'a>: Sealed<hash_map::Entry<'a, K, V>
 }
 
 #[cfg(feature = "std")]
-impl<'a, K, V> HashMapEntry_v1_50<'a, K, V> for hash_map::Entry<'a, K, V> {
+impl<'a, K: 'a, V: 'a> HashMapEntry_v1_50<'a, K, V> for hash_map::Entry<'a, K, V> {
     #[inline]
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V {
         match self {
