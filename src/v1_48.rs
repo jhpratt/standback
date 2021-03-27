@@ -2,7 +2,6 @@ use core::ops::Range;
 
 use crate::traits::Sealed;
 
-#[cfg(__standback_since_1_36)]
 pub(crate) mod future {
     use core::future::Future;
     use core::pin::Pin;

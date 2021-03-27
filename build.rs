@@ -2,7 +2,7 @@ use version_check::{Channel, Version};
 
 // We assume that features are never stabilized in patch versions.
 // If a "Rust 2.0" is ever released, we'll have to handle that explicitly.
-const MSRV_MINOR: u16 = 31;
+const MSRV_MINOR: u16 = 36;
 const CURRENT_MINOR: u16 = 51;
 
 fn main() {
@@ -25,8 +25,7 @@ fn main() {
     let channel = Channel::read();
     match channel {
         Some(channel) if channel.is_beta() => minor_used -= 1,
-        Some(channel) if channel.is_nightly() => minor_used -= 2,
-        Some(channel) if channel.is_dev() => minor_used -= 3,
+        Some(channel) if channel.supports_features() => minor_used -= 2,
         _ => {}
     }
 

@@ -8,7 +8,7 @@ use std::io::{Seek, SeekFrom};
 #[cfg(feature = "std")]
 use std::sync::Arc;
 
-use crate::task::Poll;
+use core::task::Poll;
 #[cfg(__standback_before_1_40)]
 use crate::v1_40::Option_v1_40_;
 #[cfg(__standback_before_1_50)]
@@ -143,7 +143,7 @@ impl<T> Slice_v1_51<T> for [T] {
     }
 }
 
-#[cfg(all(__standback_since_1_33, feature = "std"))]
+#[cfg(feature = "std")]
 pub trait Wake {
     fn wake(self: Arc<Self>);
     #[cfg(__standback_since_v1_41)]

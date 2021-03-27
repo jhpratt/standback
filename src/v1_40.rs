@@ -3,8 +3,6 @@ use core::ops::DerefMut;
 use core::ptr;
 
 use crate::traits::Sealed;
-#[cfg(__standback_before_1_32)]
-use crate::v1_32::{u32_v1_32, u64_v1_32};
 
 pub trait Option_v1_40<T: DerefMut>: Sealed<Option<T>> {
     fn as_deref_mut(&mut self) -> Option<&mut T::Target>;
@@ -27,7 +25,7 @@ pub trait Option_v1_40_<T>: Sealed<Option<Option<T>>> {
 
 impl<T> Option_v1_40_<T> for Option<Option<T>> {
     fn flatten(self) -> Option<T> {
-        self.and_then(crate::convert::identity)
+        self.and_then(core::convert::identity)
     }
 }
 

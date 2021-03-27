@@ -1,6 +1,5 @@
+use core::mem::MaybeUninit;
 use core::{cmp, mem, ptr};
-
-use crate::mem::MaybeUninit;
 
 fn maybe_uninit_slice_as_mut_ptr<T: Copy>(this: &mut [MaybeUninit<T>]) -> *mut T {
     this as *mut [MaybeUninit<T>] as *mut T

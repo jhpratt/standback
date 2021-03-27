@@ -8,7 +8,7 @@
 
 /*!
 Standback backports a number of methods, structs, and macros that have been stabilized in the Rust
-standard library since 1.31.0. This allows crate authors to depend on Standback rather than forcing
+standard library since 1.36.0. This allows crate authors to depend on Standback rather than forcing
 downstream users to upgrade their compiler (or not use the new feature at all).
 
 Due to a variety of restrictions in the Rust, it is not possible to implement everything that has
@@ -223,85 +223,16 @@ Option::xor
 slice::copy_within
 ```
 
-## 1.36
-
-```text
-Iterator::copied
-mem::MaybeUninit
-task::Context
-task::RawWaker
-task::RawWakerVTable
-task::Waker
-task::Poll
-```
-
-## 1.35
-
-```text
-RefCell::replace_with
-ptr::hash
-Range::contains
-RangeFrom::contains
-RangeTo::contains
-RangeInclusive::contains
-RangeToInclusive::contains
-Option::copied
-```
-
-## 1.34
-
-```text
-slice::sort_by_cached_key
-{i*, u*}::checked_pow
-{i*, u*}::saturating_pow
-{i*, u*}::wrapping_pow
-{i*, u*}::overflowing_pow
-```
-
-## 1.33
-
-```text
-os::unix::fs::FileExt::read_exact_at
-os::unix::fs::FileExt::write_all_at
-Option::transpose
-Result::transpose
-VecDeque::resize_with
-Duration::as_millis
-Duration::as_micros
-Duration::as_nanos
-```
-
-## 1.32
-
-```text
-{i*, u*}::to_be_bytes
-{i*, u*}::to_le_bytes
-{i*, u*}::to_ne_bytes
-{i*, u*}::from_be_bytes
-{i*, u*}::from_le_bytes
-{i*, u*}::from_ne_bytes
-```
-
 # Free functions and constants
 
 ```text
-future::pending // 1.48, requires rustc 1.36
-future::ready // 1.48, requires rustc 1.36
+future::pending // 1.48
+future::ready // 1.48
 char::UNICODE_VERSION // 1.45
 {f32, f64}::consts::LOG10_2 // 1.43
 {f32, f64}::consts::LOG2_10 // 1.43
 iter::once_with // 1.43
 mem::take // 1.40
-iterator::Copied // 1.36
-array::TryFromSliceError // 1.36
-iter::from_fn // 1.34
-iter::successors // 1.34
-convert::TryFrom // 1.34
-convert::TryInto // 1.34
-num::TryFromIntError // 1.34
-convert::identity // 1.33
-pin::Pin // 1.33
-marker::Unpin // 1.33
 ```
 
 # Macros
@@ -336,16 +267,6 @@ mod traits {
     impl_trait_for_all!(Float => f32 f64);
 }
 
-#[cfg(__standback_before_1_32)]
-mod v1_32;
-#[cfg(__standback_before_1_33)]
-mod v1_33;
-#[cfg(__standback_before_1_34)]
-mod v1_34;
-#[cfg(__standback_before_1_35)]
-mod v1_35;
-#[cfg(__standback_before_1_36)]
-mod v1_36;
 #[cfg(__standback_before_1_37)]
 mod v1_37;
 #[cfg(__standback_before_1_38)]
@@ -382,23 +303,6 @@ pub mod prelude {
 
     #[cfg(__standback_before_1_42)]
     pub use crate::matches;
-    #[cfg(__standback_before_1_32)]
-    pub use crate::v1_32::{
-        i128_v1_32, i16_v1_32, i32_v1_32, i64_v1_32, i8_v1_32, isize_v1_32, u128_v1_32, u16_v1_32,
-        u32_v1_32, u64_v1_32, u8_v1_32, usize_v1_32,
-    };
-    #[cfg(all(feature = "std", __standback_before_1_33, target_family = "unix"))]
-    pub use crate::v1_33::UnixFileExt_v1_33;
-    #[cfg(all(feature = "std", __standback_before_1_33))]
-    pub use crate::v1_33::VecDeque_v1_33;
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::{Duration_v1_33, Option_v1_33, Result_v1_33};
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::{Pow_v1_34, Slice_v1_34};
-    #[cfg(__standback_before_1_35)]
-    pub use crate::v1_35::{Option_v1_35, RangeBounds_v1_35, RefCell_v1_35};
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::{str_v1_36, Iterator_v1_36};
     #[cfg(__standback_before_1_37)]
     pub use crate::v1_37::{
         Cell_v1_37, Cell_v1_37_, DoubleEndedIterator_v1_37, Option_v1_37, Slice_v1_37,
@@ -450,97 +354,25 @@ pub mod prelude {
 pub mod mem {
     #[cfg(__standback_since_1_40)]
     pub use core::mem::take;
-    #[cfg(__standback_since_1_36)]
-    pub use core::mem::MaybeUninit;
 
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::MaybeUninit;
     #[cfg(__standback_before_1_40)]
     pub use crate::v1_40::take;
 }
 #[doc(hidden)]
-pub mod convert {
-    #[cfg(__standback_since_1_33)]
-    pub use core::convert::identity;
-    #[cfg(__standback_since_1_34)]
-    pub use core::convert::Infallible;
-    #[cfg(__standback_since_1_34)]
-    pub use core::convert::{TryFrom, TryInto};
-
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::identity;
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::Infallible;
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::{TryFrom, TryInto};
-}
-#[doc(hidden)]
-pub mod num {
-    #[cfg(__standback_since_1_34)]
-    pub use core::num::TryFromIntError;
-
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::TryFromIntError;
-}
-#[doc(hidden)]
 pub mod iter {
-    #[cfg(__standback_since_1_36)]
-    pub use core::iter::Copied;
-    #[cfg(__standback_since_1_34)]
-    pub use core::iter::{from_fn, successors};
     #[cfg(__standback_since_1_43)]
     pub use core::iter::{once_with, OnceWith};
 
-    #[cfg(__standback_before_1_34)]
-    pub use crate::v1_34::{from_fn, successors};
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::Copied;
     #[cfg(__standback_before_1_43)]
     pub use crate::v1_43::{once_with, OnceWith};
 }
 #[doc(hidden)]
-pub mod marker {
-    #[cfg(__standback_since_1_33)]
-    pub use core::marker::Unpin;
-
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::Unpin;
-}
-#[doc(hidden)]
-pub mod pin {
-    #[cfg(__standback_since_1_33)]
-    pub use core::pin::Pin;
-
-    #[cfg(__standback_before_1_33)]
-    pub use crate::v1_33::Pin;
-}
-#[doc(hidden)]
 pub mod task {
-    #[cfg(__standback_since_1_36)]
-    pub use core::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
     #[cfg(all(__standback_since_1_51, feature = "std"))]
     pub use std::task::Wake;
 
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::{Context, Poll, RawWaker, RawWakerVTable, Waker};
-    #[cfg(all(__standback_before_1_51, __standback_since_1_33, feature = "std"))]
+    #[cfg(all(__standback_before_1_51, feature = "std"))]
     pub use crate::v1_51::Wake;
-}
-#[doc(hidden)]
-pub mod ptr {
-    #[cfg(__standback_since_1_35)]
-    pub use core::ptr::hash;
-
-    #[cfg(__standback_before_1_35)]
-    pub use crate::v1_35::hash;
-}
-#[doc(hidden)]
-pub mod array {
-    #[cfg(__standback_since_1_36)]
-    pub use core::array::TryFromSliceError;
-
-    #[cfg(__standback_before_1_36)]
-    pub use crate::v1_36::TryFromSliceError;
 }
 #[doc(hidden)]
 pub mod f32 {
@@ -582,7 +414,6 @@ pub mod char {
     pub use core::char::UNICODE_VERSION;
 }
 #[doc(hidden)]
-#[cfg(__standback_since_1_36)]
 pub mod future {
     #[cfg(__standback_since_1_48)]
     pub use core::future::{pending, ready, Pending, Ready};
