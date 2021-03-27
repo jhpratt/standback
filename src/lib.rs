@@ -267,157 +267,157 @@ mod traits {
     impl_trait_for_all!(Float => f32 f64);
 }
 
-#[cfg(__standback_before_1_37)]
+#[cfg(shim = "1.37")]
 mod v1_37;
-#[cfg(__standback_before_1_38)]
+#[cfg(shim = "1.38")]
 mod v1_38;
-#[cfg(__standback_before_1_40)]
+#[cfg(shim = "1.40")]
 mod v1_40;
-#[cfg(__standback_before_1_41)]
+#[cfg(shim = "1.41")]
 mod v1_41;
-#[cfg(__standback_before_1_42)]
+#[cfg(shim = "1.42")]
 mod v1_42;
-#[cfg(__standback_before_1_43)]
+#[cfg(shim = "1.43")]
 mod v1_43;
-#[cfg(__standback_before_1_44)]
+#[cfg(shim = "1.44")]
 mod v1_44;
-#[cfg(__standback_before_1_45)]
+#[cfg(shim = "1.45")]
 mod v1_45;
-#[cfg(__standback_before_1_46)]
+#[cfg(shim = "1.46")]
 mod v1_46;
-#[cfg(__standback_before_1_47)]
+#[cfg(shim = "1.47")]
 mod v1_47;
-#[cfg(__standback_before_1_48)]
+#[cfg(shim = "1.48")]
 mod v1_48;
-#[cfg(__standback_before_1_49)]
+#[cfg(shim = "1.49")]
 mod v1_49;
-#[cfg(__standback_before_1_50)]
+#[cfg(shim = "1.50")]
 mod v1_50;
-#[cfg(__standback_before_1_51)]
+#[cfg(shim = "1.51")]
 mod v1_51;
 
 #[doc(hidden)]
 pub mod prelude {
-    #[cfg(__standback_before_1_39)]
+    #[cfg(shim = "1.39")]
     pub use core::unimplemented as todo;
 
-    #[cfg(__standback_before_1_42)]
+    #[cfg(shim = "1.42")]
     pub use crate::matches;
-    #[cfg(__standback_before_1_37)]
+    #[cfg(shim = "1.37")]
     pub use crate::v1_37::{
         Cell_v1_37, Cell_v1_37_, DoubleEndedIterator_v1_37, Option_v1_37, Slice_v1_37,
     };
-    #[cfg(__standback_before_1_38)]
+    #[cfg(shim = "1.38")]
     pub use crate::v1_38::{
         ConstPtr_v1_38, Duration_v1_38, EuclidFloat_v1_38, Euclid_v1_38, MutPtr_v1_38,
     };
-    #[cfg(all(feature = "std", __standback_before_1_40))]
+    #[cfg(all(shim = "1.40", feature = "std"))]
     pub use crate::v1_40::slice_v1_40;
-    #[cfg(__standback_before_1_40)]
+    #[cfg(shim = "1.40")]
     pub use crate::v1_40::{f32_v1_40, f64_v1_40, Option_v1_40, Option_v1_40_};
-    #[cfg(__standback_before_1_41)]
+    #[cfg(shim = "1.41")]
     pub use crate::v1_41::Result_v1_41;
-    #[cfg(all(__standback_before_1_42, feature = "std"))]
+    #[cfg(all(shim = "1.42", feature = "std"))]
     pub use crate::v1_42::Condvar_v1_42;
-    #[cfg(__standback_before_1_42)]
+    #[cfg(shim = "1.42")]
     pub use crate::v1_42::ManuallyDrop_v1_42;
-    #[cfg(__standback_before_1_43)]
+    #[cfg(shim = "1.43")]
     pub use crate::v1_43::{float_v1_43, int_v1_43};
-    #[cfg(__standback_before_1_44)]
+    #[cfg(shim = "1.44")]
     pub use crate::v1_44::Layout_v1_44;
-    #[cfg(all(__standback_before_1_44, feature = "std"))]
+    #[cfg(all(shim = "1.44", feature = "std"))]
     pub use crate::v1_44::PathBuf_v1_44;
-    #[cfg(__standback_before_1_45)]
+    #[cfg(shim = "1.45")]
     pub use crate::v1_45::int_v1_45;
-    #[cfg(__standback_before_1_46)]
+    #[cfg(shim = "1.46")]
     pub use crate::v1_46::{int_v1_46, Option_v1_46};
-    #[cfg(all(feature = "std", __standback_before_1_47))]
+    #[cfg(all(shim = "1.47", feature = "std"))]
     pub use crate::v1_47::Vec_v1_47;
-    #[cfg(__standback_before_1_47)]
+    #[cfg(shim = "1.47")]
     pub use crate::v1_47::{Range_v1_47, Result_v1_47};
-    #[cfg(__standback_before_1_48)]
+    #[cfg(shim = "1.48")]
     pub use crate::v1_48::Slice_v1_48;
-    #[cfg(__standback_before_1_49)]
+    #[cfg(shim = "1.49")]
     pub use crate::v1_49::Slice_v1_49;
-    #[cfg(all(__standback_before_1_50, feature = "std"))]
+    #[cfg(all(shim = "1.50", feature = "std"))]
     pub use crate::v1_50::{BTreeMapEntry_v1_50, HashMapEntry_v1_50};
-    #[cfg(__standback_before_1_50)]
+    #[cfg(shim = "1.50")]
     pub use crate::v1_50::{
         Bool_v1_50, Float_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
     };
-    #[cfg(all(__standback_before_1_51, feature = "std"))]
+    #[cfg(all(shim = "1.51", feature = "std"))]
     pub use crate::v1_51::{Arc_v1_51, Seek_v1_51};
-    #[cfg(__standback_before_1_51)]
+    #[cfg(shim = "1.51")]
     pub use crate::v1_51::{Integer_v1_51, Peekable_v1_51, Poll_v1_51, Slice_v1_51};
 }
 #[doc(hidden)]
 pub mod mem {
-    #[cfg(__standback_since_1_40)]
+    #[cfg(reexport = "1.40")]
     pub use core::mem::take;
 
-    #[cfg(__standback_before_1_40)]
+    #[cfg(shim = "1.40")]
     pub use crate::v1_40::take;
 }
 #[doc(hidden)]
 pub mod iter {
-    #[cfg(__standback_since_1_43)]
+    #[cfg(reexport = "1.43")]
     pub use core::iter::{once_with, OnceWith};
 
-    #[cfg(__standback_before_1_43)]
+    #[cfg(shim = "1.43")]
     pub use crate::v1_43::{once_with, OnceWith};
 }
 #[doc(hidden)]
 pub mod task {
-    #[cfg(all(__standback_since_1_51, feature = "std"))]
+    #[cfg(all(reexport = "1.51", feature = "std"))]
     pub use std::task::Wake;
 
-    #[cfg(all(__standback_before_1_51, feature = "std"))]
+    #[cfg(all(shim = "1.51", feature = "std"))]
     pub use crate::v1_51::Wake;
 }
 #[doc(hidden)]
 pub mod f32 {
     pub mod consts {
-        #[cfg(__standback_since_1_47)]
+        #[cfg(reexport = "1.47")]
         pub use core::f32::consts::TAU;
-        #[cfg(__standback_since_1_43)]
+        #[cfg(reexport = "1.43")]
         pub use core::f32::consts::{LOG10_2, LOG2_10};
 
-        #[cfg(__standback_before_1_43)]
+        #[cfg(shim = "1.43")]
         pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
-        #[cfg(__standback_before_1_47)]
+        #[cfg(shim = "1.47")]
         pub use crate::v1_47::f32::TAU;
     }
 }
 #[doc(hidden)]
 pub mod f64 {
     pub mod consts {
-        #[cfg(__standback_since_1_47)]
+        #[cfg(reexport = "1.47")]
         pub use core::f64::consts::TAU;
-        #[cfg(__standback_since_1_43)]
+        #[cfg(reexport = "1.43")]
         pub use core::f64::consts::{LOG10_2, LOG2_10};
 
-        #[cfg(__standback_before_1_43)]
+        #[cfg(shim = "1.43")]
         pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
-        #[cfg(__standback_before_1_47)]
+        #[cfg(shim = "1.47")]
         pub use crate::v1_47::f64::TAU;
     }
 }
 #[doc(hidden)]
 pub mod char {
-    #[cfg(__standback_before_1_38)]
+    #[cfg(shim = "1.38")]
     pub const UNICODE_VERSION: (u8, u8, u8) = (11, 0, 0);
-    #[cfg(all(__standback_since_1_38, __standback_before_1_44))]
+    #[cfg(all(reexport = "1.38", shim = "1.44"))]
     pub const UNICODE_VERSION: (u8, u8, u8) = (12, 1, 0);
-    #[cfg(all(__standback_since_1_44, __standback_before_1_45))]
+    #[cfg(all(reexport = "1.44", shim = "1.45"))]
     pub const UNICODE_VERSION: (u8, u8, u8) = (13, 0, 0);
-    #[cfg(__standback_since_1_45)]
+    #[cfg(reexport = "1.45")]
     pub use core::char::UNICODE_VERSION;
 }
 #[doc(hidden)]
 pub mod future {
-    #[cfg(__standback_since_1_48)]
+    #[cfg(reexport = "1.48")]
     pub use core::future::{pending, ready, Pending, Ready};
 
-    #[cfg(__standback_before_1_48)]
+    #[cfg(shim = "1.48")]
     pub use crate::v1_48::future::{pending, ready, Pending, Ready};
 }
