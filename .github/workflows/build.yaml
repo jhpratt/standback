@@ -69,6 +69,7 @@ jobs:
             --feature-powerset
             --exclude-features default
             --version-range ${{ matrix.version.range }}
+            --clean-per-version
 
   check-embedded:
     name: Type checking on embedded (${{ matrix.version.range }})
@@ -115,6 +116,7 @@ jobs:
             --feature-powerset
             --exclude-features default,std
             --version-range ${{ matrix.version.range }}
+            --clean-per-version
             --target thumbv7em-none-eabihf
 
   fmt:
