@@ -9,11 +9,15 @@ The format is based on [Keep a Changelog]. This project adheres to [Semantic Ver
 
 ---
 
-## 0.3.0 [2021-04-06]
+## 0.3.1 [2021-04-06]
 
 - Support for `#![no_std]` with an allocator has been added
 - The ability to declare a higher MSRV has been added.
 - The crate's MSRV has been raised to 1.36 due to the `alloc` support.
+
+## 0.3.0 [2021-04-06]
+
+This version provides no functionality whatsoever and has been yanked.
 
 ## 0.2.17 [2021-03-21]
 
