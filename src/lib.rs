@@ -365,7 +365,7 @@ pub mod prelude {
     #[cfg(all(shim = "1.51", feature = "std"))]
     pub use crate::v1_51::Seek_v1_51;
     #[cfg(shim = "1.51")]
-    pub use crate::v1_51::{Integer_v1_51, Peekable_v1_51, Poll_v1_51, Slice_v1_51};
+    pub use crate::v1_51::{Peekable_v1_51, Poll_v1_51, SignedInteger_v1_51, Slice_v1_51};
 }
 #[doc(hidden)]
 pub mod mem {

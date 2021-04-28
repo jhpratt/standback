@@ -9,8 +9,10 @@ use core::task::Poll;
 #[cfg(feature = "std")]
 use std::io::{Seek, SeekFrom};
 
+use crate::traits::Sealed;
+
 #[cfg(feature = "alloc")]
-pub trait Arc_v1_51<T> {
+pub trait Arc_v1_51<T>: Sealed<Arc<T>> {
     unsafe fn decrement_strong_count(ptr: *const T);
     unsafe fn increment_strong_count(ptr: *const T);
 }
@@ -29,7 +31,7 @@ impl<T> Arc_v1_51<T> for Arc<T> {
     }
 }
 
-pub trait Peekable_v1_51<I: Iterator> {
+pub trait Peekable_v1_51<I: Iterator>: Sealed<Peekable<I>> {
     fn next_if(&mut self, func: impl FnOnce(&I::Item) -> bool) -> Option<I::Item>;
     fn next_if_eq<T>(&mut self, expected: &T) -> Option<I::Item>
     where
@@ -56,18 +58,18 @@ impl<I: Iterator> Peekable_v1_51<I> for Peekable<I> {
 }
 
 #[cfg(feature = "std")]
-pub trait Seek_v1_51 {
+pub trait Seek_v1_51<T: Seek>: Sealed<T> {
     fn stream_position(&mut self) -> std::io::Result<u64>;
 }
 
 #[cfg(feature = "std")]
-impl<T: Seek> Seek_v1_51 for T {
+impl<T: Seek> Seek_v1_51<T> for T {
     fn stream_position(&mut self) -> std::io::Result<u64> {
         self.seek(SeekFrom::Current(0))
     }
 }
 
-pub trait Slice_v1_51<T> {
+pub trait Slice_v1_51<T>: Sealed<[T]> {
     fn fill_with<F>(&mut self, f: F)
     where
         F: FnMut() -> T;
@@ -151,14 +153,14 @@ pub trait Wake {
     }
 }
 
-pub trait Integer_v1_51 {
+pub trait SignedInteger_v1_51: crate::traits::SignedInteger {
     type __StandbackUnsigned;
     fn unsigned_abs(self) -> Self::__StandbackUnsigned;
 }
 
 macro_rules! impl_integer {
     ($($int:ty => $uint:ty)*) => {$(
-        impl Integer_v1_51 for $int {
+        impl SignedInteger_v1_51 for $int {
             type __StandbackUnsigned = $uint;
             #[inline]
             fn unsigned_abs(self) -> Self::__StandbackUnsigned {
@@ -176,7 +178,7 @@ impl_integer! {
     i128 => u128
 }
 
-pub trait Poll_v1_51<T, E> {
+pub trait Poll_v1_51<T, E>: Sealed<Poll<Result<T, E>>> {
     fn map_ok<U, F>(self, f: F) -> Poll<Result<U, E>>
     where
         F: FnOnce(T) -> U;

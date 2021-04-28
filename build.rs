@@ -32,7 +32,7 @@ fn main() {
     macro_rules! old_stable_compilers {
         ($($msrv_str:literal $minor:literal),+,) => {$(
             if cfg!(feature = $msrv_str) {
-                if $minor + 1 <= minor_used {
+                if $minor < minor_used {
                     println!(r#"cargo:rustc-cfg=reexport="1.{}""#, $minor + 1);
                 } else {
                     println!(r#"cargo:rustc-cfg=shim="1.{}""#, $minor + 1);
