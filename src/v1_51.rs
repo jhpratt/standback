@@ -147,7 +147,7 @@ impl<T> Slice_v1_51<T> for [T] {
 #[cfg(feature = "alloc")]
 pub trait Wake {
     fn wake(self: Arc<Self>);
-    #[cfg(reexport = "1.41")]
+    #[cfg(since = "1.41")]
     fn wake_by_ref(self: &Arc<Self>) {
         self.clone().wake();
     }

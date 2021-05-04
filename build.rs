@@ -31,12 +31,14 @@ fn main() {
     // Eager macro expansion would be nice!
     macro_rules! old_stable_compilers {
         ($($msrv_str:literal $minor:literal),+,) => {$(
-            if cfg!(feature = $msrv_str) {
-                if $minor < minor_used {
-                    println!(r#"cargo:rustc-cfg=reexport="1.{}""#, $minor + 1);
-                } else {
-                    println!(r#"cargo:rustc-cfg=shim="1.{}""#, $minor + 1);
-                }
+            if $minor < minor_used {
+                #[cfg(feature = $msrv_str)]
+                println!(r#"cargo:rustc-cfg=reexport="1.{}""#, $minor + 1);
+                println!(r#"cargo:rustc-cfg=since="1.{}""#, $minor + 1);
+            } else {
+                #[cfg(feature = $msrv_str)]
+                println!(r#"cargo:rustc-cfg=shim="1.{}""#, $minor + 1);
+                println!(r#"cargo:rustc-cfg=before="1.{}""#, $minor + 1);
             }
         )*};
     }

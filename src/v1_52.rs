@@ -16,19 +16,19 @@ impl char_v1_52 for char {
     const MAX: char = '\u{10ffff}';
     const REPLACEMENT_CHARACTER: char = '\u{FFFD}';
     const UNICODE_VERSION: (u8, u8, u8) = {
-        #[cfg(shim = "1.38")]
+        #[cfg(before = "1.38")]
         {
             (11, 0, 0)
         }
-        #[cfg(all(reexport = "1.38", shim = "1.44"))]
+        #[cfg(all(since = "1.38", before = "1.44"))]
         {
             (12, 1, 0)
         }
-        #[cfg(all(reexport = "1.44", shim = "1.45"))]
+        #[cfg(all(since = "1.44", before = "1.45"))]
         {
             (13, 0, 0)
         }
-        #[cfg(not(shim = "1.45"))]
+        #[cfg(since = "1.45")]
         {
             core::char::UNICODE_VERSION
         }
