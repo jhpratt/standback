@@ -54,6 +54,19 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
+## 1.52
+
+```text
+char::MAX
+char::REPLACEMENT_CHARACTER
+char::UNICODE_VERSION
+char::decode_utf16
+char::from_digit
+char::from_u32_unchecked
+char::from_u32
+slice::partition_point
+```
+
 ## 1.51
 
 ```text
@@ -308,6 +321,8 @@ mod v1_49;
 mod v1_50;
 #[cfg(shim = "1.51")]
 mod v1_51;
+#[cfg(shim = "1.52")]
+mod v1_52;
 
 #[doc(hidden)]
 pub mod prelude {
