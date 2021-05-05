@@ -68,6 +68,7 @@ jobs:
             check
             --feature-powerset
             --exclude-features default
+            --exclude-no-default-features
             --version-range ${{ matrix.version.range }}
             --clean-per-version
 
@@ -115,6 +116,7 @@ jobs:
             check
             --feature-powerset
             --exclude-features default,std
+            --exclude-no-default-features
             --version-range ${{ matrix.version.range }}
             --clean-per-version
             --target thumbv7em-none-eabihf

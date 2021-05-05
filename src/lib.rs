@@ -3,7 +3,9 @@
 #![allow(
     non_camel_case_types,
     unstable_name_collisions,
-    clippy::missing_safety_doc
+    clippy::missing_safety_doc,
+    clippy::wrong_self_convention,
+    clippy::match_like_matches_macro
 )]
 
 /*!
@@ -45,7 +47,9 @@ the `std` feature.
 By default, this crate has a minimum supported Rust version of 1.36. If you do not require a MSRV
 this low, you can raise it by using `default-features = false` (be sure to re-enable `std` or
 `alloc` if you need it) and enabling a `msrv-1.XX` feature flag, substituting the appropriate
-version. All versions up to the most recent stable release of a compiler are supported.
+version; the standback crate is not guaranteed to work (let alone produce a reasonable result) if no
+MSRV is declared when `default-features = false`. All versions up to the most recent stable release
+of a compiler are supported.
 
 Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 
@@ -292,6 +296,8 @@ mod traits {
     pub trait Float {}
     impl_trait_for_all!(Float => f32 f64);
 }
+
+mod pattern;
 
 #[cfg(shim = "1.37")]
 mod v1_37;

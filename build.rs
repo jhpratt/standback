@@ -3,6 +3,7 @@ use version_check::{Channel, Version};
 // We assume that features are never stabilized in patch versions.
 // If a "Rust 2.0" is ever released, we'll have to handle that explicitly.
 const MSRV_MINOR: u16 = 36;
+const CURRENT_MINOR: u16 = 52;
 
 fn main() {
     let msrv = Version::from_mmp(1, MSRV_MINOR, 0);
@@ -28,9 +29,17 @@ fn main() {
         _ => {}
     }
 
+    #[allow(unused_assignments, unused_mut)]
+    let mut explicit_msrv_set = false;
+
     // Eager macro expansion would be nice!
     macro_rules! old_stable_compilers {
         ($($msrv_str:literal $minor:literal),+,) => {$(
+            #[allow(unused_assignments)]
+            #[cfg(feature = $msrv_str)]
+            {
+                explicit_msrv_set = true;
+            }
             if $minor < minor_used {
                 #[cfg(feature = $msrv_str)]
                 println!(r#"cargo:rustc-cfg=reexport="1.{}""#, $minor + 1);
@@ -62,4 +71,10 @@ fn main() {
         "msrv-1-50" 50,
         "msrv-1-51" 51,
     ];
+
+    if !explicit_msrv_set {
+        for minor in (MSRV_MINOR + 1)..=CURRENT_MINOR {
+            println!(r#"cargo:rustc-cfg=shim="1.{}""#, minor);
+        }
+    }
 }
