@@ -69,6 +69,8 @@ char::from_digit
 char::from_u32_unchecked
 char::from_u32
 slice::partition_point
+str::rsplit_once
+str::split_once
 ```
 
 ## 1.51
@@ -387,6 +389,8 @@ pub mod prelude {
     pub use crate::v1_51::Seek_v1_51;
     #[cfg(shim = "1.51")]
     pub use crate::v1_51::{Peekable_v1_51, Poll_v1_51, SignedInteger_v1_51, Slice_v1_51};
+    #[cfg(shim = "1.52")]
+    pub use crate::v1_52::{char_v1_52, str_v1_52, Slice_v1_52};
 }
 #[doc(hidden)]
 pub mod mem {

@@ -1,5 +1,6 @@
 use core::char::DecodeUtf16;
 
+use crate::pattern::{Pattern, ReverseSearcher, Searcher};
 use crate::traits::Sealed;
 
 pub trait char_v1_52: Sealed<char> {
@@ -75,5 +76,31 @@ impl<T> Slice_v1_52<T> for [T] {
         }
 
         left
+    }
+}
+
+pub trait str_v1_52: Sealed<str> {
+    fn rsplit_once<'a, P>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>
+    where
+        P: Pattern<'a>,
+        <P as Pattern<'a>>::Searcher: ReverseSearcher<'a>;
+    fn split_once<'a, P: Pattern<'a>>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>;
+}
+
+impl str_v1_52 for str {
+    #[inline]
+    fn rsplit_once<'a, P>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>
+    where
+        P: Pattern<'a>,
+        <P as Pattern<'a>>::Searcher: ReverseSearcher<'a>,
+    {
+        let (start, end) = delimiter.into_searcher(self).next_match_back()?;
+        Some((&self[..start], &self[end..]))
+    }
+
+    #[inline]
+    fn split_once<'a, P: Pattern<'a>>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)> {
+        let (start, end) = delimiter.into_searcher(self).next_match()?;
+        Some((&self[..start], &self[end..]))
     }
 }
