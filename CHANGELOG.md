@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog]. This project adheres to [Semantic Ver
 
 ---
 
+## 0.3.2 [2021-05-05]
+
+- Support for Rust 1.52 APIs has been added.
+- Some older APIs have been added due to the internal addition of the unstable `Pattern`.
+
 ## 0.3.1 [2021-04-06]
 
 - Support for `#![no_std]` with an allocator has been added
