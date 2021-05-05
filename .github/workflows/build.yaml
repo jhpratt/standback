@@ -13,18 +13,30 @@ on:
       - "**.md"
       - LICENSE-Apache
       - LICENSE-MIT
-  schedule:
-    - cron: "0 0 * * 6" # midnight on Saturdays
 
 jobs:
   check:
-    name: Type checking (${{ matrix.version.range }}, ${{ matrix.os }})
+    name: Type checking (Rust ${{ matrix.version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         version:
-          - { range: "1.36..1.45", first: "1.36" }
-          - { range: "1.46..1.51", first: "1.46" }
+          - "1.36"
+          - "1.37"
+          - "1.38"
+          - "1.39"
+          - "1.40"
+          - "1.41"
+          - "1.42"
+          - "1.43"
+          - "1.44"
+          - "1.45"
+          - "1.46"
+          - "1.47"
+          - "1.48"
+          - "1.49"
+          - "1.50"
+          - "1.51"
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -35,7 +47,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.version.first }}
+          toolchain: ${{ matrix.version }}
 
       - name: Install cargo-hack
         shell: bash
@@ -51,15 +63,6 @@ jobs:
               exit 1
           fi
 
-      - name: Cache cargo output
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ matrix.version.range }}
-
       - name: Check powerset
         uses: actions-rs/cargo@v1
         with:
@@ -69,18 +72,29 @@ jobs:
             --feature-powerset
             --exclude-features default
             --exclude-no-default-features
-            --version-range ${{ matrix.version.range }}
-            --clean-per-version
 
   check-embedded:
-    name: Type checking on embedded (${{ matrix.version.range }})
-    runs-on: ${{ matrix.os }}
+    name: Type checking on embedded (Rust ${{ matrix.version }})
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         version:
-          - { range: "1.36..1.45", first: "1.36" }
-          - { range: "1.46..1.51", first: "1.46" }
-        os: [ubuntu-latest]
+          - "1.36"
+          - "1.37"
+          - "1.38"
+          - "1.39"
+          - "1.40"
+          - "1.41"
+          - "1.42"
+          - "1.43"
+          - "1.44"
+          - "1.45"
+          - "1.46"
+          - "1.47"
+          - "1.48"
+          - "1.49"
+          - "1.50"
+          - "1.51"
 
     steps:
       - name: Checkout sources
@@ -90,7 +104,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.version.first }}
+          toolchain: ${{ matrix.version }}
           target: thumbv7em-none-eabihf
           override: true
 
@@ -98,15 +112,6 @@ jobs:
         shell: bash
         run: |
           curl -LsSf https://github.com/taiki-e/cargo-hack/releases/latest/download/cargo-hack-x86_64-unknown-linux-gnu.tar.gz | tar xzf - -C ~/.cargo/bin
-
-      - name: Cache cargo output
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ matrix.version.range }}-embedded
 
       - name: Check powerset
         uses: actions-rs/cargo@v1
@@ -117,8 +122,6 @@ jobs:
             --feature-powerset
             --exclude-features default,std
             --exclude-no-default-features
-            --version-range ${{ matrix.version.range }}
-            --clean-per-version
             --target thumbv7em-none-eabihf
 
   fmt:
