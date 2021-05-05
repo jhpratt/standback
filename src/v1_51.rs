@@ -1,4 +1,5 @@
 mod slice;
+mod str;
 
 #[cfg(feature = "alloc")]
 use alloc::sync::Arc;
@@ -9,6 +10,7 @@ use core::task::Poll;
 #[cfg(feature = "std")]
 use std::io::{Seek, SeekFrom};
 
+use crate::pattern::Pattern;
 use crate::traits::Sealed;
 
 #[cfg(feature = "alloc")]
@@ -208,5 +210,22 @@ impl<T, E> Poll_v1_51<T, E> for Poll<Result<T, E>> {
             Poll::Ready(Err(e)) => Poll::Ready(Err(f(e))),
             Poll::Pending => Poll::Pending,
         }
+    }
+}
+
+pub trait str_v1_51: Sealed<str> {
+    fn split_inclusive<'a, P: Pattern<'a>>(&'a self, pat: P) -> str::SplitInclusive<'a, P>;
+}
+
+impl str_v1_51 for str {
+    #[inline]
+    fn split_inclusive<'a, P: Pattern<'a>>(&'a self, pat: P) -> str::SplitInclusive<'a, P> {
+        str::SplitInclusive(str::SplitInternal {
+            start: 0,
+            end: self.len(),
+            matcher: pat.into_searcher(self),
+            allow_trailing_empty: false,
+            finished: false,
+        })
     }
 }

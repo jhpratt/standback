@@ -1,12 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![deny(rust_2018_idioms, unused_qualifications)]
-#![allow(
-    non_camel_case_types,
-    unstable_name_collisions,
-    clippy::missing_safety_doc,
-    clippy::wrong_self_convention,
-    clippy::match_like_matches_macro
-)]
+#![allow(non_camel_case_types, unstable_name_collisions, clippy::all)]
 
 /*!
 Standback backports a number of methods, structs, and macros that have been stabilized in the Rust
@@ -86,6 +80,7 @@ slice::split_inclusive_mut
 slice::split_inclusive
 slice::strip_prefix
 slice::strip_suffix
+str::split_inclusive
 task::Wake
 i*::unsigned_abs
 Poll::map_ok
@@ -144,6 +139,8 @@ Option::zip
 ```text
 i*::saturating_abs
 i*::saturating_neg
+str::strip_prefix
+str::strip_suffix
 ```
 
 ## 1.44
@@ -364,7 +361,7 @@ pub mod prelude {
     #[cfg(all(shim = "1.44", feature = "std"))]
     pub use crate::v1_44::PathBuf_v1_44;
     #[cfg(shim = "1.45")]
-    pub use crate::v1_45::int_v1_45;
+    pub use crate::v1_45::{int_v1_45, str_v1_45};
     #[cfg(shim = "1.46")]
     pub use crate::v1_46::{int_v1_46, Option_v1_46};
     #[cfg(all(shim = "1.47", feature = "alloc"))]
@@ -388,7 +385,9 @@ pub mod prelude {
     #[cfg(all(shim = "1.51", feature = "std"))]
     pub use crate::v1_51::Seek_v1_51;
     #[cfg(shim = "1.51")]
-    pub use crate::v1_51::{Peekable_v1_51, Poll_v1_51, SignedInteger_v1_51, Slice_v1_51};
+    pub use crate::v1_51::{
+        str_v1_51, Peekable_v1_51, Poll_v1_51, SignedInteger_v1_51, Slice_v1_51,
+    };
     #[cfg(shim = "1.52")]
     pub use crate::v1_52::{char_v1_52, str_v1_52, Slice_v1_52};
 }
