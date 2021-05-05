@@ -111,6 +111,7 @@ fn layout_err() -> LayoutErr {
 }
 
 mod sealed {
+    #[allow(unreachable_pub)]
     pub trait FloatToInt<Int> {
         unsafe fn to_int_unchecked(self) -> Int;
     }

@@ -141,8 +141,6 @@ pub unsafe trait ReverseSearcher<'a>: Searcher<'a> {
     }
 }
 
-pub trait DoubleEndedSearcher<'a>: ReverseSearcher<'a> {}
-
 #[derive(Clone, Debug)]
 pub struct CharSearcher<'a> {
     haystack: &'a str,
@@ -245,8 +243,6 @@ unsafe impl<'a> ReverseSearcher<'a> for CharSearcher<'a> {
         }
     }
 }
-
-impl<'a> DoubleEndedSearcher<'a> for CharSearcher<'a> {}
 
 impl<'a> Pattern<'a> for char {
     type Searcher = CharSearcher<'a>;
@@ -387,8 +383,6 @@ unsafe impl<'a, C: MultiCharEq> ReverseSearcher<'a> for MultiCharEqSearcher<'a, 
     }
 }
 
-impl<'a, C: MultiCharEq> DoubleEndedSearcher<'a> for MultiCharEqSearcher<'a, C> {}
-
 macro_rules! pattern_methods {
     ($t:ty, $pmap:expr, $smap:expr) => {
         type Searcher = $t;
@@ -483,8 +477,6 @@ unsafe impl<'a, 'b> ReverseSearcher<'a> for CharSliceSearcher<'a, 'b> {
     searcher_methods!(reverse);
 }
 
-impl<'a, 'b> DoubleEndedSearcher<'a> for CharSliceSearcher<'a, 'b> {}
-
 impl<'a, 'b> Pattern<'a> for &'b [char] {
     pattern_methods!(
         CharSliceSearcher<'a, 'b>,
@@ -522,8 +514,6 @@ where
 {
     searcher_methods!(reverse);
 }
-
-impl<'a, F> DoubleEndedSearcher<'a> for CharPredicateSearcher<'a, F> where F: FnMut(char) -> bool {}
 
 impl<'a, F> Pattern<'a> for F
 where

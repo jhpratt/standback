@@ -2,12 +2,12 @@ use core::iter::FusedIterator;
 
 use crate::traits::{Float, Integer};
 
-pub mod f32 {
+pub(crate) mod f32 {
     pub const LOG10_2: f32 = 0.301029995663981195213738894724493027_f32;
     pub const LOG2_10: f32 = 3.32192809488736234787031942948939018_f32;
 }
 
-pub mod f64 {
+pub(crate) mod f64 {
     pub const LOG10_2: f64 = 0.301029995663981195213738894724493027_f64;
     pub const LOG2_10: f64 = 3.32192809488736234787031942948939018_f64;
 }

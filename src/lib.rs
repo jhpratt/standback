@@ -1,5 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![deny(rust_2018_idioms, unused_qualifications)]
+#![warn(unreachable_pub)]
 #![allow(non_camel_case_types, unstable_name_collisions, clippy::all)]
 
 /*!
@@ -272,7 +273,6 @@ todo! // 1.39
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-// A few traits to make sealing other traits simpler.
 mod traits {
     pub trait Sealed<T: ?Sized> {}
     impl<T: ?Sized> Sealed<T> for T {}
@@ -283,15 +283,19 @@ mod traits {
         )+};
     }
 
+    #[allow(unreachable_pub)]
     pub trait Integer: Sized {}
     impl_trait_for_all!(Integer => i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize);
 
+    #[allow(unreachable_pub)]
     pub trait SignedInteger {}
     impl_trait_for_all!(SignedInteger => i8 i16 i32 i64 i128 isize);
 
+    #[allow(unreachable_pub)]
     pub trait UnsignedInteger {}
     impl_trait_for_all!(UnsignedInteger => u8 u16 u32 u64 u128 usize);
 
+    #[allow(unreachable_pub)]
     pub trait Float {}
     impl_trait_for_all!(Float => f32 f64);
 }
@@ -356,10 +360,10 @@ pub mod prelude {
     pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(shim = "1.43")]
     pub use crate::v1_43::{float_v1_43, int_v1_43};
-    #[cfg(shim = "1.44")]
-    pub use crate::v1_44::Layout_v1_44;
     #[cfg(all(shim = "1.44", feature = "std"))]
     pub use crate::v1_44::PathBuf_v1_44;
+    #[cfg(shim = "1.44")]
+    pub use crate::v1_44::{float_v1_44, Layout_v1_44};
     #[cfg(shim = "1.45")]
     pub use crate::v1_45::{int_v1_45, str_v1_45};
     #[cfg(shim = "1.46")]
