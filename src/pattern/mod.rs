@@ -8,6 +8,7 @@ use core::{cmp, fmt, usize};
 mod sealed {
     use super::*;
 
+    #[allow(unreachable_pub)]
     pub trait Sealed {}
     impl Sealed for &str {}
     impl Sealed for char {}
@@ -21,6 +22,7 @@ mod sealed {
     impl<C: MultiCharEq> Sealed for MultiCharEqPattern<C> {}
 }
 
+#[allow(unreachable_pub)]
 pub trait Pattern<'a>: Sized + sealed::Sealed {
     type Searcher: Searcher<'a>;
 
@@ -76,6 +78,7 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
     }
 }
 
+#[allow(unreachable_pub)]
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub enum SearchStep {
     Match(usize, usize),
@@ -83,6 +86,7 @@ pub enum SearchStep {
     Done,
 }
 
+#[allow(unreachable_pub)]
 pub unsafe trait Searcher<'a> {
     fn haystack(&self) -> &'a str;
     fn next(&mut self) -> SearchStep;
@@ -108,6 +112,7 @@ pub unsafe trait Searcher<'a> {
     }
 }
 
+#[allow(unreachable_pub)]
 pub unsafe trait ReverseSearcher<'a>: Searcher<'a> {
     fn next_back(&mut self) -> SearchStep;
 
@@ -132,6 +137,7 @@ pub unsafe trait ReverseSearcher<'a>: Searcher<'a> {
     }
 }
 
+#[allow(unreachable_pub)]
 #[derive(Clone, Debug)]
 pub struct CharSearcher<'a> {
     haystack: &'a str,
@@ -427,6 +433,7 @@ macro_rules! searcher_methods {
     };
 }
 
+#[allow(unreachable_pub)]
 #[derive(Clone, Debug)]
 pub struct CharSliceSearcher<'a, 'b>(<MultiCharEqPattern<&'b [char]> as Pattern<'a>>::Searcher);
 
@@ -446,6 +453,7 @@ impl<'a, 'b> Pattern<'a> for &'b [char] {
     );
 }
 
+#[allow(unreachable_pub)]
 #[derive(Clone)]
 pub struct CharPredicateSearcher<'a, F>(<MultiCharEqPattern<F> as Pattern<'a>>::Searcher)
 where
@@ -524,6 +532,7 @@ impl<'a, 'b> Pattern<'a> for &'b str {
     }
 }
 
+#[allow(unreachable_pub)]
 #[derive(Clone, Debug)]
 pub struct StrSearcher<'a, 'b> {
     haystack: &'a str,

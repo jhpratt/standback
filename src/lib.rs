@@ -274,6 +274,7 @@ todo! // 1.39
 extern crate alloc;
 
 mod traits {
+    #[allow(unreachable_pub)]
     pub trait Sealed<T: ?Sized> {}
     impl<T: ?Sized> Sealed<T> for T {}
 
