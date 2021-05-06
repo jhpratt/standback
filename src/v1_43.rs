@@ -12,7 +12,6 @@ pub(crate) mod f64 {
     pub const LOG2_10: f64 = 3.32192809488736234787031942948939018_f64;
 }
 
-#[inline]
 pub fn once_with<A, F: FnOnce() -> A>(gen: F) -> OnceWith<F> {
     OnceWith { gen: Some(gen) }
 }
@@ -25,13 +24,11 @@ pub struct OnceWith<F> {
 impl<A, F: FnOnce() -> A> Iterator for OnceWith<F> {
     type Item = A;
 
-    #[inline]
     fn next(&mut self) -> Option<A> {
         let f = self.gen.take()?;
         Some(f())
     }
 
-    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.gen.iter().size_hint()
     }

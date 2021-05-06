@@ -26,12 +26,10 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
 
     fn into_searcher(self, haystack: &'a str) -> Self::Searcher;
 
-    #[inline]
     fn is_contained_in(self, haystack: &'a str) -> bool {
         self.into_searcher(haystack).next_match().is_some()
     }
 
-    #[inline]
     fn is_prefix_of(self, haystack: &'a str) -> bool {
         match self.into_searcher(haystack).next() {
             SearchStep::Match(0, _) => true,
@@ -39,7 +37,6 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
         }
     }
 
-    #[inline]
     fn is_suffix_of(self, haystack: &'a str) -> bool
     where
         Self::Searcher: ReverseSearcher<'a>,
@@ -50,7 +47,6 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
         }
     }
 
-    #[inline]
     fn strip_prefix_of(self, haystack: &'a str) -> Option<&'a str> {
         if let SearchStep::Match(start, len) = self.into_searcher(haystack).next() {
             debug_assert_eq!(
@@ -63,7 +59,6 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
         }
     }
 
-    #[inline]
     fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str>
     where
         Self::Searcher: ReverseSearcher<'a>,
@@ -92,7 +87,6 @@ pub unsafe trait Searcher<'a> {
     fn haystack(&self) -> &'a str;
     fn next(&mut self) -> SearchStep;
 
-    #[inline]
     fn next_match(&mut self) -> Option<(usize, usize)> {
         loop {
             match self.next() {
@@ -103,7 +97,6 @@ pub unsafe trait Searcher<'a> {
         }
     }
 
-    #[inline]
     fn next_reject(&mut self) -> Option<(usize, usize)> {
         loop {
             match self.next() {
@@ -118,7 +111,6 @@ pub unsafe trait Searcher<'a> {
 pub unsafe trait ReverseSearcher<'a>: Searcher<'a> {
     fn next_back(&mut self) -> SearchStep;
 
-    #[inline]
     fn next_match_back(&mut self) -> Option<(usize, usize)> {
         loop {
             match self.next_back() {
@@ -129,7 +121,6 @@ pub unsafe trait ReverseSearcher<'a>: Searcher<'a> {
         }
     }
 
-    #[inline]
     fn next_reject_back(&mut self) -> Option<(usize, usize)> {
         loop {
             match self.next_back() {
@@ -152,11 +143,9 @@ pub struct CharSearcher<'a> {
 }
 
 unsafe impl<'a> Searcher<'a> for CharSearcher<'a> {
-    #[inline]
     fn haystack(&self) -> &'a str {
         self.haystack
     }
-    #[inline]
     fn next(&mut self) -> SearchStep {
         let old_finger = self.finger;
         let slice = unsafe { self.haystack.get_unchecked(old_finger..self.finger_back) };
@@ -173,7 +162,6 @@ unsafe impl<'a> Searcher<'a> for CharSearcher<'a> {
             SearchStep::Done
         }
     }
-    #[inline]
     fn next_match(&mut self) -> Option<(usize, usize)> {
         loop {
             let bytes = self
@@ -200,7 +188,6 @@ unsafe impl<'a> Searcher<'a> for CharSearcher<'a> {
 }
 
 unsafe impl<'a> ReverseSearcher<'a> for CharSearcher<'a> {
-    #[inline]
     fn next_back(&mut self) -> SearchStep {
         let old_finger = self.finger_back;
         let slice = unsafe { self.haystack.get_unchecked(self.finger..old_finger) };
@@ -217,7 +204,6 @@ unsafe impl<'a> ReverseSearcher<'a> for CharSearcher<'a> {
             SearchStep::Done
         }
     }
-    #[inline]
     fn next_match_back(&mut self) -> Option<(usize, usize)> {
         let haystack = self.haystack.as_bytes();
         loop {
@@ -247,7 +233,6 @@ unsafe impl<'a> ReverseSearcher<'a> for CharSearcher<'a> {
 impl<'a> Pattern<'a> for char {
     type Searcher = CharSearcher<'a>;
 
-    #[inline]
     fn into_searcher(self, haystack: &'a str) -> Self::Searcher {
         let mut utf8_encoded = [0; 4];
         let utf8_size = self.encode_utf8(&mut utf8_encoded).len();
@@ -261,7 +246,6 @@ impl<'a> Pattern<'a> for char {
         }
     }
 
-    #[inline]
     fn is_contained_in(self, haystack: &'a str) -> bool {
         if (self as u32) < 128 {
             haystack.as_bytes().contains(&(self as u8))
@@ -271,17 +255,14 @@ impl<'a> Pattern<'a> for char {
         }
     }
 
-    #[inline]
     fn is_prefix_of(self, haystack: &'a str) -> bool {
         self.encode_utf8(&mut [0u8; 4]).is_prefix_of(haystack)
     }
 
-    #[inline]
     fn strip_prefix_of(self, haystack: &'a str) -> Option<&'a str> {
         self.encode_utf8(&mut [0u8; 4]).strip_prefix_of(haystack)
     }
 
-    #[inline]
     fn is_suffix_of(self, haystack: &'a str) -> bool
     where
         Self::Searcher: ReverseSearcher<'a>,
@@ -289,7 +270,6 @@ impl<'a> Pattern<'a> for char {
         self.encode_utf8(&mut [0u8; 4]).is_suffix_of(haystack)
     }
 
-    #[inline]
     fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str>
     where
         Self::Searcher: ReverseSearcher<'a>,
@@ -307,14 +287,12 @@ impl<F> MultiCharEq for F
 where
     F: FnMut(char) -> bool,
 {
-    #[inline]
     fn matches(&mut self, c: char) -> bool {
         (*self)(c)
     }
 }
 
 impl MultiCharEq for &[char] {
-    #[inline]
     fn matches(&mut self, c: char) -> bool {
         self.iter().any(|&m| m == c)
     }
@@ -332,7 +310,6 @@ struct MultiCharEqSearcher<'a, C: MultiCharEq> {
 impl<'a, C: MultiCharEq> Pattern<'a> for MultiCharEqPattern<C> {
     type Searcher = MultiCharEqSearcher<'a, C>;
 
-    #[inline]
     fn into_searcher(self, haystack: &'a str) -> MultiCharEqSearcher<'a, C> {
         MultiCharEqSearcher {
             haystack,
@@ -343,12 +320,10 @@ impl<'a, C: MultiCharEq> Pattern<'a> for MultiCharEqPattern<C> {
 }
 
 unsafe impl<'a, C: MultiCharEq> Searcher<'a> for MultiCharEqSearcher<'a, C> {
-    #[inline]
     fn haystack(&self) -> &'a str {
         self.haystack
     }
 
-    #[inline]
     fn next(&mut self) -> SearchStep {
         let s = &mut self.char_indices;
         let pre_len = s.as_str().len();
@@ -366,7 +341,6 @@ unsafe impl<'a, C: MultiCharEq> Searcher<'a> for MultiCharEqSearcher<'a, C> {
 }
 
 unsafe impl<'a, C: MultiCharEq> ReverseSearcher<'a> for MultiCharEqSearcher<'a, C> {
-    #[inline]
     fn next_back(&mut self) -> SearchStep {
         let s = &mut self.char_indices;
         let pre_len = s.as_str().len();
@@ -388,31 +362,26 @@ macro_rules! pattern_methods {
         type Searcher = $t;
 
         #[allow(clippy::redundant_closure_call)]
-        #[inline]
         fn into_searcher(self, haystack: &'a str) -> $t {
             ($smap)(($pmap)(self).into_searcher(haystack))
         }
 
         #[allow(clippy::redundant_closure_call)]
-        #[inline]
         fn is_contained_in(self, haystack: &'a str) -> bool {
             ($pmap)(self).is_contained_in(haystack)
         }
 
         #[allow(clippy::redundant_closure_call)]
-        #[inline]
         fn is_prefix_of(self, haystack: &'a str) -> bool {
             ($pmap)(self).is_prefix_of(haystack)
         }
 
         #[allow(clippy::redundant_closure_call)]
-        #[inline]
         fn strip_prefix_of(self, haystack: &'a str) -> Option<&'a str> {
             ($pmap)(self).strip_prefix_of(haystack)
         }
 
         #[allow(clippy::redundant_closure_call)]
-        #[inline]
         fn is_suffix_of(self, haystack: &'a str) -> bool
         where
             $t: ReverseSearcher<'a>,
@@ -421,7 +390,6 @@ macro_rules! pattern_methods {
         }
 
         #[allow(clippy::redundant_closure_call)]
-        #[inline]
         fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str>
         where
             $t: ReverseSearcher<'a>,
@@ -433,33 +401,26 @@ macro_rules! pattern_methods {
 
 macro_rules! searcher_methods {
     (forward) => {
-        #[inline]
         fn haystack(&self) -> &'a str {
             self.0.haystack()
         }
-        #[inline]
         fn next(&mut self) -> SearchStep {
             self.0.next()
         }
-        #[inline]
         fn next_match(&mut self) -> Option<(usize, usize)> {
             self.0.next_match()
         }
-        #[inline]
         fn next_reject(&mut self) -> Option<(usize, usize)> {
             self.0.next_reject()
         }
     };
     (reverse) => {
-        #[inline]
         fn next_back(&mut self) -> SearchStep {
             self.0.next_back()
         }
-        #[inline]
         fn next_match_back(&mut self) -> Option<(usize, usize)> {
             self.0.next_match_back()
         }
-        #[inline]
         fn next_reject_back(&mut self) -> Option<(usize, usize)> {
             self.0.next_reject_back()
         }
@@ -533,17 +494,14 @@ impl<'a, 'b, 'c> Pattern<'a> for &'c &'b str {
 impl<'a, 'b> Pattern<'a> for &'b str {
     type Searcher = StrSearcher<'a, 'b>;
 
-    #[inline]
     fn into_searcher(self, haystack: &'a str) -> StrSearcher<'a, 'b> {
         StrSearcher::new(haystack, self)
     }
 
-    #[inline]
     fn is_prefix_of(self, haystack: &'a str) -> bool {
         haystack.as_bytes().starts_with(self.as_bytes())
     }
 
-    #[inline]
     fn strip_prefix_of(self, haystack: &'a str) -> Option<&'a str> {
         if self.is_prefix_of(haystack) {
             unsafe { Some(haystack.get_unchecked(self.as_bytes().len()..)) }
@@ -552,12 +510,10 @@ impl<'a, 'b> Pattern<'a> for &'b str {
         }
     }
 
-    #[inline]
     fn is_suffix_of(self, haystack: &'a str) -> bool {
         haystack.as_bytes().ends_with(self.as_bytes())
     }
 
-    #[inline]
     fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str> {
         if self.is_suffix_of(haystack) {
             let i = haystack.len() - self.as_bytes().len();
@@ -617,12 +573,10 @@ impl<'a, 'b> StrSearcher<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> Searcher<'a> for StrSearcher<'a, 'b> {
-    #[inline]
     fn haystack(&self) -> &'a str {
         self.haystack
     }
 
-    #[inline]
     fn next(&mut self) -> SearchStep {
         match self.searcher {
             StrSearcherImpl::Empty(ref mut searcher) => {
@@ -661,7 +615,6 @@ unsafe impl<'a, 'b> Searcher<'a> for StrSearcher<'a, 'b> {
         }
     }
 
-    #[inline]
     fn next_match(&mut self) -> Option<(usize, usize)> {
         match self.searcher {
             StrSearcherImpl::Empty(..) => loop {
@@ -692,7 +645,6 @@ unsafe impl<'a, 'b> Searcher<'a> for StrSearcher<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> ReverseSearcher<'a> for StrSearcher<'a, 'b> {
-    #[inline]
     fn next_back(&mut self) -> SearchStep {
         match self.searcher {
             StrSearcherImpl::Empty(ref mut searcher) => {
@@ -731,7 +683,6 @@ unsafe impl<'a, 'b> ReverseSearcher<'a> for StrSearcher<'a, 'b> {
         }
     }
 
-    #[inline]
     fn next_match_back(&mut self) -> Option<(usize, usize)> {
         match self.searcher {
             StrSearcherImpl::Empty(..) => loop {
@@ -817,17 +768,14 @@ impl TwoWaySearcher {
         }
     }
 
-    #[inline]
     fn byteset_create(bytes: &[u8]) -> u64 {
         bytes.iter().fold(0, |a, &b| (1 << (b & 0x3f)) | a)
     }
 
-    #[inline]
     fn byteset_contains(&self, byte: u8) -> bool {
         (self.byteset >> ((byte & 0x3f) as usize)) & 1 != 0
     }
 
-    #[inline]
     fn next<S>(&mut self, haystack: &[u8], needle: &[u8], long_period: bool) -> S::Output
     where
         S: TwoWayStrategy,
@@ -892,7 +840,6 @@ impl TwoWaySearcher {
         }
     }
 
-    #[inline]
     fn next_back<S>(&mut self, haystack: &[u8], needle: &[u8], long_period: bool) -> S::Output
     where
         S: TwoWayStrategy,
@@ -959,7 +906,6 @@ impl TwoWaySearcher {
         }
     }
 
-    #[inline]
     fn maximal_suffix(arr: &[u8], order_greater: bool) -> (usize, usize) {
         let mut left = 0;
         let mut right = 1;
@@ -1037,15 +983,12 @@ enum MatchOnly {}
 impl TwoWayStrategy for MatchOnly {
     type Output = Option<(usize, usize)>;
 
-    #[inline]
     fn use_early_reject() -> bool {
         false
     }
-    #[inline]
     fn rejecting(_a: usize, _b: usize) -> Self::Output {
         None
     }
-    #[inline]
     fn matching(a: usize, b: usize) -> Self::Output {
         Some((a, b))
     }
@@ -1056,15 +999,12 @@ enum RejectAndMatch {}
 impl TwoWayStrategy for RejectAndMatch {
     type Output = SearchStep;
 
-    #[inline]
     fn use_early_reject() -> bool {
         true
     }
-    #[inline]
     fn rejecting(a: usize, b: usize) -> Self::Output {
         SearchStep::Reject(a, b)
     }
-    #[inline]
     fn matching(a: usize, b: usize) -> Self::Output {
         SearchStep::Match(a, b)
     }

@@ -10,24 +10,20 @@ const LO_USIZE: usize = LO_U64 as usize;
 const HI_USIZE: usize = HI_U64 as usize;
 const USIZE_BYTES: usize = mem::size_of::<usize>();
 
-#[inline]
 fn contains_zero_byte(x: usize) -> bool {
     x.wrapping_sub(LO_USIZE) & !x & HI_USIZE != 0
 }
 
 #[cfg(target_pointer_width = "16")]
-#[inline]
 fn repeat_byte(b: u8) -> usize {
     (b as usize) << 8 | b as usize
 }
 
 #[cfg(not(target_pointer_width = "16"))]
-#[inline]
 fn repeat_byte(b: u8) -> usize {
     (b as usize) * (usize::MAX / 255)
 }
 
-#[inline]
 pub(super) fn memchr(x: u8, text: &[u8]) -> Option<usize> {
     if text.len() < 2 * USIZE_BYTES {
         return text.iter().position(|elt| *elt == x);

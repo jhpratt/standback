@@ -14,7 +14,6 @@ pub(crate) mod future {
     impl<T> Future for Ready<T> {
         type Output = T;
 
-        #[inline]
         fn poll(mut self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<T> {
             Poll::Ready(self.0.take().expect("Ready polled after completion"))
         }
@@ -59,14 +58,12 @@ pub trait Slice_v1_48<T>: Sealed<[T]> {
 }
 
 impl<T> Slice_v1_48<T> for [T] {
-    #[inline]
     fn as_ptr_range(&self) -> Range<*const T> {
         let start = self.as_ptr();
         let end = unsafe { start.add(self.len()) };
         start..end
     }
 
-    #[inline]
     fn as_mut_ptr_range(&mut self) -> Range<*mut T> {
         let start = self.as_mut_ptr();
         let end = unsafe { start.add(self.len()) };

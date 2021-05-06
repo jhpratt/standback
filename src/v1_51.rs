@@ -21,12 +21,10 @@ pub trait Arc_v1_51<T>: Sealed<Arc<T>> {
 
 #[cfg(feature = "alloc")]
 impl<T> Arc_v1_51<T> for Arc<T> {
-    #[inline]
     unsafe fn decrement_strong_count(ptr: *const T) {
         drop(Arc::from_raw(ptr));
     }
 
-    #[inline]
     unsafe fn increment_strong_count(ptr: *const T) {
         let arc = mem::ManuallyDrop::new(Arc::<T>::from_raw(ptr));
         let _arc_clone: mem::ManuallyDrop<_> = arc.clone();
@@ -99,7 +97,6 @@ impl<T> Slice_v1_51<T> for [T] {
         }
     }
 
-    #[inline]
     fn split_inclusive_mut<F>(&mut self, pred: F) -> slice::SplitInclusiveMut<'_, T, F>
     where
         F: FnMut(&T) -> bool,
@@ -107,7 +104,6 @@ impl<T> Slice_v1_51<T> for [T] {
         slice::SplitInclusiveMut::new(self, pred)
     }
 
-    #[inline]
     fn split_inclusive<F>(&self, pred: F) -> slice::SplitInclusive<'_, T, F>
     where
         F: FnMut(&T) -> bool,
@@ -164,7 +160,6 @@ macro_rules! impl_integer {
     ($($int:ty => $uint:ty)*) => {$(
         impl SignedInteger_v1_51 for $int {
             type __StandbackUnsigned = $uint;
-            #[inline]
             fn unsigned_abs(self) -> Self::__StandbackUnsigned {
                  self.wrapping_abs() as $uint
             }
@@ -218,7 +213,6 @@ pub trait str_v1_51: Sealed<str> {
 }
 
 impl str_v1_51 for str {
-    #[inline]
     fn split_inclusive<'a, P: Pattern<'a>>(&'a self, pat: P) -> str::SplitInclusive<'a, P> {
         str::SplitInclusive(str::SplitInternal {
             start: 0,

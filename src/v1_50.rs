@@ -11,7 +11,6 @@ pub trait Bool_v1_50: Sealed<bool> {
 }
 
 impl Bool_v1_50 for bool {
-    #[inline]
     fn then<T, F: FnOnce() -> T>(self, f: F) -> Option<T> {
         if self { Some(f()) } else { None }
     }
@@ -24,7 +23,6 @@ pub trait BTreeMapEntry_v1_50<'a, K: 'a, V: 'a>: Sealed<btree_map::Entry<'a, K, 
 
 #[cfg(feature = "alloc")]
 impl<'a, K: Ord + 'a, V: 'a> BTreeMapEntry_v1_50<'a, K, V> for btree_map::Entry<'a, K, V> {
-    #[inline]
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V {
         match self {
             btree_map::Entry::Occupied(entry) => entry.into_mut(),
@@ -43,7 +41,6 @@ pub trait HashMapEntry_v1_50<'a, K: 'a, V: 'a>: Sealed<hash_map::Entry<'a, K, V>
 
 #[cfg(feature = "std")]
 impl<'a, K: 'a, V: 'a> HashMapEntry_v1_50<'a, K, V> for hash_map::Entry<'a, K, V> {
-    #[inline]
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V {
         match self {
             hash_map::Entry::Occupied(entry) => entry.into_mut(),
@@ -61,7 +58,6 @@ pub trait Float_v1_50: Float {
 
 impl Float_v1_50 for f32 {
     #[must_use = "method returns a new number and does not mutate the original value"]
-    #[inline]
     fn clamp(self, min: f32, max: f32) -> f32 {
         assert!(min <= max);
         let mut x = self;
@@ -77,7 +73,6 @@ impl Float_v1_50 for f32 {
 
 impl Float_v1_50 for f64 {
     #[must_use = "method returns a new number and does not mutate the original value"]
-    #[inline]
     fn clamp(self, min: f64, max: f64) -> f64 {
         assert!(min <= max);
         let mut x = self;
@@ -148,7 +143,6 @@ pub trait UnsafeCell_v1_50<T>: Sealed<UnsafeCell<T>> {
 }
 
 impl<T> UnsafeCell_v1_50<T> for UnsafeCell<T> {
-    #[inline]
     fn get_mut(&mut self) -> &mut T {
         unsafe { &mut *self.get() }
     }

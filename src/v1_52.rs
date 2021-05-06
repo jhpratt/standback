@@ -35,22 +35,18 @@ impl char_v1_52 for char {
         }
     };
 
-    #[inline]
     fn decode_utf16<I: IntoIterator<Item = u16>>(iter: I) -> DecodeUtf16<I::IntoIter> {
         core::char::decode_utf16(iter)
     }
 
-    #[inline]
     fn from_digit(num: u32, radix: u32) -> Option<char> {
         core::char::from_digit(num, radix)
     }
 
-    #[inline]
     unsafe fn from_u32_unchecked(i: u32) -> char {
         core::char::from_u32_unchecked(i)
     }
 
-    #[inline]
     fn from_u32(i: u32) -> Option<char> {
         core::char::from_u32(i)
     }
@@ -88,7 +84,6 @@ pub trait str_v1_52: Sealed<str> {
 }
 
 impl str_v1_52 for str {
-    #[inline]
     fn rsplit_once<'a, P>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>
     where
         P: Pattern<'a>,
@@ -98,7 +93,6 @@ impl str_v1_52 for str {
         Some((&self[..start], &self[end..]))
     }
 
-    #[inline]
     fn split_once<'a, P: Pattern<'a>>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)> {
         let (start, end) = delimiter.into_searcher(self).next_match()?;
         Some((&self[..start], &self[end..]))

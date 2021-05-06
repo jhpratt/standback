@@ -9,7 +9,6 @@ use std::{
 use crate::traits::Sealed;
 
 #[cfg(feature = "std")]
-#[inline(always)]
 fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
     unsafe { core::mem::transmute(value) }
 }
@@ -78,7 +77,6 @@ pub trait ManuallyDrop_v1_42<T>: Sealed<ManuallyDrop<T>> {
 
 impl<T> ManuallyDrop_v1_42<T> for ManuallyDrop<T> {
     #[must_use = "if you don't need the value, you can use `ManuallyDrop::drop` instead"]
-    #[inline]
     unsafe fn take(slot: &mut ManuallyDrop<T>) -> T {
         ptr::read(slot as *mut _ as *const _)
     }

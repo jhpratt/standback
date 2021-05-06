@@ -9,7 +9,6 @@ pub trait Cell_v1_37<T>: Sealed<Cell<T>> {
 }
 
 impl<T> Cell_v1_37<T> for Cell<T> {
-    #[inline]
     fn from_mut(t: &mut T) -> &Cell<T> {
         unsafe { &*(t as *mut T as *const Cell<T>) }
     }
@@ -30,7 +29,6 @@ pub trait Option_v1_37<T>: Sealed<Option<T>> {
 }
 
 impl<T> Option_v1_37<T> for Option<T> {
-    #[inline]
     fn xor(self, optb: Option<T>) -> Option<T> {
         match (self, optb) {
             (Some(a), None) => Some(a),
@@ -79,7 +77,6 @@ impl<T> Slice_v1_37<T> for [T] {
     }
 }
 
-#[inline(never)]
 #[cold]
 fn slice_index_overflow_fail() -> ! {
     panic!("attempted to index slice up to maximum usize");
@@ -90,7 +87,6 @@ pub trait DoubleEndedIterator_v1_37: DoubleEndedIterator {
 }
 
 impl<Iter: DoubleEndedIterator> DoubleEndedIterator_v1_37 for Iter {
-    #[inline]
     fn nth_back(&mut self, mut n: usize) -> Option<Self::Item> {
         for x in self.rev() {
             if n == 0 {

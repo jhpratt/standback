@@ -11,7 +11,6 @@ where
 }
 
 impl<'a, T: 'a, P: FnMut(&T) -> bool> SplitInclusiveMut<'a, T, P> {
-    #[inline]
     pub(super) fn new(slice: &'a mut [T], pred: P) -> Self {
         Self {
             v: slice,
@@ -39,7 +38,6 @@ where
 {
     type Item = &'a mut [T];
 
-    #[inline]
     fn next(&mut self) -> Option<&'a mut [T]> {
         if self.finished {
             return None;
@@ -59,7 +57,6 @@ where
         Some(head)
     }
 
-    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         if self.finished {
             (0, Some(0))
@@ -73,7 +70,6 @@ impl<'a, T, P> DoubleEndedIterator for SplitInclusiveMut<'a, T, P>
 where
     P: FnMut(&T) -> bool,
 {
-    #[inline]
     fn next_back(&mut self) -> Option<&'a mut [T]> {
         if self.finished {
             return None;
@@ -109,7 +105,6 @@ where
 }
 
 impl<'a, T: 'a, P: FnMut(&T) -> bool> SplitInclusive<'a, T, P> {
-    #[inline]
     pub(super) fn new(slice: &'a [T], pred: P) -> Self {
         Self {
             v: slice,
@@ -150,7 +145,6 @@ where
 {
     type Item = &'a [T];
 
-    #[inline]
     fn next(&mut self) -> Option<&'a [T]> {
         if self.finished {
             return None;
@@ -170,7 +164,6 @@ where
         ret
     }
 
-    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         if self.finished {
             (0, Some(0))
@@ -184,7 +177,6 @@ impl<'a, T, P> DoubleEndedIterator for SplitInclusive<'a, T, P>
 where
     P: FnMut(&T) -> bool,
 {
-    #[inline]
     fn next_back(&mut self) -> Option<&'a [T]> {
         if self.finished {
             return None;

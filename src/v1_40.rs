@@ -41,32 +41,26 @@ pub trait f32_v1_40: Sealed<f32> {
 }
 
 impl f32_v1_40 for f32 {
-    #[inline]
     fn to_be_bytes(self) -> [u8; 4] {
         self.to_bits().to_be_bytes()
     }
 
-    #[inline]
     fn to_le_bytes(self) -> [u8; 4] {
         self.to_bits().to_le_bytes()
     }
 
-    #[inline]
     fn to_ne_bytes(self) -> [u8; 4] {
         self.to_bits().to_ne_bytes()
     }
 
-    #[inline]
     fn from_be_bytes(bytes: [u8; 4]) -> Self {
         Self::from_bits(u32::from_be_bytes(bytes))
     }
 
-    #[inline]
     fn from_le_bytes(bytes: [u8; 4]) -> Self {
         Self::from_bits(u32::from_le_bytes(bytes))
     }
 
-    #[inline]
     fn from_ne_bytes(bytes: [u8; 4]) -> Self {
         Self::from_bits(u32::from_ne_bytes(bytes))
     }
@@ -82,32 +76,26 @@ pub trait f64_v1_40: Sealed<f64> {
 }
 
 impl f64_v1_40 for f64 {
-    #[inline]
     fn to_be_bytes(self) -> [u8; 8] {
         self.to_bits().to_be_bytes()
     }
 
-    #[inline]
     fn to_le_bytes(self) -> [u8; 8] {
         self.to_bits().to_le_bytes()
     }
 
-    #[inline]
     fn to_ne_bytes(self) -> [u8; 8] {
         self.to_bits().to_ne_bytes()
     }
 
-    #[inline]
     fn from_be_bytes(bytes: [u8; 8]) -> Self {
         Self::from_bits(u64::from_be_bytes(bytes))
     }
 
-    #[inline]
     fn from_le_bytes(bytes: [u8; 8]) -> Self {
         Self::from_bits(u64::from_le_bytes(bytes))
     }
 
-    #[inline]
     fn from_ne_bytes(bytes: [u8; 8]) -> Self {
         Self::from_bits(u64::from_ne_bytes(bytes))
     }

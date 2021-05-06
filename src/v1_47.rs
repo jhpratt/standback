@@ -40,7 +40,6 @@ pub trait Vec_v1_47<T>: Sealed<Vec<T>> {
 
 #[cfg(feature = "alloc")]
 impl<T> Vec_v1_47<T> for Vec<T> {
-    #[inline]
     fn leak<'a>(self) -> &'a mut [T]
     where
         T: 'a,

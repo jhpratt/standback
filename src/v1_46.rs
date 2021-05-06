@@ -8,24 +8,20 @@ pub trait int_v1_46: Integer {
 macro_rules! impl_int_v1_46 {
     ($($signed_type:ty, $unsigned_type:ty),*) => {$(
         impl int_v1_46 for $signed_type {
-            #[inline]
             fn leading_ones(self) -> u32 {
                 (self as $unsigned_type).leading_ones()
             }
 
-            #[inline]
             fn trailing_ones(self) -> u32 {
                 (self as $unsigned_type).trailing_ones()
             }
         }
 
         impl int_v1_46 for $unsigned_type {
-            #[inline]
             fn leading_ones(self) -> u32 {
                 (!self).leading_zeros()
             }
 
-            #[inline]
             fn trailing_ones(self) -> u32 {
                 (!self).trailing_zeros()
             }

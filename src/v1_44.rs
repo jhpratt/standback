@@ -53,19 +53,16 @@ pub trait Layout_v1_44: Sealed<Layout> {
 }
 
 impl Layout_v1_44 for Layout {
-    #[inline]
     fn align_to(&self, align: usize) -> Result<Self, LayoutErr> {
         Layout::from_size_align(self.size(), cmp::max(self.align(), align))
     }
 
-    #[inline]
     fn pad_to_align(&self) -> Layout {
         let pad = padding_needed_for(self, self.align());
         let new_size = self.size() + pad;
         Layout::from_size_align(new_size, self.align()).unwrap()
     }
 
-    #[inline]
     fn array<T>(n: usize) -> Result<Self, LayoutErr> {
         repeat(&Layout::new::<T>(), n).map(|(k, offs)| {
             debug_assert!(offs == mem::size_of::<T>());
@@ -73,7 +70,6 @@ impl Layout_v1_44 for Layout {
         })
     }
 
-    #[inline]
     fn extend(&self, next: Self) -> Result<(Self, usize), LayoutErr> {
         let new_align = cmp::max(self.align(), next.align());
         let pad = padding_needed_for(self, next.align());
@@ -92,7 +88,6 @@ fn padding_needed_for(zelf: &Layout, align: usize) -> usize {
     len_rounded_up.wrapping_sub(len)
 }
 
-#[inline]
 fn repeat(zelf: &Layout, n: usize) -> Result<(Layout, usize), LayoutErr> {
     let padded_size = zelf.size() + padding_needed_for(zelf, zelf.align());
     let alloc_size = padded_size.checked_mul(n).ok_or(layout_err())?;
@@ -105,7 +100,6 @@ fn repeat(zelf: &Layout, n: usize) -> Result<(Layout, usize), LayoutErr> {
     }
 }
 
-#[inline(always)]
 fn layout_err() -> LayoutErr {
     unsafe { transmute(()) }
 }
@@ -119,7 +113,6 @@ mod sealed {
     macro_rules! impl_float_to_int {
         ($float:ident => $($int:ident)+) => {$(
             impl FloatToInt<$int> for $float {
-                #[inline]
                 unsafe fn to_int_unchecked(self) -> $int {
                     self as $int
                 }
