@@ -1,3 +1,5 @@
+#![allow(deprecated)]
+
 use core::alloc::{Layout, LayoutErr};
 use core::cmp;
 use core::mem::{self, transmute};

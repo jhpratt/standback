@@ -53,6 +53,35 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
+## 1.53
+
+```text
+Ordering::is_eq
+Duration::ZERO
+Duration::is_zero
+Duration::saturating_add
+Duration::saturating_mul
+Duration::saturating_sub
+Option::insert
+Ordering::is_eq
+Ordering::is_ge
+Ordering::is_gt
+Ordering::is_le
+Ordering::is_lt
+Ordering::is_ne
+OsStr::make_ascii_lowercase
+OsStr::make_ascii_uppercase
+OsStr::to_ascii_lowercase
+OsStr::to_ascii_uppercase
+OsStr::is_ascii
+OsStr::eq_ignore_ascii_case
+Rc::decrement_strong_count
+Rc::increment_strong_count
+Vec::extend_from_within
+{f32, f64}::is_subnormal
+{i*, u*}::BITS
+```
+
 ## 1.52
 
 ```text
@@ -252,6 +281,12 @@ slice::copy_within
 # Free functions and constants
 
 ```text
+array::from_ref // 1.53
+array::from_mut // 1.53
+cmp::min_by // 1.53
+cmp::max_by // 1.53
+cmp::min_by_key // 1.53
+cmp::max_by_key // 1.53
 future::pending // 1.48
 future::ready // 1.48
 char::UNICODE_VERSION // 1.45
@@ -333,6 +368,8 @@ mod v1_50;
 mod v1_51;
 #[cfg(shim = "1.52")]
 mod v1_52;
+#[cfg(shim = "1.53")]
+mod v1_53;
 
 #[doc(hidden)]
 pub mod prelude {
@@ -395,6 +432,14 @@ pub mod prelude {
     };
     #[cfg(shim = "1.52")]
     pub use crate::v1_52::{char_v1_52, str_v1_52, Slice_v1_52};
+    #[cfg(all(shim = "1.53", feature = "std"))]
+    pub use crate::v1_53::OsStr_v1_53;
+    #[cfg(shim = "1.53")]
+    pub use crate::v1_53::{
+        Duration_v1_53, Float_v1_53, Integer_v1_53, Option_v1_53, Ordering_v1_53,
+    };
+    #[cfg(all(shim = "1.53", feature = "alloc"))]
+    pub use crate::v1_53::{Rc_v1_53, Vec_v1_53};
 }
 #[doc(hidden)]
 pub mod mem {
@@ -466,4 +511,20 @@ pub mod future {
 
     #[cfg(shim = "1.48")]
     pub use crate::v1_48::future::{pending, ready, Pending, Ready};
+}
+#[doc(hidden)]
+pub mod array {
+    #[cfg(reexport = "1.53")]
+    pub use core::array::{from_mut, from_ref};
+
+    #[cfg(shim = "1.53")]
+    pub use crate::v1_53::array::{from_mut, from_ref};
+}
+#[doc(hidden)]
+pub mod cmp {
+    #[cfg(reexport = "1.53")]
+    pub use core::cmp::{max_by, max_by_key, min_by, min_by_key};
+
+    #[cfg(shim = "1.53")]
+    pub use crate::v1_53::cmp::{max_by, max_by_key, min_by, min_by_key};
 }

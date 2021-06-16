@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog]. This project adheres to [Semantic Ver
 
 ---
 
+## 0.3.3 [2021-06-16]
+
+- Support for Rust 1.53 APIs has been added.
+
 ## 0.3.2 [2021-05-05]
 
 - Support for Rust 1.52 APIs has been added.
@@ -20,7 +24,7 @@ The format is based on [Keep a Changelog]. This project adheres to [Semantic Ver
 - The ability to declare a higher MSRV has been added.
 - The crate's MSRV has been raised to 1.36 due to the `alloc` support.
 
-## 0.3.0 [2021-04-06]
+## 0.3.0 [2021-04-06] [YANKED]
 
 This version provides no functionality whatsoever and has been yanked.
 
