@@ -2,33 +2,35 @@ use core::cell::Cell;
 use core::ops::{Bound, RangeBounds};
 use core::ptr;
 
+use easy_ext::ext;
+
 use crate::traits::Sealed;
 
-pub trait Cell_v1_37<T>: Sealed<Cell<T>> {
-    fn from_mut(t: &mut T) -> &Cell<T>;
-}
-
-impl<T> Cell_v1_37<T> for Cell<T> {
+#[ext(Cell_v1_37)]
+pub impl<T> Cell<T>
+where
+    Self: Sealed<Cell<T>>,
+{
     fn from_mut(t: &mut T) -> &Cell<T> {
         unsafe { &*(t as *mut T as *const Cell<T>) }
     }
 }
 
-pub trait Cell_v1_37_<T>: Sealed<Cell<[T]>> {
-    fn as_slice_of_cells(&self) -> &[Cell<T>];
-}
-
-impl<T> Cell_v1_37_<T> for Cell<[T]> {
+#[ext(Cell_v1_37_)]
+pub impl<T> Cell<[T]>
+where
+    Self: Sealed<Cell<[T]>>,
+{
     fn as_slice_of_cells(&self) -> &[Cell<T>] {
         unsafe { &*(self as *const Cell<[T]> as *const [Cell<T>]) }
     }
 }
 
-pub trait Option_v1_37<T>: Sealed<Option<T>> {
-    fn xor(self, optb: Option<T>) -> Option<T>;
-}
-
-impl<T> Option_v1_37<T> for Option<T> {
+#[ext(Option_v1_37)]
+pub impl<T> Option<T>
+where
+    Self: Sealed<Option<T>>,
+{
     fn xor(self, optb: Option<T>) -> Option<T> {
         match (self, optb) {
             (Some(a), None) => Some(a),
@@ -38,13 +40,11 @@ impl<T> Option_v1_37<T> for Option<T> {
     }
 }
 
-pub trait Slice_v1_37<T>: Sealed<[T]> {
-    fn copy_within<R: RangeBounds<usize>>(&mut self, src: R, dest: usize)
-    where
-        T: Copy;
-}
-
-impl<T> Slice_v1_37<T> for [T] {
+#[ext(Slice_v1_37)]
+pub impl<T> [T]
+where
+    Self: Sealed<[T]>,
+{
     fn copy_within<R: RangeBounds<usize>>(&mut self, src: R, dest: usize)
     where
         T: Copy,
@@ -82,11 +82,11 @@ fn slice_index_overflow_fail() -> ! {
     panic!("attempted to index slice up to maximum usize");
 }
 
-pub trait DoubleEndedIterator_v1_37: DoubleEndedIterator {
-    fn nth_back(&mut self, n: usize) -> Option<Self::Item>;
-}
-
-impl<Iter: DoubleEndedIterator> DoubleEndedIterator_v1_37 for Iter {
+#[ext(DoubleEndedIterator_v1_37)]
+pub impl<Iter> Iter
+where
+    Self: DoubleEndedIterator,
+{
     fn nth_back(&mut self, mut n: usize) -> Option<Self::Item> {
         for x in self.rev() {
             if n == 0 {

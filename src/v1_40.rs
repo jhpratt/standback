@@ -4,14 +4,15 @@ use core::ops::DerefMut;
 #[cfg(feature = "alloc")]
 use core::ptr;
 
+use easy_ext::ext;
+
 use crate::traits::Sealed;
 
-pub trait Option_v1_40<T: DerefMut>: Sealed<Option<T>> {
-    fn as_deref_mut(&mut self) -> Option<&mut T::Target>;
-    fn as_deref(&self) -> Option<&T::Target>;
-}
-
-impl<T: DerefMut> Option_v1_40<T> for Option<T> {
+#[ext(Option_v1_40)]
+pub impl<T: DerefMut> Option<T>
+where
+    Self: Sealed<Option<T>>,
+{
     fn as_deref_mut(&mut self) -> Option<&mut T::Target> {
         self.as_mut().map(|t| t.deref_mut())
     }
@@ -21,26 +22,21 @@ impl<T: DerefMut> Option_v1_40<T> for Option<T> {
     }
 }
 
-pub trait Option_v1_40_<T>: Sealed<Option<Option<T>>> {
-    fn flatten(self) -> Option<T>;
-}
-
-impl<T> Option_v1_40_<T> for Option<Option<T>> {
+#[ext(Option_v1_40_)]
+pub impl<T> Option<Option<T>>
+where
+    Self: Sealed<Option<Option<T>>>,
+{
     fn flatten(self) -> Option<T> {
         self.and_then(core::convert::identity)
     }
 }
 
-pub trait f32_v1_40: Sealed<f32> {
-    fn to_be_bytes(self) -> [u8; 4];
-    fn to_le_bytes(self) -> [u8; 4];
-    fn to_ne_bytes(self) -> [u8; 4];
-    fn from_be_bytes(bytes: [u8; 4]) -> Self;
-    fn from_le_bytes(bytes: [u8; 4]) -> Self;
-    fn from_ne_bytes(bytes: [u8; 4]) -> Self;
-}
-
-impl f32_v1_40 for f32 {
+#[ext(f32_v1_40)]
+pub impl f32
+where
+    Self: Sealed<f32>,
+{
     fn to_be_bytes(self) -> [u8; 4] {
         self.to_bits().to_be_bytes()
     }
@@ -66,16 +62,11 @@ impl f32_v1_40 for f32 {
     }
 }
 
-pub trait f64_v1_40: Sealed<f64> {
-    fn to_be_bytes(self) -> [u8; 8];
-    fn to_le_bytes(self) -> [u8; 8];
-    fn to_ne_bytes(self) -> [u8; 8];
-    fn from_be_bytes(bytes: [u8; 8]) -> Self;
-    fn from_le_bytes(bytes: [u8; 8]) -> Self;
-    fn from_ne_bytes(bytes: [u8; 8]) -> Self;
-}
-
-impl f64_v1_40 for f64 {
+#[ext(f64_v1_40)]
+pub impl f64
+where
+    Self: Sealed<f64>,
+{
     fn to_be_bytes(self) -> [u8; 8] {
         self.to_bits().to_be_bytes()
     }
@@ -106,14 +97,11 @@ pub fn take<T: Default>(dest: &mut T) -> T {
 }
 
 #[cfg(feature = "alloc")]
-pub trait slice_v1_40<T>: Sealed<[T]> {
-    fn repeat(&self, n: usize) -> Vec<T>
-    where
-        T: Copy;
-}
-
-#[cfg(feature = "alloc")]
-impl<T: Copy> slice_v1_40<T> for [T] {
+#[ext(slice_v1_40)]
+pub impl<T: Copy> [T]
+where
+    Self: Sealed<[T]>,
+{
     fn repeat(&self, n: usize) -> Vec<T> {
         if n == 0 {
             return Vec::new();

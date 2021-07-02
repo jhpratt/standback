@@ -4,24 +4,25 @@ use alloc::boxed::Box;
 use alloc::vec::Vec;
 use core::ops::{DerefMut, Range};
 
+use easy_ext::ext;
+
 use crate::traits::Sealed;
 
-pub trait Range_v1_47<Idx>: Sealed<Range<Idx>> {
-    fn is_empty(&self) -> bool;
-}
-
-impl<Idx: PartialOrd<Idx>> Range_v1_47<Idx> for Range<Idx> {
+#[ext(Range_v1_47)]
+pub impl<Idx: PartialOrd<Idx>> Range<Idx>
+where
+    Self: Sealed<Range<Idx>>,
+{
     fn is_empty(&self) -> bool {
         !(self.start < self.end)
     }
 }
 
-pub trait Result_v1_47<T: DerefMut, E>: Sealed<Result<T, E>> {
-    fn as_deref(&self) -> Result<&T::Target, &E>;
-    fn as_deref_mut(&mut self) -> Result<&mut T::Target, &mut E>;
-}
-
-impl<T: DerefMut, E> Result_v1_47<T, E> for Result<T, E> {
+#[ext(Result_v1_47)]
+pub impl<T: DerefMut, E> Result<T, E>
+where
+    Self: Sealed<Result<T, E>>,
+{
     fn as_deref(&self) -> Result<&T::Target, &E> {
         self.as_ref().map(|t| t.deref())
     }
@@ -32,14 +33,11 @@ impl<T: DerefMut, E> Result_v1_47<T, E> for Result<T, E> {
 }
 
 #[cfg(feature = "alloc")]
-pub trait Vec_v1_47<T>: Sealed<Vec<T>> {
-    fn leak<'a>(self) -> &'a mut [T]
-    where
-        T: 'a;
-}
-
-#[cfg(feature = "alloc")]
-impl<T> Vec_v1_47<T> for Vec<T> {
+#[ext(Vec_v1_47)]
+pub impl<T> Vec<T>
+where
+    Self: Sealed<Vec<T>>,
+{
     fn leak<'a>(self) -> &'a mut [T]
     where
         T: 'a,

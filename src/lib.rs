@@ -312,28 +312,6 @@ mod traits {
     #[allow(unreachable_pub)]
     pub trait Sealed<T: ?Sized> {}
     impl<T: ?Sized> Sealed<T> for T {}
-
-    macro_rules! impl_trait_for_all {
-        ($trait:ident => $($type:ty)+) => {$(
-            impl $trait for $type {}
-        )+};
-    }
-
-    #[allow(unreachable_pub)]
-    pub trait Integer: Sized {}
-    impl_trait_for_all!(Integer => i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize);
-
-    #[allow(unreachable_pub)]
-    pub trait SignedInteger {}
-    impl_trait_for_all!(SignedInteger => i8 i16 i32 i64 i128 isize);
-
-    #[allow(unreachable_pub)]
-    pub trait UnsignedInteger {}
-    impl_trait_for_all!(UnsignedInteger => u8 u16 u32 u64 u128 usize);
-
-    #[allow(unreachable_pub)]
-    pub trait Float {}
-    impl_trait_for_all!(Float => f32 f64);
 }
 
 mod pattern;
@@ -383,9 +361,12 @@ pub mod prelude {
         Cell_v1_37, Cell_v1_37_, DoubleEndedIterator_v1_37, Option_v1_37, Slice_v1_37,
     };
     #[cfg(all(shim = "1.38", feature = "std"))]
-    pub use crate::v1_38::EuclidFloat_v1_38;
+    pub use crate::v1_38::{f32_v1_38, f64_v1_38};
     #[cfg(shim = "1.38")]
-    pub use crate::v1_38::{ConstPtr_v1_38, Duration_v1_38, Euclid_v1_38, MutPtr_v1_38};
+    pub use crate::v1_38::{
+        i128_v1_38, i16_v1_38, i32_v1_38, i64_v1_38, i8_v1_38, isize_v1_38, u128_v1_38, u16_v1_38,
+        u32_v1_38, u64_v1_38, u8_v1_38, usize_v1_38, ConstPtr_v1_38, Duration_v1_38, MutPtr_v1_38,
+    };
     #[cfg(all(shim = "1.40", feature = "alloc"))]
     pub use crate::v1_40::slice_v1_40;
     #[cfg(shim = "1.40")]
@@ -397,11 +378,11 @@ pub mod prelude {
     #[cfg(shim = "1.42")]
     pub use crate::v1_42::ManuallyDrop_v1_42;
     #[cfg(shim = "1.43")]
-    pub use crate::v1_43::{float_v1_43, int_v1_43};
+    pub use crate::v1_43::{f32_v1_43, f64_v1_43, int_v1_43};
     #[cfg(all(shim = "1.44", feature = "std"))]
     pub use crate::v1_44::PathBuf_v1_44;
     #[cfg(shim = "1.44")]
-    pub use crate::v1_44::{float_v1_44, Layout_v1_44};
+    pub use crate::v1_44::{f32_v1_44, f64_v1_44, Layout_v1_44};
     #[cfg(shim = "1.45")]
     pub use crate::v1_45::{int_v1_45, str_v1_45};
     #[cfg(shim = "1.46")]
@@ -420,7 +401,7 @@ pub mod prelude {
     pub use crate::v1_50::HashMapEntry_v1_50;
     #[cfg(shim = "1.50")]
     pub use crate::v1_50::{
-        Bool_v1_50, Float_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
+        f32_v1_50, f64_v1_50, Bool_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
     };
     #[cfg(all(shim = "1.51", feature = "alloc"))]
     pub use crate::v1_51::Arc_v1_51;
@@ -436,7 +417,7 @@ pub mod prelude {
     pub use crate::v1_53::OsStr_v1_53;
     #[cfg(shim = "1.53")]
     pub use crate::v1_53::{
-        Duration_v1_53, Float_v1_53, Integer_v1_53, Option_v1_53, Ordering_v1_53,
+        f32_v1_53, f64_v1_53, Duration_v1_53, Integer_v1_53, Option_v1_53, Ordering_v1_53,
     };
     #[cfg(all(shim = "1.53", feature = "alloc"))]
     pub use crate::v1_53::{Rc_v1_53, Vec_v1_53};

@@ -8,20 +8,16 @@ use std::ffi::OsString;
 #[cfg(feature = "std")]
 use std::path::PathBuf;
 
-use crate::traits::{Float, Sealed};
+use easy_ext::ext;
+
+use crate::traits::Sealed;
 
 #[cfg(feature = "std")]
-pub trait PathBuf_v1_44: Sealed<PathBuf> {
-    fn with_capacity(capacity: usize) -> PathBuf;
-    fn capacity(&self) -> usize;
-    fn clear(&mut self);
-    fn reserve(&mut self, additional: usize);
-    fn reserve_exact(&mut self, additional: usize);
-    fn shrink_to_fit(&mut self);
-}
-
-#[cfg(feature = "std")]
-impl PathBuf_v1_44 for PathBuf {
+#[ext(PathBuf_v1_44)]
+pub impl PathBuf
+where
+    Self: Sealed<PathBuf>,
+{
     fn with_capacity(capacity: usize) -> PathBuf {
         OsString::with_capacity(capacity).into()
     }
@@ -47,15 +43,12 @@ impl PathBuf_v1_44 for PathBuf {
     }
 }
 
-pub trait Layout_v1_44: Sealed<Layout> {
-    fn align_to(&self, align: usize) -> Result<Layout, LayoutErr>;
-    fn pad_to_align(&self) -> Layout;
-    fn array<T>(n: usize) -> Result<Layout, LayoutErr>;
-    fn extend(&self, next: Layout) -> Result<(Layout, usize), LayoutErr>;
-}
-
-impl Layout_v1_44 for Layout {
-    fn align_to(&self, align: usize) -> Result<Self, LayoutErr> {
+#[ext(Layout_v1_44)]
+pub impl Layout
+where
+    Self: Sealed<Layout>,
+{
+    fn align_to(&self, align: usize) -> Result<Layout, LayoutErr> {
         Layout::from_size_align(self.size(), cmp::max(self.align(), align))
     }
 
@@ -65,14 +58,14 @@ impl Layout_v1_44 for Layout {
         Layout::from_size_align(new_size, self.align()).unwrap()
     }
 
-    fn array<T>(n: usize) -> Result<Self, LayoutErr> {
+    fn array<T>(n: usize) -> Result<Layout, LayoutErr> {
         repeat(&Layout::new::<T>(), n).map(|(k, offs)| {
             debug_assert!(offs == mem::size_of::<T>());
             k
         })
     }
 
-    fn extend(&self, next: Self) -> Result<(Self, usize), LayoutErr> {
+    fn extend(&self, next: Self) -> Result<(Layout, usize), LayoutErr> {
         let new_align = cmp::max(self.align(), next.align());
         let pad = padding_needed_for(self, next.align());
 
@@ -126,13 +119,11 @@ mod sealed {
     impl_float_to_int!(f64 => u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize);
 }
 
-pub trait float_v1_44: Float {
-    unsafe fn to_int_unchecked<Int>(self) -> Int
-    where
-        Self: sealed::FloatToInt<Int>;
-}
-
-impl float_v1_44 for f32 {
+#[ext(f32_v1_44)]
+pub impl f32
+where
+    Self: Sealed<f32>,
+{
     unsafe fn to_int_unchecked<Int>(self) -> Int
     where
         f32: sealed::FloatToInt<Int>,
@@ -141,7 +132,11 @@ impl float_v1_44 for f32 {
     }
 }
 
-impl float_v1_44 for f64 {
+#[ext(f64_v1_44)]
+pub impl f64
+where
+    Self: Sealed<f64>,
+{
     unsafe fn to_int_unchecked<Int>(self) -> Int
     where
         f64: sealed::FloatToInt<Int>,

@@ -6,6 +6,8 @@ use std::{
     time::{Duration, Instant},
 };
 
+use easy_ext::ext;
+
 use crate::traits::Sealed;
 
 #[cfg(feature = "std")]
@@ -14,26 +16,11 @@ fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
 }
 
 #[cfg(feature = "std")]
-pub trait Condvar_v1_42: Sealed<Condvar> {
-    fn wait_while<'a, T, F>(
-        &self,
-        guard: MutexGuard<'a, T>,
-        condition: F,
-    ) -> LockResult<MutexGuard<'a, T>>
-    where
-        F: FnMut(&mut T) -> bool;
-    fn wait_timeout_while<'a, T, F>(
-        &self,
-        guard: MutexGuard<'a, T>,
-        dur: Duration,
-        condition: F,
-    ) -> LockResult<(MutexGuard<'a, T>, WaitTimeoutResult)>
-    where
-        F: FnMut(&mut T) -> bool;
-}
-
-#[cfg(feature = "std")]
-impl Condvar_v1_42 for Condvar {
+#[ext(Condvar_v1_42)]
+pub impl Condvar
+where
+    Self: Sealed<Condvar>,
+{
     fn wait_while<'a, T, F>(
         &self,
         mut guard: MutexGuard<'a, T>,
@@ -71,11 +58,11 @@ impl Condvar_v1_42 for Condvar {
     }
 }
 
-pub trait ManuallyDrop_v1_42<T>: Sealed<ManuallyDrop<T>> {
-    unsafe fn take(slot: &mut ManuallyDrop<T>) -> T;
-}
-
-impl<T> ManuallyDrop_v1_42<T> for ManuallyDrop<T> {
+#[ext(ManuallyDrop_v1_42)]
+pub impl<T> ManuallyDrop<T>
+where
+    Self: Sealed<ManuallyDrop<T>>,
+{
     #[must_use = "if you don't need the value, you can use `ManuallyDrop::drop` instead"]
     unsafe fn take(slot: &mut ManuallyDrop<T>) -> T {
         ptr::read(slot as *mut _ as *const _)
@@ -84,23 +71,9 @@ impl<T> ManuallyDrop_v1_42<T> for ManuallyDrop<T> {
 
 #[macro_export]
 macro_rules! matches {
-    ($expression:expr, $( $pattern:pat )|+) => {
+    ($expression:expr, $( $pattern:pat )|+ $(if $guard:expr)? $(,)?) => {
         match $expression {
-            $( $pattern )|+ => true,
-            _ => false,
-        }
-    };
-
-    ($expression:expr, $( $pattern:pat )|+ if $guard:expr) => {
-        match $expression {
-            $( $pattern )|+ if $guard => true,
-            _ => false
-        }
-    };
-
-    ($expression:expr, $( $pattern:pat )|+ if $guard:expr ,) => {
-        match $expression {
-            $( $pattern )|+ if $guard => true,
+            $( $pattern )|+ $(if $guard)? => true,
             _ => false
         }
     };

@@ -10,17 +10,17 @@ use core::task::Poll;
 #[cfg(feature = "std")]
 use std::io::{Seek, SeekFrom};
 
+use easy_ext::ext;
+
 use crate::pattern::Pattern;
 use crate::traits::Sealed;
 
 #[cfg(feature = "alloc")]
-pub trait Arc_v1_51<T>: Sealed<Arc<T>> {
-    unsafe fn decrement_strong_count(ptr: *const T);
-    unsafe fn increment_strong_count(ptr: *const T);
-}
-
-#[cfg(feature = "alloc")]
-impl<T> Arc_v1_51<T> for Arc<T> {
+#[ext(Arc_v1_51)]
+pub impl<T> Arc<T>
+where
+    Self: Sealed<Arc<T>>,
+{
     unsafe fn decrement_strong_count(ptr: *const T) {
         drop(Arc::from_raw(ptr));
     }
@@ -31,15 +31,11 @@ impl<T> Arc_v1_51<T> for Arc<T> {
     }
 }
 
-pub trait Peekable_v1_51<I: Iterator>: Sealed<Peekable<I>> {
-    fn next_if(&mut self, func: impl FnOnce(&I::Item) -> bool) -> Option<I::Item>;
-    fn next_if_eq<T>(&mut self, expected: &T) -> Option<I::Item>
-    where
-        T: ?Sized,
-        I::Item: PartialEq<T>;
-}
-
-impl<I: Iterator> Peekable_v1_51<I> for Peekable<I> {
+#[ext(Peekable_v1_51)]
+pub impl<I: Iterator> Peekable<I>
+where
+    Self: Sealed<Peekable<I>>,
+{
     fn next_if(&mut self, func: impl FnOnce(&I::Item) -> bool) -> Option<I::Item> {
         if func(self.peek()?) {
             self.next()
@@ -58,36 +54,21 @@ impl<I: Iterator> Peekable_v1_51<I> for Peekable<I> {
 }
 
 #[cfg(feature = "std")]
-pub trait Seek_v1_51<T: Seek>: Sealed<T> {
-    fn stream_position(&mut self) -> std::io::Result<u64>;
-}
-
-#[cfg(feature = "std")]
-impl<T: Seek> Seek_v1_51<T> for T {
+#[ext(Seek_v1_51)]
+pub impl<T: Seek> T
+where
+    Self: Sealed<T>,
+{
     fn stream_position(&mut self) -> std::io::Result<u64> {
         self.seek(SeekFrom::Current(0))
     }
 }
 
-pub trait Slice_v1_51<T>: Sealed<[T]> {
-    fn fill_with<F>(&mut self, f: F)
-    where
-        F: FnMut() -> T;
-    fn split_inclusive_mut<F>(&mut self, pred: F) -> slice::SplitInclusiveMut<'_, T, F>
-    where
-        F: FnMut(&T) -> bool;
-    fn split_inclusive<F>(&self, pred: F) -> slice::SplitInclusive<'_, T, F>
-    where
-        F: FnMut(&T) -> bool;
-    fn strip_prefix(&self, prefix: &[T]) -> Option<&[T]>
-    where
-        T: PartialEq;
-    fn strip_suffix(&self, suffix: &[T]) -> Option<&[T]>
-    where
-        T: PartialEq;
-}
-
-impl<T> Slice_v1_51<T> for [T] {
+#[ext(Slice_v1_51)]
+pub impl<T> [T]
+where
+    Self: Sealed<[T]>,
+{
     fn fill_with<F>(&mut self, mut f: F)
     where
         F: FnMut() -> T,
@@ -151,40 +132,30 @@ pub trait Wake {
     }
 }
 
-pub trait SignedInteger_v1_51: crate::traits::SignedInteger {
-    type __StandbackUnsigned;
-    fn unsigned_abs(self) -> Self::__StandbackUnsigned;
-}
-
 macro_rules! impl_integer {
-    ($($int:ty => $uint:ty)*) => {$(
-        impl SignedInteger_v1_51 for $int {
-            type __StandbackUnsigned = $uint;
-            fn unsigned_abs(self) -> Self::__StandbackUnsigned {
+    ($(($trait_name:ident $int:ty => $uint:ty))+) => {$(
+        #[ext($trait_name)]
+        pub impl $int where Self: Sealed<$int>, {
+            fn unsigned_abs(self) -> $uint {
                  self.wrapping_abs() as $uint
             }
         }
-    )*};
+    )+};
 }
 
 impl_integer! {
-    i8 => u8
-    i16 => u16
-    i32 => u32
-    i64 => u64
-    i128 => u128
+    (i8_v1_51 i8 => u8)
+    (i16_v1_51 i16 => u16)
+    (i32_v1_51 i32 => u32)
+    (i64_v1_51 i64 => u64)
+    (i128_v1_51 i128 => u128)
 }
 
-pub trait Poll_v1_51<T, E>: Sealed<Poll<Result<T, E>>> {
-    fn map_ok<U, F>(self, f: F) -> Poll<Result<U, E>>
-    where
-        F: FnOnce(T) -> U;
-    fn map_err<U, F>(self, f: F) -> Poll<Result<T, U>>
-    where
-        F: FnOnce(E) -> U;
-}
-
-impl<T, E> Poll_v1_51<T, E> for Poll<Result<T, E>> {
+#[ext(Poll_v1_51)]
+pub impl<T, E> Poll<Result<T, E>>
+where
+    Self: Sealed<Poll<Result<T, E>>>,
+{
     fn map_ok<U, F>(self, f: F) -> Poll<Result<U, E>>
     where
         F: FnOnce(T) -> U,
@@ -208,11 +179,11 @@ impl<T, E> Poll_v1_51<T, E> for Poll<Result<T, E>> {
     }
 }
 
-pub trait str_v1_51: Sealed<str> {
-    fn split_inclusive<'a, P: Pattern<'a>>(&'a self, pat: P) -> str::SplitInclusive<'a, P>;
-}
-
-impl str_v1_51 for str {
+#[ext(str_v1_51)]
+pub impl str
+where
+    Self: Sealed<str>,
+{
     fn split_inclusive<'a, P: Pattern<'a>>(&'a self, pat: P) -> str::SplitInclusive<'a, P> {
         str::SplitInclusive(str::SplitInternal {
             start: 0,

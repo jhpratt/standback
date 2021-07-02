@@ -1,19 +1,15 @@
 use core::char::DecodeUtf16;
 
+use easy_ext::ext;
+
 use crate::pattern::{Pattern, ReverseSearcher, Searcher};
 use crate::traits::Sealed;
 
-pub trait char_v1_52: Sealed<char> {
-    const MAX: char;
-    const REPLACEMENT_CHARACTER: char;
-    const UNICODE_VERSION: (u8, u8, u8);
-    fn decode_utf16<I: IntoIterator<Item = u16>>(iter: I) -> DecodeUtf16<I::IntoIter>;
-    fn from_digit(num: u32, radix: u32) -> Option<char>;
-    unsafe fn from_u32_unchecked(i: u32) -> char;
-    fn from_u32(i: u32) -> Option<char>;
-}
-
-impl char_v1_52 for char {
+#[ext(char_v1_52)]
+pub impl char
+where
+    Self: Sealed<char>,
+{
     const MAX: char = '\u{10ffff}';
     const REPLACEMENT_CHARACTER: char = '\u{FFFD}';
     const UNICODE_VERSION: (u8, u8, u8) = {
@@ -52,11 +48,11 @@ impl char_v1_52 for char {
     }
 }
 
-pub trait Slice_v1_52<T>: Sealed<[T]> {
-    fn partition_point<P: FnMut(&T) -> bool>(&self, pred: P) -> usize;
-}
-
-impl<T> Slice_v1_52<T> for [T] {
+#[ext(Slice_v1_52)]
+pub impl<T> [T]
+where
+    Self: Sealed<[T]>,
+{
     fn partition_point<P: FnMut(&T) -> bool>(&self, mut pred: P) -> usize {
         let mut left = 0;
         let mut right = self.len();
@@ -75,15 +71,11 @@ impl<T> Slice_v1_52<T> for [T] {
     }
 }
 
-pub trait str_v1_52: Sealed<str> {
-    fn rsplit_once<'a, P>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>
-    where
-        P: Pattern<'a>,
-        <P as Pattern<'a>>::Searcher: ReverseSearcher<'a>;
-    fn split_once<'a, P: Pattern<'a>>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>;
-}
-
-impl str_v1_52 for str {
+#[ext(str_v1_52)]
+pub impl str
+where
+    Self: Sealed<str>,
+{
     fn rsplit_once<'a, P>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>
     where
         P: Pattern<'a>,

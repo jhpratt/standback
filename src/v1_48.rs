@@ -1,5 +1,7 @@
 use core::ops::Range;
 
+use easy_ext::ext;
+
 use crate::traits::Sealed;
 
 pub(crate) mod future {
@@ -52,12 +54,11 @@ pub(crate) mod future {
     }
 }
 
-pub trait Slice_v1_48<T>: Sealed<[T]> {
-    fn as_ptr_range(&self) -> Range<*const T>;
-    fn as_mut_ptr_range(&mut self) -> Range<*mut T>;
-}
-
-impl<T> Slice_v1_48<T> for [T] {
+#[ext(Slice_v1_48)]
+pub impl<T> [T]
+where
+    Self: Sealed<[T]>,
+{
     fn as_ptr_range(&self) -> Range<*const T> {
         let start = self.as_ptr();
         let end = unsafe { start.add(self.len()) };

@@ -1,41 +1,34 @@
 use core::time::Duration;
 
-#[cfg(feature = "std")]
-use crate::traits::Float;
-use crate::traits::{Integer, Sealed};
+use easy_ext::ext;
 
-pub trait ConstPtr_v1_38<T>: Sealed<*const T> {
-    fn cast<U>(self) -> *const U;
-}
+use crate::traits::Sealed;
 
-impl<T> ConstPtr_v1_38<T> for *const T {
+#[ext(ConstPtr_v1_38)]
+pub impl<T> *const T
+where
+    Self: Sealed<*const T>,
+{
     fn cast<U>(self) -> *const U {
         self as _
     }
 }
 
-pub trait MutPtr_v1_38<T>: Sealed<*mut T> {
-    fn cast<U>(self) -> *mut U;
-}
-
-impl<T> MutPtr_v1_38<T> for *mut T {
+#[ext(MutPtr_v1_38)]
+pub impl<T> *mut T
+where
+    Self: Sealed<*mut T>,
+{
     fn cast<U>(self) -> *mut U {
         self as _
     }
 }
 
-pub trait Duration_v1_38: Sealed<Duration> {
-    fn as_secs_f32(&self) -> f32;
-    fn as_secs_f64(&self) -> f64;
-    fn div_f32(&self, rhs: f32) -> Self;
-    fn div_f64(&self, rhs: f64) -> Self;
-    fn from_secs_f32(secs: f32) -> Self;
-    fn from_secs_f64(secs: f64) -> Self;
-    fn mul_f32(&self, rhs: f32) -> Self;
-    fn mul_f64(&self, rhs: f64) -> Self;
-}
-
-impl Duration_v1_38 for Duration {
+#[ext(Duration_v1_38)]
+pub impl Duration
+where
+    Self: Sealed<Duration>,
+{
     fn as_secs_f32(&self) -> f32 {
         (self.as_secs() as f32) + (self.subsec_nanos() as f32) / 1_000_000_000.
     }
@@ -99,20 +92,10 @@ impl Duration_v1_38 for Duration {
     }
 }
 
-pub trait Euclid_v1_38: Integer {
-    fn rem_euclid(self, rhs: Self) -> Self;
-    fn checked_rem_euclid(self, rhs: Self) -> Option<Self>;
-    fn wrapping_rem_euclid(self, rhs: Self) -> Self;
-    fn overflowing_rem_euclid(self, rhs: Self) -> (Self, bool);
-    fn div_euclid(self, rhs: Self) -> Self;
-    fn checked_div_euclid(self, rhs: Self) -> Option<Self>;
-    fn wrapping_div_euclid(self, rhs: Self) -> Self;
-    fn overflowing_div_euclid(self, rhs: Self) -> (Self, bool);
-}
-
 macro_rules! impl_euclid_for_signed {
-    ($($type:ty)+) => {$(
-        impl Euclid_v1_38 for $type {
+    ($(($trait_name:ident $type:ty))+) => {$(
+        #[ext($trait_name)]
+        pub impl $type where Self: Sealed<$type>, {
             #[must_use = "this returns the result of the operation, without modifying the original"]
             fn rem_euclid(self, rhs: Self) -> Self {
                 let r = self % rhs;
@@ -128,7 +111,7 @@ macro_rules! impl_euclid_for_signed {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn checked_rem_euclid(self, rhs: Self) -> Option<Self> {
+            fn checked_rem_euclid(self, rhs: Self) -> Option<$type> {
                 if rhs == 0 || (self == Self::min_value() && rhs == -1) {
                     None
                 } else {
@@ -142,7 +125,7 @@ macro_rules! impl_euclid_for_signed {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn overflowing_rem_euclid(self, rhs: Self) -> (Self, bool) {
+            fn overflowing_rem_euclid(self, rhs: Self) -> ($type, bool) {
                 if self == Self::min_value() && rhs == -1 {
                     (0, true)
                 } else {
@@ -160,7 +143,7 @@ macro_rules! impl_euclid_for_signed {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn checked_div_euclid(self, rhs: Self) -> Option<Self> {
+            fn checked_div_euclid(self, rhs: Self) -> Option<$type> {
                 if rhs == 0 || (self == Self::min_value() && rhs == -1) {
                     None
                 } else {
@@ -174,7 +157,7 @@ macro_rules! impl_euclid_for_signed {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn overflowing_div_euclid(self, rhs: Self) -> (Self, bool) {
+            fn overflowing_div_euclid(self, rhs: Self) -> ($type, bool) {
                 if self == Self::min_value() && rhs == -1 {
                     (self, true)
                 } else {
@@ -185,18 +168,26 @@ macro_rules! impl_euclid_for_signed {
     )+};
 }
 
-impl_euclid_for_signed![i8 i16 i32 i64 i128 isize];
+impl_euclid_for_signed![
+    (i8_v1_38 i8)
+    (i16_v1_38 i16)
+    (i32_v1_38 i32)
+    (i64_v1_38 i64)
+    (i128_v1_38 i128)
+    (isize_v1_38 isize)
+];
 
 macro_rules! impl_euclid_for_unsigned {
-    ($($type:ty)+) => {$(
-        impl Euclid_v1_38 for $type {
+    ($(($trait_name:ident $type:ty))+) => {$(
+        #[ext($trait_name)]
+        pub impl $type where Self: Sealed<$type>, {
             #[must_use = "this returns the result of the operation, without modifying the original"]
             fn rem_euclid(self, rhs: Self) -> Self {
                 self % rhs
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn checked_rem_euclid(self, rhs: Self) -> Option<Self> {
+            fn checked_rem_euclid(self, rhs: Self) -> Option<$type> {
                 if rhs == 0 {
                     None
                 } else {
@@ -210,7 +201,7 @@ macro_rules! impl_euclid_for_unsigned {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn overflowing_rem_euclid(self, rhs: Self) -> (Self, bool) {
+            fn overflowing_rem_euclid(self, rhs: Self) -> ($type, bool) {
                 (self % rhs, false)
             }
 
@@ -220,7 +211,7 @@ macro_rules! impl_euclid_for_unsigned {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn checked_div_euclid(self, rhs: Self) -> Option<Self> {
+            fn checked_div_euclid(self, rhs: Self) -> Option<$type> {
                 if rhs == 0 {
                     None
                 } else {
@@ -234,53 +225,42 @@ macro_rules! impl_euclid_for_unsigned {
             }
 
             #[must_use = "this returns the result of the operation, without modifying the original"]
-            fn overflowing_div_euclid(self, rhs: Self) -> (Self, bool) {
+            fn overflowing_div_euclid(self, rhs: Self) -> ($type, bool) {
                 (self / rhs, false)
             }
         }
     )+};
 }
 
-impl_euclid_for_unsigned![u8 u16 u32 u64 u128 usize];
+impl_euclid_for_unsigned![
+    (u8_v1_38 u8)
+    (u16_v1_38 u16)
+    (u32_v1_38 u32)
+    (u64_v1_38 u64)
+    (u128_v1_38 u128)
+    (usize_v1_38 usize)
+];
 
-#[cfg(feature = "std")]
-pub trait EuclidFloat_v1_38: Float {
-    fn rem_euclid(self, rhs: Self) -> Self;
-    fn div_euclid(self, rhs: Self) -> Self;
-}
+macro_rules! euclid_float {
+    ($(($trait_name:ident $type:ty))+) => {$(
+        #[cfg(feature = "std")]
+        #[ext($trait_name)]
+        pub impl $type where Self: Sealed<$type>, {
+            #[must_use = "method returns a new number and does not mutate the original value"]
+            fn rem_euclid(self, rhs: $type) -> $type {
+                let r = self % rhs;
+                if r < 0.0 { r + rhs.abs() } else { r }
+            }
 
-#[cfg(feature = "std")]
-impl EuclidFloat_v1_38 for f32 {
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    fn rem_euclid(self, rhs: f32) -> f32 {
-        let r = self % rhs;
-        if r < 0.0 { r + rhs.abs() } else { r }
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    fn div_euclid(self, rhs: f32) -> f32 {
-        let q = (self / rhs).trunc();
-        if self % rhs < 0.0 {
-            return if rhs > 0.0 { q - 1.0 } else { q + 1.0 };
+            #[must_use = "method returns a new number and does not mutate the original value"]
+            fn div_euclid(self, rhs: $type) -> $type {
+                let q = (self / rhs).trunc();
+                if self % rhs < 0.0 {
+                    return if rhs > 0.0 { q - 1.0 } else { q + 1.0 };
+                }
+                q
+            }
         }
-        q
-    }
+    )+};
 }
-
-#[cfg(feature = "std")]
-impl EuclidFloat_v1_38 for f64 {
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    fn rem_euclid(self, rhs: f64) -> f64 {
-        let r = self % rhs;
-        if r < 0.0 { r + rhs.abs() } else { r }
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    fn div_euclid(self, rhs: f64) -> f64 {
-        let q = (self / rhs).trunc();
-        if self % rhs < 0.0 {
-            return if rhs > 0.0 { q - 1.0 } else { q + 1.0 };
-        }
-        q
-    }
-}
+euclid_float![(f32_v1_38 f32) (f64_v1_38 f64)];

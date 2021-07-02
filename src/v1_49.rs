@@ -2,30 +2,15 @@ mod sort;
 
 use core::cmp::Ordering;
 
+use easy_ext::ext;
+
 use crate::traits::Sealed;
 
-pub trait Slice_v1_49<T>: Sealed<[T]> {
-    fn select_nth_unstable(&mut self, index: usize) -> (&mut [T], &mut T, &mut [T])
-    where
-        T: Ord;
-    fn select_nth_unstable_by<F>(
-        &mut self,
-        index: usize,
-        compare: F,
-    ) -> (&mut [T], &mut T, &mut [T])
-    where
-        F: FnMut(&T, &T) -> Ordering;
-    fn select_nth_unstable_by_key<K, F>(
-        &mut self,
-        index: usize,
-        f: F,
-    ) -> (&mut [T], &mut T, &mut [T])
-    where
-        F: FnMut(&T) -> K,
-        K: Ord;
-}
-
-impl<T> Slice_v1_49<T> for [T] {
+#[ext(Slice_v1_49)]
+pub impl<T> [T]
+where
+    Self: Sealed<[T]>,
+{
     fn select_nth_unstable(&mut self, index: usize) -> (&mut [T], &mut T, &mut [T])
     where
         T: Ord,

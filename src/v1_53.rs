@@ -13,18 +13,15 @@ use core::{mem, u64};
 #[cfg(feature = "std")]
 use std::ffi::{OsStr, OsString};
 
-use crate::traits::{Float, Integer, Sealed};
+use easy_ext::ext;
 
-pub trait Ordering_v1_53: Sealed<Ordering> {
-    fn is_eq(self) -> bool;
-    fn is_ne(self) -> bool;
-    fn is_lt(self) -> bool;
-    fn is_gt(self) -> bool;
-    fn is_le(self) -> bool;
-    fn is_ge(self) -> bool;
-}
+use crate::traits::Sealed;
 
-impl Ordering_v1_53 for Ordering {
+#[ext(Ordering_v1_53)]
+pub impl Ordering
+where
+    Self: Sealed<Ordering>,
+{
     #[must_use]
     fn is_eq(self) -> bool {
         self == Ordering::Equal
@@ -51,11 +48,11 @@ impl Ordering_v1_53 for Ordering {
     }
 }
 
-pub trait Option_v1_53<T>: Sealed<Option<T>> {
-    fn insert(&mut self, value: T) -> &mut T;
-}
-
-impl<T> Option_v1_53<T> for Option<T> {
+#[ext(Option_v1_53)]
+pub impl<T> Option<T>
+where
+    Self: Sealed<Option<T>>,
+{
     fn insert(&mut self, value: T) -> &mut T {
         *self = Some(value);
 
@@ -66,31 +63,31 @@ impl<T> Option_v1_53<T> for Option<T> {
     }
 }
 
-pub trait Float_v1_53: Float {
-    fn is_subnormal(self) -> bool;
-}
-
-impl Float_v1_53 for f32 {
+#[ext(f32_v1_53)]
+pub impl f32
+where
+    Self: Sealed<f32>,
+{
     fn is_subnormal(self) -> bool {
         self.classify() == FpCategory::Subnormal
     }
 }
 
-impl Float_v1_53 for f64 {
+#[ext(f64_v1_53)]
+pub impl f64
+where
+    Self: Sealed<f64>,
+{
     fn is_subnormal(self) -> bool {
         self.classify() == FpCategory::Subnormal
     }
 }
 
-pub trait Duration_v1_53: Sealed<Duration> {
-    const ZERO: Self;
-    fn is_zero(&self) -> bool;
-    fn saturating_add(self, rhs: Self) -> Self;
-    fn saturating_sub(self, rhs: Self) -> Self;
-    fn saturating_mul(self, rhs: u32) -> Self;
-}
-
-impl Duration_v1_53 for Duration {
+#[ext(Duration_v1_53)]
+pub impl Duration
+where
+    Self: Sealed<Duration>,
+{
     const ZERO: Self = Self::from_nanos(0);
 
     fn is_zero(&self) -> bool {
@@ -116,28 +113,36 @@ impl Duration_v1_53 for Duration {
     }
 }
 
-pub trait Integer_v1_53: Integer {
-    const BITS: u32;
-}
-
 macro_rules! impl_integer {
-    ($($t:ty)+) => {$(
-        impl Integer_v1_53 for $t {
+    ($(($trait_name:ident $t:ty))+) => {$(
+        #[ext($trait_name)]
+        pub impl $t where Self: Sealed<$t>, {
             const BITS: u32 = mem::size_of::<$t>() as u32 * 8;
         }
     )+};
 }
 
-impl_integer![u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize];
+impl_integer![
+    (u8_v1_53 u8)
+    (u16_v1_53 u16)
+    (u32_v1_53 u32)
+    (u64_v1_53 u64)
+    (u128_v1_53 u128)
+    (usize_v1_53 usize)
+    (i8_v1_53 i8)
+    (i16_v1_53 i16)
+    (i32_v1_53 i32)
+    (i64_v1_53 i64)
+    (i128_v1_53 i128)
+    (isize_v1_53 isize)
+];
 
 #[cfg(feature = "alloc")]
-pub trait Rc_v1_53<T>: Sealed<Rc<T>> {
-    unsafe fn increment_strong_count(ptr: *const T);
-    unsafe fn decrement_strong_count(ptr: *const T);
-}
-
-#[cfg(feature = "alloc")]
-impl<T> Rc_v1_53<T> for Rc<T> {
+#[ext(Rc_v1_53)]
+pub impl<T> Rc<T>
+where
+    Self: Sealed<Rc<T>>,
+{
     unsafe fn increment_strong_count(ptr: *const T) {
         let rc = mem::ManuallyDrop::new(Rc::<T>::from_raw(ptr));
         let _rc_clone = rc.clone();
@@ -148,17 +153,11 @@ impl<T> Rc_v1_53<T> for Rc<T> {
 }
 
 #[cfg(feature = "std")]
-pub trait OsStr_v1_53: Sealed<OsStr> {
-    fn make_ascii_lowercase(&mut self);
-    fn make_ascii_uppercase(&mut self);
-    fn to_ascii_lowercase(&self) -> OsString;
-    fn to_ascii_uppercase(&self) -> OsString;
-    fn is_ascii(&self) -> bool;
-    fn eq_ignore_ascii_case<S: AsRef<OsStr>>(&self, other: S) -> bool;
-}
-
-#[cfg(feature = "std")]
-impl OsStr_v1_53 for OsStr {
+#[ext(OsStr_v1_53)]
+pub impl OsStr
+where
+    Self: Sealed<OsStr>,
+{
     fn make_ascii_lowercase(&mut self) {
         unsafe { transmute::<_, &mut [u8]>(self).make_ascii_lowercase() }
     }
@@ -180,15 +179,11 @@ impl OsStr_v1_53 for OsStr {
 }
 
 #[cfg(feature = "alloc")]
-pub trait Vec_v1_53<T>: Sealed<Vec<T>> {
-    fn extend_from_within<R: ops::RangeBounds<usize> + core::slice::SliceIndex<[T], Output = [T]>>(
-        &mut self,
-        src: R,
-    );
-}
-
-#[cfg(feature = "alloc")]
-impl<T: Clone> Vec_v1_53<T> for Vec<T> {
+#[ext(Vec_v1_53)]
+pub impl<T: Clone> Vec<T>
+where
+    Self: Sealed<Vec<T>>,
+{
     fn extend_from_within<
         R: ops::RangeBounds<usize> + core::slice::SliceIndex<[T], Output = [T]>,
     >(

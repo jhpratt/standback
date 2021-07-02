@@ -1,6 +1,8 @@
 use core::iter::FusedIterator;
 
-use crate::traits::{Float, Integer};
+use easy_ext::ext;
+
+use crate::traits::Sealed;
 
 pub(crate) mod f32 {
     pub const LOG10_2: f32 = 0.301029995663981195213738894724493027_f32;
@@ -48,24 +50,11 @@ impl<A, F: FnOnce() -> A> ExactSizeIterator for OnceWith<F> {
 
 impl<A, F: FnOnce() -> A> FusedIterator for OnceWith<F> {}
 
-pub trait float_v1_43: Float {
-    const RADIX: u32;
-    const MANTISSA_DIGITS: u32;
-    const DIGITS: u32;
-    const EPSILON: Self;
-    const MIN: Self;
-    const MIN_POSITIVE: Self;
-    const MAX: Self;
-    const MIN_EXP: i32;
-    const MAX_EXP: i32;
-    const MIN_10_EXP: i32;
-    const MAX_10_EXP: i32;
-    const NAN: Self;
-    const INFINITY: Self;
-    const NEG_INFINITY: Self;
-}
-
-impl float_v1_43 for f32 {
+#[ext(f32_v1_43)]
+pub impl f32
+where
+    Self: Sealed<f32>,
+{
     const DIGITS: u32 = 6;
     const EPSILON: f32 = 1.19209290e-07_f32;
     const INFINITY: f32 = 1.0_f32 / 0.0_f32;
@@ -82,7 +71,11 @@ impl float_v1_43 for f32 {
     const RADIX: u32 = 2;
 }
 
-impl float_v1_43 for f64 {
+#[ext(f64_v1_43)]
+pub impl f64
+where
+    Self: Sealed<f64>,
+{
     const DIGITS: u32 = 15;
     const EPSILON: f64 = 2.2204460492503131e-16_f64;
     const INFINITY: f64 = 1.0_f64 / 0.0_f64;
@@ -99,25 +92,27 @@ impl float_v1_43 for f64 {
     const RADIX: u32 = 2;
 }
 
-pub trait int_v1_43: Integer {
-    const MIN: Self;
-    const MAX: Self;
-}
-
 macro_rules! impl_int_v1_43 {
-    ($($signed_type:ty, $unsigned_type:ty),*) => {$(
-        impl int_v1_43 for $signed_type {
+    ($(($signed_trait_name:ident $signed_type:ty) ($unsigned_trait_name:ident $unsigned_type:ty))+) => {$(
+        #[ext($signed_trait_name)]
+        impl $signed_type where Self: Sealed<$signed_type>, {
             const MIN: Self = !0 ^ ((!0 as $unsigned_type) >> 1) as Self;
             const MAX: Self = !Self::MIN;
         }
 
-        impl int_v1_43 for $unsigned_type {
+        #[ext($unsigned_trait_name)]
+        impl $unsigned_type where Self: Sealed<$unsigned_type>, {
             const MIN: Self = 0;
             const MAX: Self = !0;
         }
-    )*}
+    )+}
 }
 
 impl_int_v1_43![
-    i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize
+    (i8_v1_43 i8) (u8_v1_43 u8)
+    (i16_v1_43 i16) (u16_v1_43 u16)
+    (i32_v1_43 i32) (u32_v1_43 u32)
+    (i64_v1_43 i64) (u64_v1_43 u64)
+    (i128_v1_43 i128) (u128_v1_43 u128)
+    (isize_v1_43 isize) (usize_v1_43 usize)
 ];
