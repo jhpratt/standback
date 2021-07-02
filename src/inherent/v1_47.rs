@@ -8,7 +8,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Range_v1_47)]
+#[ext]
 pub impl<Idx: PartialOrd<Idx>> Range<Idx>
 where
     Self: Sealed<Range<Idx>>,
@@ -18,7 +18,7 @@ where
     }
 }
 
-#[ext(Result_v1_47)]
+#[ext]
 pub impl<T: DerefMut, E> Result<T, E>
 where
     Self: Sealed<Result<T, E>>,
@@ -33,7 +33,7 @@ where
 }
 
 #[cfg(feature = "alloc")]
-#[ext(Vec_v1_47)]
+#[ext]
 pub impl<T> Vec<T>
 where
     Self: Sealed<Vec<T>>,

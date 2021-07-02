@@ -8,7 +8,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Bool_v1_50)]
+#[ext]
 pub impl bool
 where
     Self: Sealed<bool>,
@@ -19,7 +19,7 @@ where
 }
 
 #[cfg(feature = "alloc")]
-#[ext(BTreeMapEntry_v1_50)]
+#[ext]
 pub impl<'a, K: Ord + 'a, V: 'a> btree_map::Entry<'a, K, V>
 where
     Self: Sealed<btree_map::Entry<'a, K, V>>,
@@ -36,7 +36,7 @@ where
 }
 
 #[cfg(feature = "std")]
-#[ext(HashMapEntry_v1_50)]
+#[ext]
 pub impl<'a, K: 'a, V: 'a> hash_map::Entry<'a, K, V>
 where
     Self: Sealed<hash_map::Entry<'a, K, V>>,
@@ -52,7 +52,7 @@ where
     }
 }
 
-#[ext(f32_v1_50)]
+#[ext]
 pub impl f32
 where
     Self: Sealed<f32>,
@@ -71,7 +71,7 @@ where
     }
 }
 
-#[ext(f64_v1_50)]
+#[ext]
 pub impl f64
 where
     Self: Sealed<f64>,
@@ -90,7 +90,7 @@ where
     }
 }
 
-#[ext(Ord_v1_50)]
+#[ext]
 pub impl<T: Ord> T
 where
     Self: Sealed<T>,
@@ -111,7 +111,7 @@ where
     }
 }
 
-#[ext(RefCell_v1_50)]
+#[ext]
 pub impl<T: Default> RefCell<T>
 where
     Self: Sealed<RefCell<T>>,
@@ -121,7 +121,7 @@ where
     }
 }
 
-#[ext(Slice_v1_50)]
+#[ext]
 pub impl<T> [T]
 where
     Self: Sealed<[T]>,
@@ -140,7 +140,7 @@ where
     }
 }
 
-#[ext(UnsafeCell_v1_50)]
+#[ext]
 pub impl<T> UnsafeCell<T>
 where
     Self: Sealed<UnsafeCell<T>>,

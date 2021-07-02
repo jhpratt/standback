@@ -6,7 +6,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Slice_v1_49)]
+#[ext]
 pub impl<T> [T]
 where
     Self: Sealed<[T]>,

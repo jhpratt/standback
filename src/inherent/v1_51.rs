@@ -16,7 +16,7 @@ use crate::inherent::Sealed;
 use crate::pattern::Pattern;
 
 #[cfg(feature = "alloc")]
-#[ext(Arc_v1_51)]
+#[ext]
 pub impl<T> Arc<T>
 where
     Self: Sealed<Arc<T>>,
@@ -31,7 +31,7 @@ where
     }
 }
 
-#[ext(Peekable_v1_51)]
+#[ext]
 pub impl<I: Iterator> Peekable<I>
 where
     Self: Sealed<Peekable<I>>,
@@ -54,7 +54,7 @@ where
 }
 
 #[cfg(feature = "std")]
-#[ext(Seek_v1_51)]
+#[ext]
 pub impl<T: Seek> T
 where
     Self: Sealed<T>,
@@ -64,7 +64,7 @@ where
     }
 }
 
-#[ext(Slice_v1_51)]
+#[ext]
 pub impl<T> [T]
 where
     Self: Sealed<[T]>,
@@ -124,8 +124,8 @@ where
 }
 
 macro_rules! impl_integer {
-    ($(($trait_name:ident $int:ty => $uint:ty))+) => {$(
-        #[ext($trait_name)]
+    ($($int:ty => $uint:ty)+) => {$(
+        #[ext]
         pub impl $int where Self: Sealed<$int>, {
             fn unsigned_abs(self) -> $uint {
                  self.wrapping_abs() as $uint
@@ -135,14 +135,14 @@ macro_rules! impl_integer {
 }
 
 impl_integer! {
-    (i8_v1_51 i8 => u8)
-    (i16_v1_51 i16 => u16)
-    (i32_v1_51 i32 => u32)
-    (i64_v1_51 i64 => u64)
-    (i128_v1_51 i128 => u128)
+    i8 => u8
+    i16 => u16
+    i32 => u32
+    i64 => u64
+    i128 => u128
 }
 
-#[ext(Poll_v1_51)]
+#[ext]
 pub impl<T, E> Poll<Result<T, E>>
 where
     Self: Sealed<Poll<Result<T, E>>>,
@@ -170,7 +170,7 @@ where
     }
 }
 
-#[ext(str_v1_51)]
+#[ext]
 pub impl str
 where
     Self: Sealed<str>,

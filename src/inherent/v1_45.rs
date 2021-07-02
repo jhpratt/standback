@@ -4,8 +4,8 @@ use crate::inherent::Sealed;
 use crate::pattern::{Pattern, ReverseSearcher};
 
 macro_rules! impl_int_v1_45 {
-    ($(($trait_name:ident $type:ident))+) => {$(
-        #[ext($trait_name)]
+    ($($type:ident)+) => {$(
+        #[ext]
         pub impl $type where Self: Sealed<$type>, {
             fn saturating_neg(self) -> Self {
                 if self == core::$type::MIN {
@@ -26,16 +26,9 @@ macro_rules! impl_int_v1_45 {
     )*};
 }
 
-impl_int_v1_45![
-    (i8_v1_45 i8)
-    (i16_v1_45 i16)
-    (i32_v1_45 i32)
-    (i64_v1_45 i64)
-    (i128_v1_45 i128)
-    (isize_v1_45 isize)
-];
+impl_int_v1_45![i8 i16 i32 i64 i128 isize];
 
-#[ext(str_v1_45)]
+#[ext]
 pub impl str
 where
     Self: Sealed<str>,

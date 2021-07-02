@@ -3,7 +3,7 @@ use core::ops::Range;
 use easy_ext::ext;
 
 use crate::inherent::Sealed;
-#[ext(Slice_v1_48)]
+#[ext]
 pub impl<T> [T]
 where
     Self: Sealed<[T]>,

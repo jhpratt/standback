@@ -2,7 +2,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(f32_v1_43)]
+#[ext]
 pub impl f32
 where
     Self: Sealed<f32>,
@@ -23,7 +23,7 @@ where
     const RADIX: u32 = 2;
 }
 
-#[ext(f64_v1_43)]
+#[ext]
 pub impl f64
 where
     Self: Sealed<f64>,
@@ -45,14 +45,14 @@ where
 }
 
 macro_rules! impl_int_v1_43 {
-    ($(($signed_trait_name:ident $signed_type:ty) ($unsigned_trait_name:ident $unsigned_type:ty))+) => {$(
-        #[ext($signed_trait_name)]
+    ($($signed_type:ty, $unsigned_type:ty),+) => {$(
+        #[ext]
         impl $signed_type where Self: Sealed<$signed_type>, {
             const MIN: Self = !0 ^ ((!0 as $unsigned_type) >> 1) as Self;
             const MAX: Self = !Self::MIN;
         }
 
-        #[ext($unsigned_trait_name)]
+        #[ext]
         impl $unsigned_type where Self: Sealed<$unsigned_type>, {
             const MIN: Self = 0;
             const MAX: Self = !0;
@@ -61,10 +61,5 @@ macro_rules! impl_int_v1_43 {
 }
 
 impl_int_v1_43![
-    (i8_v1_43 i8) (u8_v1_43 u8)
-    (i16_v1_43 i16) (u16_v1_43 u16)
-    (i32_v1_43 i32) (u32_v1_43 u32)
-    (i64_v1_43 i64) (u64_v1_43 u64)
-    (i128_v1_43 i128) (u128_v1_43 u128)
-    (isize_v1_43 isize) (usize_v1_43 usize)
+    i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize
 ];

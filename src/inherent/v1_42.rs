@@ -16,7 +16,7 @@ fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
 }
 
 #[cfg(feature = "std")]
-#[ext(Condvar_v1_42)]
+#[ext]
 pub impl Condvar
 where
     Self: Sealed<Condvar>,
@@ -58,7 +58,7 @@ where
     }
 }
 
-#[ext(ManuallyDrop_v1_42)]
+#[ext]
 pub impl<T> ManuallyDrop<T>
 where
     Self: Sealed<ManuallyDrop<T>>,

@@ -2,7 +2,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Result_v1_41)]
+#[ext]
 pub impl<T, E> Result<T, E>
 where
     Self: Sealed<Result<T, E>>,

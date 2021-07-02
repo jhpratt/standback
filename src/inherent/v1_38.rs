@@ -4,7 +4,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(ConstPtr_v1_38)]
+#[ext]
 pub impl<T> *const T
 where
     Self: Sealed<*const T>,
@@ -14,7 +14,7 @@ where
     }
 }
 
-#[ext(MutPtr_v1_38)]
+#[ext]
 pub impl<T> *mut T
 where
     Self: Sealed<*mut T>,
@@ -24,7 +24,7 @@ where
     }
 }
 
-#[ext(Duration_v1_38)]
+#[ext]
 pub impl Duration
 where
     Self: Sealed<Duration>,
@@ -93,8 +93,8 @@ where
 }
 
 macro_rules! impl_euclid_for_signed {
-    ($(($trait_name:ident $type:ty))+) => {$(
-        #[ext($trait_name)]
+    ($($type:ty)+) => {$(
+        #[ext]
         pub impl $type where Self: Sealed<$type>, {
             #[must_use = "this returns the result of the operation, without modifying the original"]
             fn rem_euclid(self, rhs: Self) -> Self {
@@ -168,18 +168,11 @@ macro_rules! impl_euclid_for_signed {
     )+};
 }
 
-impl_euclid_for_signed![
-    (i8_v1_38 i8)
-    (i16_v1_38 i16)
-    (i32_v1_38 i32)
-    (i64_v1_38 i64)
-    (i128_v1_38 i128)
-    (isize_v1_38 isize)
-];
+impl_euclid_for_signed![i8 i16 i32 i64 i128 isize];
 
 macro_rules! impl_euclid_for_unsigned {
-    ($(($trait_name:ident $type:ty))+) => {$(
-        #[ext($trait_name)]
+    ($($type:ty)+) => {$(
+        #[ext]
         pub impl $type where Self: Sealed<$type>, {
             #[must_use = "this returns the result of the operation, without modifying the original"]
             fn rem_euclid(self, rhs: Self) -> Self {
@@ -232,19 +225,12 @@ macro_rules! impl_euclid_for_unsigned {
     )+};
 }
 
-impl_euclid_for_unsigned![
-    (u8_v1_38 u8)
-    (u16_v1_38 u16)
-    (u32_v1_38 u32)
-    (u64_v1_38 u64)
-    (u128_v1_38 u128)
-    (usize_v1_38 usize)
-];
+impl_euclid_for_unsigned![u8 u16 u32 u64 u128 usize];
 
 macro_rules! euclid_float {
-    ($(($trait_name:ident $type:ty))+) => {$(
+    ($($type:ty)+) => {$(
         #[cfg(feature = "std")]
-        #[ext($trait_name)]
+        #[ext]
         pub impl $type where Self: Sealed<$type>, {
             #[must_use = "method returns a new number and does not mutate the original value"]
             fn rem_euclid(self, rhs: $type) -> $type {
@@ -263,4 +249,4 @@ macro_rules! euclid_float {
         }
     )+};
 }
-euclid_float![(f32_v1_38 f32) (f64_v1_38 f64)];
+euclid_float![f32 f64];

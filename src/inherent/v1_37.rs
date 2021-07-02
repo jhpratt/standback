@@ -6,7 +6,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Cell_v1_37)]
+#[ext]
 pub impl<T> Cell<T>
 where
     Self: Sealed<Cell<T>>,
@@ -16,7 +16,7 @@ where
     }
 }
 
-#[ext(Cell_v1_37_)]
+#[ext]
 pub impl<T> Cell<[T]>
 where
     Self: Sealed<Cell<[T]>>,
@@ -26,7 +26,7 @@ where
     }
 }
 
-#[ext(Option_v1_37)]
+#[ext]
 pub impl<T> Option<T>
 where
     Self: Sealed<Option<T>>,
@@ -40,7 +40,7 @@ where
     }
 }
 
-#[ext(Slice_v1_37)]
+#[ext]
 pub impl<T> [T]
 where
     Self: Sealed<[T]>,
@@ -82,7 +82,7 @@ fn slice_index_overflow_fail() -> ! {
     panic!("attempted to index slice up to maximum usize");
 }
 
-#[ext(DoubleEndedIterator_v1_37)]
+#[ext]
 pub impl<Iter> Iter
 where
     Self: DoubleEndedIterator,

@@ -13,7 +13,7 @@ use easy_ext::ext;
 use crate::inherent::Sealed;
 
 #[cfg(feature = "std")]
-#[ext(PathBuf_v1_44)]
+#[ext]
 pub impl PathBuf
 where
     Self: Sealed<PathBuf>,
@@ -43,7 +43,7 @@ where
     }
 }
 
-#[ext(Layout_v1_44)]
+#[ext]
 pub impl Layout
 where
     Self: Sealed<Layout>,
@@ -119,7 +119,7 @@ mod sealed {
     impl_float_to_int!(f64 => u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize);
 }
 
-#[ext(f32_v1_44)]
+#[ext]
 pub impl f32
 where
     Self: Sealed<f32>,
@@ -132,7 +132,7 @@ where
     }
 }
 
-#[ext(f64_v1_44)]
+#[ext]
 pub impl f64
 where
     Self: Sealed<f64>,

@@ -8,7 +8,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Option_v1_40)]
+#[ext]
 pub impl<T: DerefMut> Option<T>
 where
     Self: Sealed<Option<T>>,
@@ -22,7 +22,7 @@ where
     }
 }
 
-#[ext(Option_v1_40_)]
+#[ext]
 pub impl<T> Option<Option<T>>
 where
     Self: Sealed<Option<Option<T>>>,
@@ -32,7 +32,7 @@ where
     }
 }
 
-#[ext(f32_v1_40)]
+#[ext]
 pub impl f32
 where
     Self: Sealed<f32>,
@@ -62,7 +62,7 @@ where
     }
 }
 
-#[ext(f64_v1_40)]
+#[ext]
 pub impl f64
 where
     Self: Sealed<f64>,
@@ -93,7 +93,7 @@ where
 }
 
 #[cfg(feature = "alloc")]
-#[ext(slice_v1_40)]
+#[ext]
 pub impl<T: Copy> [T]
 where
     Self: Sealed<[T]>,

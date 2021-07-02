@@ -313,11 +313,17 @@ mod inherent;
 mod pattern;
 
 mod free {
+    #[cfg(shim = "1.40")]
     pub(crate) mod v1_40;
+    #[cfg(shim = "1.43")]
     pub(crate) mod v1_43;
+    #[cfg(shim = "1.47")]
     pub(crate) mod v1_47;
+    #[cfg(shim = "1.48")]
     pub(crate) mod v1_48;
+    #[cfg(shim = "1.51")]
     pub(crate) mod v1_51;
+    #[cfg(shim = "1.53")]
     pub(crate) mod v1_53;
 }
 

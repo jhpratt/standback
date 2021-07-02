@@ -5,7 +5,7 @@ use easy_ext::ext;
 use crate::inherent::Sealed;
 use crate::pattern::{Pattern, ReverseSearcher, Searcher};
 
-#[ext(char_v1_52)]
+#[ext]
 pub impl char
 where
     Self: Sealed<char>,
@@ -48,7 +48,7 @@ where
     }
 }
 
-#[ext(Slice_v1_52)]
+#[ext]
 pub impl<T> [T]
 where
     Self: Sealed<[T]>,
@@ -71,7 +71,7 @@ where
     }
 }
 
-#[ext(str_v1_52)]
+#[ext]
 pub impl str
 where
     Self: Sealed<str>,

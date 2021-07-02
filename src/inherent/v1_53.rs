@@ -17,7 +17,7 @@ use easy_ext::ext;
 
 use crate::inherent::Sealed;
 
-#[ext(Ordering_v1_53)]
+#[ext]
 pub impl Ordering
 where
     Self: Sealed<Ordering>,
@@ -48,7 +48,7 @@ where
     }
 }
 
-#[ext(Option_v1_53)]
+#[ext]
 pub impl<T> Option<T>
 where
     Self: Sealed<Option<T>>,
@@ -63,7 +63,7 @@ where
     }
 }
 
-#[ext(f32_v1_53)]
+#[ext]
 pub impl f32
 where
     Self: Sealed<f32>,
@@ -73,7 +73,7 @@ where
     }
 }
 
-#[ext(f64_v1_53)]
+#[ext]
 pub impl f64
 where
     Self: Sealed<f64>,
@@ -83,7 +83,7 @@ where
     }
 }
 
-#[ext(Duration_v1_53)]
+#[ext]
 pub impl Duration
 where
     Self: Sealed<Duration>,
@@ -114,31 +114,18 @@ where
 }
 
 macro_rules! impl_integer {
-    ($(($trait_name:ident $t:ty))+) => {$(
-        #[ext($trait_name)]
+    ($($t:ty)+) => {$(
+        #[ext]
         pub impl $t where Self: Sealed<$t>, {
             const BITS: u32 = mem::size_of::<$t>() as u32 * 8;
         }
     )+};
 }
 
-impl_integer![
-    (u8_v1_53 u8)
-    (u16_v1_53 u16)
-    (u32_v1_53 u32)
-    (u64_v1_53 u64)
-    (u128_v1_53 u128)
-    (usize_v1_53 usize)
-    (i8_v1_53 i8)
-    (i16_v1_53 i16)
-    (i32_v1_53 i32)
-    (i64_v1_53 i64)
-    (i128_v1_53 i128)
-    (isize_v1_53 isize)
-];
+impl_integer![u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize];
 
 #[cfg(feature = "alloc")]
-#[ext(Rc_v1_53)]
+#[ext]
 pub impl<T> Rc<T>
 where
     Self: Sealed<Rc<T>>,
@@ -153,7 +140,7 @@ where
 }
 
 #[cfg(feature = "std")]
-#[ext(OsStr_v1_53)]
+#[ext]
 pub impl OsStr
 where
     Self: Sealed<OsStr>,
@@ -179,7 +166,7 @@ where
 }
 
 #[cfg(feature = "alloc")]
-#[ext(Vec_v1_53)]
+#[ext]
 pub impl<T: Clone> Vec<T>
 where
     Self: Sealed<Vec<T>>,
