@@ -10,7 +10,7 @@ use std::path::PathBuf;
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[cfg(feature = "std")]
 #[ext(PathBuf_v1_44)]

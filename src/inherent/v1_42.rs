@@ -8,7 +8,7 @@ use std::{
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[cfg(feature = "std")]
 fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {

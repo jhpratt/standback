@@ -1,6 +1,6 @@
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(Result_v1_41)]
 pub impl<T, E> Result<T, E>

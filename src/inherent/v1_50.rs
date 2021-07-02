@@ -6,7 +6,7 @@ use std::collections::hash_map;
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(Bool_v1_50)]
 pub impl bool

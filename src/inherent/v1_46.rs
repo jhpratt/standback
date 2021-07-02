@@ -1,6 +1,6 @@
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 macro_rules! impl_int_v1_46 {
     ($(($signed_trait_name:ident $signed_type:ty) ($unsigned_trait_name:ident $unsigned_type:ty))+) => {$(

@@ -4,7 +4,7 @@ use core::ptr;
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(Cell_v1_37)]
 pub impl<T> Cell<T>

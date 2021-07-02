@@ -6,7 +6,7 @@ use core::ptr;
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(Option_v1_40)]
 pub impl<T: DerefMut> Option<T>
@@ -90,10 +90,6 @@ where
     fn from_ne_bytes(bytes: [u8; 8]) -> Self {
         Self::from_bits(u64::from_ne_bytes(bytes))
     }
-}
-
-pub fn take<T: Default>(dest: &mut T) -> T {
-    core::mem::replace(dest, T::default())
 }
 
 #[cfg(feature = "alloc")]

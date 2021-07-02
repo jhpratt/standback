@@ -2,7 +2,7 @@ use core::time::Duration;
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(ConstPtr_v1_38)]
 pub impl<T> *const T

@@ -12,8 +12,8 @@ use std::io::{Seek, SeekFrom};
 
 use easy_ext::ext;
 
+use crate::inherent::Sealed;
 use crate::pattern::Pattern;
-use crate::traits::Sealed;
 
 #[cfg(feature = "alloc")]
 #[ext(Arc_v1_51)]
@@ -120,15 +120,6 @@ where
             }
         }
         None
-    }
-}
-
-#[cfg(feature = "alloc")]
-pub trait Wake {
-    fn wake(self: Arc<Self>);
-    #[cfg(since = "1.41")]
-    fn wake_by_ref(self: &Arc<Self>) {
-        self.clone().wake();
     }
 }
 

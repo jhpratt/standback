@@ -6,7 +6,7 @@ use core::ops::{DerefMut, Range};
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(Range_v1_47)]
 pub impl<Idx: PartialOrd<Idx>> Range<Idx>
@@ -44,12 +44,4 @@ where
     {
         Box::leak(self.into_boxed_slice())
     }
-}
-
-pub(crate) mod f32 {
-    pub const TAU: f32 = 6.28318530717958647692528676655900577_f32;
-}
-
-pub(crate) mod f64 {
-    pub const TAU: f64 = 6.28318530717958647692528676655900577_f64;
 }

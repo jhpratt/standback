@@ -48,7 +48,7 @@ of a compiler are supported.
 
 Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 
-# Inherent and trait methods, associated constants
+# Inherent items
 
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
@@ -111,7 +111,6 @@ slice::split_inclusive
 slice::strip_prefix
 slice::strip_suffix
 str::split_inclusive
-task::Wake
 i*::unsigned_abs
 Poll::map_ok
 Poll::map_err
@@ -278,7 +277,7 @@ Option::xor
 slice::copy_within
 ```
 
-# Free functions and constants
+# Free items
 
 ```text
 array::from_ref // 1.53
@@ -287,8 +286,10 @@ cmp::min_by // 1.53
 cmp::max_by // 1.53
 cmp::min_by_key // 1.53
 cmp::max_by_key // 1.53
+task::Wake // 1.51
 future::pending // 1.48
 future::ready // 1.48
+{f32, f64}::consts::TAU // 1.47
 char::UNICODE_VERSION // 1.45
 {f32, f64}::consts::LOG10_2 // 1.43
 {f32, f64}::consts::LOG2_10 // 1.43
@@ -296,7 +297,7 @@ iter::once_with // 1.43
 mem::take // 1.40
 ```
 
-# Macros
+# Prelude macros
 
 ```text
 matches! // 1.42
@@ -308,119 +309,26 @@ todo! // 1.39
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-mod traits {
-    #[allow(unreachable_pub)]
-    pub trait Sealed<T: ?Sized> {}
-    impl<T: ?Sized> Sealed<T> for T {}
-}
-
+mod inherent;
 mod pattern;
 
-#[cfg(shim = "1.37")]
-mod v1_37;
-#[cfg(shim = "1.38")]
-mod v1_38;
-#[cfg(shim = "1.40")]
-mod v1_40;
-#[cfg(shim = "1.41")]
-mod v1_41;
-#[cfg(shim = "1.42")]
-mod v1_42;
-#[cfg(shim = "1.43")]
-mod v1_43;
-#[cfg(shim = "1.44")]
-mod v1_44;
-#[cfg(shim = "1.45")]
-mod v1_45;
-#[cfg(shim = "1.46")]
-mod v1_46;
-#[cfg(shim = "1.47")]
-mod v1_47;
-#[cfg(shim = "1.48")]
-mod v1_48;
-#[cfg(shim = "1.49")]
-mod v1_49;
-#[cfg(shim = "1.50")]
-mod v1_50;
-#[cfg(shim = "1.51")]
-mod v1_51;
-#[cfg(shim = "1.52")]
-mod v1_52;
-#[cfg(shim = "1.53")]
-mod v1_53;
+mod free {
+    pub(crate) mod v1_40;
+    pub(crate) mod v1_43;
+    pub(crate) mod v1_47;
+    pub(crate) mod v1_48;
+    pub(crate) mod v1_51;
+    pub(crate) mod v1_53;
+}
 
 #[doc(hidden)]
 pub mod prelude {
     #[cfg(shim = "1.39")]
     pub use core::unimplemented as todo;
 
+    pub use crate::inherent::*;
     #[cfg(shim = "1.42")]
     pub use crate::matches;
-    #[cfg(shim = "1.37")]
-    pub use crate::v1_37::{
-        Cell_v1_37, Cell_v1_37_, DoubleEndedIterator_v1_37, Option_v1_37, Slice_v1_37,
-    };
-    #[cfg(all(shim = "1.38", feature = "std"))]
-    pub use crate::v1_38::{f32_v1_38, f64_v1_38};
-    #[cfg(shim = "1.38")]
-    pub use crate::v1_38::{
-        i128_v1_38, i16_v1_38, i32_v1_38, i64_v1_38, i8_v1_38, isize_v1_38, u128_v1_38, u16_v1_38,
-        u32_v1_38, u64_v1_38, u8_v1_38, usize_v1_38, ConstPtr_v1_38, Duration_v1_38, MutPtr_v1_38,
-    };
-    #[cfg(all(shim = "1.40", feature = "alloc"))]
-    pub use crate::v1_40::slice_v1_40;
-    #[cfg(shim = "1.40")]
-    pub use crate::v1_40::{f32_v1_40, f64_v1_40, Option_v1_40, Option_v1_40_};
-    #[cfg(shim = "1.41")]
-    pub use crate::v1_41::Result_v1_41;
-    #[cfg(all(shim = "1.42", feature = "std"))]
-    pub use crate::v1_42::Condvar_v1_42;
-    #[cfg(shim = "1.42")]
-    pub use crate::v1_42::ManuallyDrop_v1_42;
-    #[cfg(shim = "1.43")]
-    pub use crate::v1_43::{f32_v1_43, f64_v1_43, int_v1_43};
-    #[cfg(all(shim = "1.44", feature = "std"))]
-    pub use crate::v1_44::PathBuf_v1_44;
-    #[cfg(shim = "1.44")]
-    pub use crate::v1_44::{f32_v1_44, f64_v1_44, Layout_v1_44};
-    #[cfg(shim = "1.45")]
-    pub use crate::v1_45::{int_v1_45, str_v1_45};
-    #[cfg(shim = "1.46")]
-    pub use crate::v1_46::{int_v1_46, Option_v1_46};
-    #[cfg(all(shim = "1.47", feature = "alloc"))]
-    pub use crate::v1_47::Vec_v1_47;
-    #[cfg(shim = "1.47")]
-    pub use crate::v1_47::{Range_v1_47, Result_v1_47};
-    #[cfg(shim = "1.48")]
-    pub use crate::v1_48::Slice_v1_48;
-    #[cfg(shim = "1.49")]
-    pub use crate::v1_49::Slice_v1_49;
-    #[cfg(all(shim = "1.50", feature = "alloc"))]
-    pub use crate::v1_50::BTreeMapEntry_v1_50;
-    #[cfg(all(shim = "1.50", feature = "std"))]
-    pub use crate::v1_50::HashMapEntry_v1_50;
-    #[cfg(shim = "1.50")]
-    pub use crate::v1_50::{
-        f32_v1_50, f64_v1_50, Bool_v1_50, Ord_v1_50, RefCell_v1_50, Slice_v1_50, UnsafeCell_v1_50,
-    };
-    #[cfg(all(shim = "1.51", feature = "alloc"))]
-    pub use crate::v1_51::Arc_v1_51;
-    #[cfg(all(shim = "1.51", feature = "std"))]
-    pub use crate::v1_51::Seek_v1_51;
-    #[cfg(shim = "1.51")]
-    pub use crate::v1_51::{
-        str_v1_51, Peekable_v1_51, Poll_v1_51, SignedInteger_v1_51, Slice_v1_51,
-    };
-    #[cfg(shim = "1.52")]
-    pub use crate::v1_52::{char_v1_52, str_v1_52, Slice_v1_52};
-    #[cfg(all(shim = "1.53", feature = "std"))]
-    pub use crate::v1_53::OsStr_v1_53;
-    #[cfg(shim = "1.53")]
-    pub use crate::v1_53::{
-        f32_v1_53, f64_v1_53, Duration_v1_53, Integer_v1_53, Option_v1_53, Ordering_v1_53,
-    };
-    #[cfg(all(shim = "1.53", feature = "alloc"))]
-    pub use crate::v1_53::{Rc_v1_53, Vec_v1_53};
 }
 #[doc(hidden)]
 pub mod mem {
@@ -428,7 +336,7 @@ pub mod mem {
     pub use core::mem::take;
 
     #[cfg(shim = "1.40")]
-    pub use crate::v1_40::take;
+    pub use crate::free::v1_40::mem::*;
 }
 #[doc(hidden)]
 pub mod iter {
@@ -436,7 +344,7 @@ pub mod iter {
     pub use core::iter::{once_with, OnceWith};
 
     #[cfg(shim = "1.43")]
-    pub use crate::v1_43::{once_with, OnceWith};
+    pub use crate::free::v1_43::iter::*;
 }
 #[doc(hidden)]
 pub mod task {
@@ -444,7 +352,7 @@ pub mod task {
     pub use alloc::task::Wake;
 
     #[cfg(all(shim = "1.51", feature = "alloc"))]
-    pub use crate::v1_51::Wake;
+    pub use crate::free::v1_51::task::*;
 }
 #[doc(hidden)]
 pub mod f32 {
@@ -455,9 +363,9 @@ pub mod f32 {
         pub use core::f32::consts::{LOG10_2, LOG2_10};
 
         #[cfg(shim = "1.43")]
-        pub use crate::v1_43::f32::{LOG10_2, LOG2_10};
+        pub use crate::free::v1_43::f32::consts::*;
         #[cfg(shim = "1.47")]
-        pub use crate::v1_47::f32::TAU;
+        pub use crate::free::v1_47::f32::consts::*;
     }
 }
 #[doc(hidden)]
@@ -469,9 +377,9 @@ pub mod f64 {
         pub use core::f64::consts::{LOG10_2, LOG2_10};
 
         #[cfg(shim = "1.43")]
-        pub use crate::v1_43::f64::{LOG10_2, LOG2_10};
+        pub use crate::free::v1_43::f64::consts::*;
         #[cfg(shim = "1.47")]
-        pub use crate::v1_47::f64::TAU;
+        pub use crate::free::v1_47::f64::consts::*;
     }
 }
 #[doc(hidden)]
@@ -491,7 +399,7 @@ pub mod future {
     pub use core::future::{pending, ready, Pending, Ready};
 
     #[cfg(shim = "1.48")]
-    pub use crate::v1_48::future::{pending, ready, Pending, Ready};
+    pub use crate::free::v1_48::future::*;
 }
 #[doc(hidden)]
 pub mod array {
@@ -499,7 +407,7 @@ pub mod array {
     pub use core::array::{from_mut, from_ref};
 
     #[cfg(shim = "1.53")]
-    pub use crate::v1_53::array::{from_mut, from_ref};
+    pub use crate::free::v1_53::array::*;
 }
 #[doc(hidden)]
 pub mod cmp {
@@ -507,5 +415,5 @@ pub mod cmp {
     pub use core::cmp::{max_by, max_by_key, min_by, min_by_key};
 
     #[cfg(shim = "1.53")]
-    pub use crate::v1_53::cmp::{max_by, max_by_key, min_by, min_by_key};
+    pub use crate::free::v1_53::cmp::*;
 }

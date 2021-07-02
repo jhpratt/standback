@@ -1,7 +1,7 @@
 use easy_ext::ext;
 
+use crate::inherent::Sealed;
 use crate::pattern::{Pattern, ReverseSearcher};
-use crate::traits::Sealed;
 
 macro_rules! impl_int_v1_45 {
     ($(($trait_name:ident $type:ident))+) => {$(

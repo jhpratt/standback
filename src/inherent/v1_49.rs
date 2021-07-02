@@ -4,7 +4,7 @@ use core::cmp::Ordering;
 
 use easy_ext::ext;
 
-use crate::traits::Sealed;
+use crate::inherent::Sealed;
 
 #[ext(Slice_v1_49)]
 pub impl<T> [T]

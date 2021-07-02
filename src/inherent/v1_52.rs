@@ -2,8 +2,8 @@ use core::char::DecodeUtf16;
 
 use easy_ext::ext;
 
+use crate::inherent::Sealed;
 use crate::pattern::{Pattern, ReverseSearcher, Searcher};
-use crate::traits::Sealed;
 
 #[ext(char_v1_52)]
 pub impl char
