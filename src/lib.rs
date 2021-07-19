@@ -13,10 +13,10 @@ been stabilized.
 
 # Usage
 
-For most cases, importing the prelude should suffice.
+For most cases, importing the shims should suffice.
 
 ```rust,no_run
-use standback::prelude::*;
+use standback::shim::*;
 ```
 
 If you are using anything that would normally have to be imported, just use the `standback` crate
@@ -52,6 +52,19 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
+
+## 1.54
+
+```text
+BTreeMap::into_keys
+BTreeMap::into_values
+HashMap::into_keys
+HashMap::into_values
+VecDeque::binary_search
+VecDeque::binary_search_by
+VecDeque::binary_search_by_key
+VecDeque::partition_point
+```
 
 ## 1.53
 
@@ -328,13 +341,18 @@ mod free {
 }
 
 #[doc(hidden)]
-pub mod prelude {
+pub mod shim {
     #[cfg(shim = "1.39")]
     pub use core::unimplemented as todo;
 
     pub use crate::inherent::*;
     #[cfg(shim = "1.42")]
     pub use crate::matches;
+}
+#[doc(hidden)]
+pub mod prelude {
+    // FIXME Remove this in the next breaking change
+    pub use crate::shim::*;
 }
 #[doc(hidden)]
 pub mod mem {

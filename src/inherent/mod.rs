@@ -30,6 +30,8 @@ mod v1_51;
 mod v1_52;
 #[cfg(shim = "1.53")]
 mod v1_53;
+#[cfg(shim = "1.54")]
+mod v1_54;
 
 #[allow(unused_imports)]
 use sealed::Sealed;
@@ -87,3 +89,6 @@ pub use v1_52::*;
 #[cfg(shim = "1.53")]
 #[allow(unreachable_pub)]
 pub use v1_53::*;
+#[cfg(shim = "1.54")]
+#[allow(unreachable_pub)]
+pub use v1_54::*;
