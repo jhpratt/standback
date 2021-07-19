@@ -4,8 +4,7 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl f32
-where
-    Self: Sealed<f32>,
+where Self: Sealed<f32>
 {
     const DIGITS: u32 = 6;
     const EPSILON: f32 = 1.19209290e-07_f32;
@@ -25,8 +24,7 @@ where
 
 #[ext]
 pub impl f64
-where
-    Self: Sealed<f64>,
+where Self: Sealed<f64>
 {
     const DIGITS: u32 = 15;
     const EPSILON: f64 = 2.2204460492503131e-16_f64;
@@ -60,6 +58,4 @@ macro_rules! impl_int_v1_43 {
     )+}
 }
 
-impl_int_v1_43![
-    i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize
-];
+impl_int_v1_43![i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize];

@@ -10,8 +10,7 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl bool
-where
-    Self: Sealed<bool>,
+where Self: Sealed<bool>
 {
     fn then<T, F: FnOnce() -> T>(self, f: F) -> Option<T> {
         if self { Some(f()) } else { None }
@@ -21,8 +20,7 @@ where
 #[cfg(feature = "alloc")]
 #[ext]
 pub impl<'a, K: Ord + 'a, V: 'a> btree_map::Entry<'a, K, V>
-where
-    Self: Sealed<btree_map::Entry<'a, K, V>>,
+where Self: Sealed<btree_map::Entry<'a, K, V>>
 {
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V {
         match self {
@@ -38,8 +36,7 @@ where
 #[cfg(feature = "std")]
 #[ext]
 pub impl<'a, K: 'a, V: 'a> hash_map::Entry<'a, K, V>
-where
-    Self: Sealed<hash_map::Entry<'a, K, V>>,
+where Self: Sealed<hash_map::Entry<'a, K, V>>
 {
     fn or_insert_with_key<F: FnOnce(&K) -> V>(self, default: F) -> &'a mut V {
         match self {
@@ -54,8 +51,7 @@ where
 
 #[ext]
 pub impl f32
-where
-    Self: Sealed<f32>,
+where Self: Sealed<f32>
 {
     #[must_use = "method returns a new number and does not mutate the original value"]
     fn clamp(self, min: f32, max: f32) -> f32 {
@@ -73,8 +69,7 @@ where
 
 #[ext]
 pub impl f64
-where
-    Self: Sealed<f64>,
+where Self: Sealed<f64>
 {
     #[must_use = "method returns a new number and does not mutate the original value"]
     fn clamp(self, min: f64, max: f64) -> f64 {
@@ -92,14 +87,11 @@ where
 
 #[ext]
 pub impl<T: Ord> T
-where
-    Self: Sealed<T>,
+where Self: Sealed<T>
 {
     #[must_use]
     fn clamp(self, min: Self, max: Self) -> Self
-    where
-        Self: Sized,
-    {
+    where Self: Sized {
         assert!(min <= max);
         if self < min {
             min
@@ -113,8 +105,7 @@ where
 
 #[ext]
 pub impl<T: Default> RefCell<T>
-where
-    Self: Sealed<RefCell<T>>,
+where Self: Sealed<RefCell<T>>
 {
     fn take(&self) -> T {
         self.replace(Default::default())
@@ -123,13 +114,10 @@ where
 
 #[ext]
 pub impl<T> [T]
-where
-    Self: Sealed<[T]>,
+where Self: Sealed<[T]>
 {
     fn fill(&mut self, value: T)
-    where
-        T: Clone,
-    {
+    where T: Clone {
         if let Some((last, elems)) = self.split_last_mut() {
             for el in elems {
                 el.clone_from(&value);
@@ -142,8 +130,7 @@ where
 
 #[ext]
 pub impl<T> UnsafeCell<T>
-where
-    Self: Sealed<UnsafeCell<T>>,
+where Self: Sealed<UnsafeCell<T>>
 {
     fn get_mut(&mut self) -> &mut T {
         unsafe { &mut *self.get() }

@@ -28,14 +28,11 @@ macro_rules! impl_int_v1_46 {
     )*};
 }
 
-impl_int_v1_46![
-    i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize
-];
+impl_int_v1_46![i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize];
 
 #[ext]
 pub impl<T> Option<T>
-where
-    Self: Sealed<Option<T>>,
+where Self: Sealed<Option<T>>
 {
     fn zip<U>(self, other: Option<U>) -> Option<(T, U)> {
         match (self, other) {

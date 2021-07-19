@@ -30,8 +30,7 @@ impl_int_v1_45![i8 i16 i32 i64 i128 isize];
 
 #[ext]
 pub impl str
-where
-    Self: Sealed<str>,
+where Self: Sealed<str>
 {
     #[must_use = "this returns the remaining substring as a new slice, without modifying the \
                   original"]

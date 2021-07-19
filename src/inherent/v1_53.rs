@@ -1,13 +1,9 @@
-#[cfg(feature = "alloc")]
-use alloc::rc::Rc;
-#[cfg(feature = "alloc")]
-use alloc::vec::Vec;
+#[cfg(feature = "alloc")] use alloc::rc::Rc;
+#[cfg(feature = "alloc")] use alloc::vec::Vec;
 use core::cmp::Ordering;
-#[cfg(feature = "std")]
-use core::mem::transmute;
+#[cfg(feature = "std")] use core::mem::transmute;
 use core::num::FpCategory;
-#[cfg(feature = "alloc")]
-use core::ops;
+#[cfg(feature = "alloc")] use core::ops;
 use core::time::Duration;
 use core::{mem, u64};
 #[cfg(feature = "std")]
@@ -19,8 +15,7 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl Ordering
-where
-    Self: Sealed<Ordering>,
+where Self: Sealed<Ordering>
 {
     #[must_use]
     fn is_eq(self) -> bool {
@@ -50,8 +45,7 @@ where
 
 #[ext]
 pub impl<T> Option<T>
-where
-    Self: Sealed<Option<T>>,
+where Self: Sealed<Option<T>>
 {
     fn insert(&mut self, value: T) -> &mut T {
         *self = Some(value);
@@ -65,8 +59,7 @@ where
 
 #[ext]
 pub impl f32
-where
-    Self: Sealed<f32>,
+where Self: Sealed<f32>
 {
     fn is_subnormal(self) -> bool {
         self.classify() == FpCategory::Subnormal
@@ -75,8 +68,7 @@ where
 
 #[ext]
 pub impl f64
-where
-    Self: Sealed<f64>,
+where Self: Sealed<f64>
 {
     fn is_subnormal(self) -> bool {
         self.classify() == FpCategory::Subnormal
@@ -85,8 +77,7 @@ where
 
 #[ext]
 pub impl Duration
-where
-    Self: Sealed<Duration>,
+where Self: Sealed<Duration>
 {
     const ZERO: Self = Self::from_nanos(0);
 
@@ -127,8 +118,7 @@ impl_integer![u8 u16 u32 u64 u128 usize i8 i16 i32 i64 i128 isize];
 #[cfg(feature = "alloc")]
 #[ext]
 pub impl<T> Rc<T>
-where
-    Self: Sealed<Rc<T>>,
+where Self: Sealed<Rc<T>>
 {
     unsafe fn increment_strong_count(ptr: *const T) {
         let rc = mem::ManuallyDrop::new(Rc::<T>::from_raw(ptr));
@@ -142,8 +132,7 @@ where
 #[cfg(feature = "std")]
 #[ext]
 pub impl OsStr
-where
-    Self: Sealed<OsStr>,
+where Self: Sealed<OsStr>
 {
     fn make_ascii_lowercase(&mut self) {
         unsafe { transmute::<_, &mut [u8]>(self).make_ascii_lowercase() }
@@ -168,8 +157,7 @@ where
 #[cfg(feature = "alloc")]
 #[ext]
 pub impl<T: Clone> Vec<T>
-where
-    Self: Sealed<Vec<T>>,
+where Self: Sealed<Vec<T>>
 {
     fn extend_from_within<
         R: ops::RangeBounds<usize> + core::slice::SliceIndex<[T], Output = [T]>,
@@ -179,15 +167,15 @@ where
     ) {
         let start = match src.start_bound() {
             ops::Bound::Included(&start) => start,
-            ops::Bound::Excluded(start) => start
-                .checked_add(1)
-                .expect("attempted to index slice from after maximum usize"),
+            ops::Bound::Excluded(start) => {
+                start.checked_add(1).expect("attempted to index slice from after maximum usize")
+            }
             ops::Bound::Unbounded => 0,
         };
         let end = match src.end_bound() {
-            ops::Bound::Included(end) => end
-                .checked_add(1)
-                .expect("attempted to index slice up to maximum usize"),
+            ops::Bound::Included(end) => {
+                end.checked_add(1).expect("attempted to index slice up to maximum usize")
+            }
             ops::Bound::Excluded(&end) => end,
             ops::Bound::Unbounded => self.len(),
         };
@@ -195,11 +183,7 @@ where
             panic!("slice index starts at {} but ends at {}", start, end);
         }
         if end > self.len() {
-            panic!(
-                "range end index {} out of range for slice of length {}",
-                end,
-                self.len()
-            );
+            panic!("range end index {} out of range for slice of length {}", end, self.len());
         }
         self.reserve(end - start);
 

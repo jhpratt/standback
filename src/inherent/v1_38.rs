@@ -6,8 +6,7 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl<T> *const T
-where
-    Self: Sealed<*const T>,
+where Self: Sealed<*const T>
 {
     fn cast<U>(self) -> *const U {
         self as _
@@ -16,8 +15,7 @@ where
 
 #[ext]
 pub impl<T> *mut T
-where
-    Self: Sealed<*mut T>,
+where Self: Sealed<*mut T>
 {
     fn cast<U>(self) -> *mut U {
         self as _
@@ -26,8 +24,7 @@ where
 
 #[ext]
 pub impl Duration
-where
-    Self: Sealed<Duration>,
+where Self: Sealed<Duration>
 {
     fn as_secs_f32(&self) -> f32 {
         (self.as_secs() as f32) + (self.subsec_nanos() as f32) / 1_000_000_000.
@@ -58,10 +55,7 @@ where
             panic!("underflow when converting float to duration");
         }
         let nanos = nanos as u128;
-        Self::new(
-            (nanos / 1_000_000_000) as u64,
-            (nanos % 1_000_000_000) as u32,
-        )
+        Self::new((nanos / 1_000_000_000) as u64, (nanos % 1_000_000_000) as u32)
     }
 
     fn from_secs_f64(secs: f64) -> Self {
@@ -77,10 +71,7 @@ where
             panic!("underflow when converting float to duration");
         }
         let nanos = nanos as u128;
-        Self::new(
-            (nanos / 1_000_000_000) as u64,
-            (nanos % 1_000_000_000) as u32,
-        )
+        Self::new((nanos / 1_000_000_000) as u64, (nanos % 1_000_000_000) as u32)
     }
 
     fn mul_f32(&self, rhs: f32) -> Self {

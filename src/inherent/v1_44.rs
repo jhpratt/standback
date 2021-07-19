@@ -3,10 +3,8 @@
 use core::alloc::{Layout, LayoutErr};
 use core::cmp;
 use core::mem::{self, transmute};
-#[cfg(feature = "std")]
-use std::ffi::OsString;
-#[cfg(feature = "std")]
-use std::path::PathBuf;
+#[cfg(feature = "std")] use std::ffi::OsString;
+#[cfg(feature = "std")] use std::path::PathBuf;
 
 use easy_ext::ext;
 
@@ -15,8 +13,7 @@ use crate::inherent::Sealed;
 #[cfg(feature = "std")]
 #[ext]
 pub impl PathBuf
-where
-    Self: Sealed<PathBuf>,
+where Self: Sealed<PathBuf>
 {
     fn with_capacity(capacity: usize) -> PathBuf {
         OsString::with_capacity(capacity).into()
@@ -45,8 +42,7 @@ where
 
 #[ext]
 pub impl Layout
-where
-    Self: Sealed<Layout>,
+where Self: Sealed<Layout>
 {
     fn align_to(&self, align: usize) -> Result<Layout, LayoutErr> {
         Layout::from_size_align(self.size(), cmp::max(self.align(), align))
@@ -87,12 +83,7 @@ fn repeat(zelf: &Layout, n: usize) -> Result<(Layout, usize), LayoutErr> {
     let padded_size = zelf.size() + padding_needed_for(zelf, zelf.align());
     let alloc_size = padded_size.checked_mul(n).ok_or(layout_err())?;
 
-    unsafe {
-        Ok((
-            Layout::from_size_align_unchecked(alloc_size, zelf.align()),
-            padded_size,
-        ))
-    }
+    unsafe { Ok((Layout::from_size_align_unchecked(alloc_size, zelf.align()), padded_size)) }
 }
 
 fn layout_err() -> LayoutErr {
@@ -121,26 +112,20 @@ mod sealed {
 
 #[ext]
 pub impl f32
-where
-    Self: Sealed<f32>,
+where Self: Sealed<f32>
 {
     unsafe fn to_int_unchecked<Int>(self) -> Int
-    where
-        f32: sealed::FloatToInt<Int>,
-    {
+    where f32: sealed::FloatToInt<Int> {
         sealed::FloatToInt::to_int_unchecked(self)
     }
 }
 
 #[ext]
 pub impl f64
-where
-    Self: Sealed<f64>,
+where Self: Sealed<f64>
 {
     unsafe fn to_int_unchecked<Int>(self) -> Int
-    where
-        f64: sealed::FloatToInt<Int>,
-    {
+    where f64: sealed::FloatToInt<Int> {
         sealed::FloatToInt::to_int_unchecked(self)
     }
 }

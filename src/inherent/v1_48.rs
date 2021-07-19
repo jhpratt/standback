@@ -5,8 +5,7 @@ use easy_ext::ext;
 use crate::inherent::Sealed;
 #[ext]
 pub impl<T> [T]
-where
-    Self: Sealed<[T]>,
+where Self: Sealed<[T]>
 {
     fn as_ptr_range(&self) -> Range<*const T> {
         let start = self.as_ptr();

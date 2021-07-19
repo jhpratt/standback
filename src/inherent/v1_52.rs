@@ -7,8 +7,7 @@ use crate::pattern::{Pattern, ReverseSearcher, Searcher};
 
 #[ext]
 pub impl char
-where
-    Self: Sealed<char>,
+where Self: Sealed<char>
 {
     const MAX: char = '\u{10ffff}';
     const REPLACEMENT_CHARACTER: char = '\u{FFFD}';
@@ -50,8 +49,7 @@ where
 
 #[ext]
 pub impl<T> [T]
-where
-    Self: Sealed<[T]>,
+where Self: Sealed<[T]>
 {
     fn partition_point<P: FnMut(&T) -> bool>(&self, mut pred: P) -> usize {
         let mut left = 0;
@@ -73,8 +71,7 @@ where
 
 #[ext]
 pub impl str
-where
-    Self: Sealed<str>,
+where Self: Sealed<str>
 {
     fn rsplit_once<'a, P>(&'a self, delimiter: P) -> Option<(&'a str, &'a str)>
     where

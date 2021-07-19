@@ -11,10 +11,7 @@ fn main() {
     let mut minor_used = match Version::read() {
         Some(version) => version,
         None => {
-            println!(
-                "cargo:warning=Unable to determine rustc version. Assuming rustc {}.",
-                msrv
-            );
+            println!("cargo:warning=Unable to determine rustc version. Assuming rustc {}.", msrv);
             msrv
         }
     }

@@ -7,8 +7,7 @@ pub(crate) mod prelude {
         pub use alloc::boxed::Box;
         #[cfg(feature = "alloc")]
         pub use alloc::string::{String, ToString};
-        #[cfg(feature = "alloc")]
-        pub use alloc::vec::Vec;
+        #[cfg(feature = "alloc")] pub use alloc::vec::Vec;
         pub use core::prelude::v1::*;
     }
     pub(crate) mod rust_2018 {

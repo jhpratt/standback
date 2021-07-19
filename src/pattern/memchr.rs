@@ -1,7 +1,6 @@
 use core::{cmp, mem, usize};
 
-#[allow(unused_imports)]
-use crate::prelude::*;
+#[allow(unused_imports)] use crate::shim::*;
 
 const LO_U64: u64 = 0x0101010101010101;
 const HI_U64: u64 = 0x8080808080808080;
@@ -59,10 +58,7 @@ fn memchr_general_case(x: u8, text: &[u8]) -> Option<usize> {
         offset += USIZE_BYTES * 2;
     }
 
-    text[offset..]
-        .iter()
-        .position(|elt| *elt == x)
-        .map(|i| offset + i)
+    text[offset..].iter().position(|elt| *elt == x).map(|i| offset + i)
 }
 
 pub(super) fn memrchr(x: u8, text: &[u8]) -> Option<usize> {

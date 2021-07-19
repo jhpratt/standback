@@ -8,13 +8,10 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl<T> [T]
-where
-    Self: Sealed<[T]>,
+where Self: Sealed<[T]>
 {
     fn select_nth_unstable(&mut self, index: usize) -> (&mut [T], &mut T, &mut [T])
-    where
-        T: Ord,
-    {
+    where T: Ord {
         let mut f = |a: &T, b: &T| a.lt(b);
         sort::partition_at_index(self, index, &mut f)
     }

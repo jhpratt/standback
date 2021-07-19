@@ -18,8 +18,7 @@ fn new_wait_timeout_result(value: bool) -> WaitTimeoutResult {
 #[cfg(feature = "std")]
 #[ext]
 pub impl Condvar
-where
-    Self: Sealed<Condvar>,
+where Self: Sealed<Condvar>
 {
     fn wait_while<'a, T, F>(
         &self,
@@ -60,8 +59,7 @@ where
 
 #[ext]
 pub impl<T> ManuallyDrop<T>
-where
-    Self: Sealed<ManuallyDrop<T>>,
+where Self: Sealed<ManuallyDrop<T>>
 {
     #[must_use = "if you don't need the value, you can use `ManuallyDrop::drop` instead"]
     unsafe fn take(slot: &mut ManuallyDrop<T>) -> T {

@@ -26,9 +26,7 @@ pub(crate) mod future {
     }
 
     pub fn pending<T>() -> Pending<T> {
-        Pending {
-            _data: core::marker::PhantomData,
-        }
+        Pending { _data: core::marker::PhantomData }
     }
 
     impl<T> Future for Pending<T> {

@@ -15,3 +15,6 @@ imports_granularity = "Module"
 group_imports = "StdExternalCrate"
 normalize_doc_attributes = true
 wrap_comments = true
+use_small_heuristics = "max"
+where_single_line = true
+inline_attribute_width = 50

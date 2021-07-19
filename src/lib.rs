@@ -326,18 +326,12 @@ mod inherent;
 mod pattern;
 
 mod free {
-    #[cfg(shim = "1.40")]
-    pub(crate) mod v1_40;
-    #[cfg(shim = "1.43")]
-    pub(crate) mod v1_43;
-    #[cfg(shim = "1.47")]
-    pub(crate) mod v1_47;
-    #[cfg(shim = "1.48")]
-    pub(crate) mod v1_48;
-    #[cfg(shim = "1.51")]
-    pub(crate) mod v1_51;
-    #[cfg(shim = "1.53")]
-    pub(crate) mod v1_53;
+    #[cfg(shim = "1.40")] pub(crate) mod v1_40;
+    #[cfg(shim = "1.43")] pub(crate) mod v1_43;
+    #[cfg(shim = "1.47")] pub(crate) mod v1_47;
+    #[cfg(shim = "1.48")] pub(crate) mod v1_48;
+    #[cfg(shim = "1.51")] pub(crate) mod v1_51;
+    #[cfg(shim = "1.53")] pub(crate) mod v1_53;
 }
 
 #[doc(hidden)]
@@ -346,8 +340,7 @@ pub mod shim {
     pub use core::unimplemented as todo;
 
     pub use crate::inherent::*;
-    #[cfg(shim = "1.42")]
-    pub use crate::matches;
+    #[cfg(shim = "1.42")] pub use crate::matches;
 }
 #[doc(hidden)]
 pub mod prelude {
@@ -356,8 +349,7 @@ pub mod prelude {
 }
 #[doc(hidden)]
 pub mod mem {
-    #[cfg(reexport = "1.40")]
-    pub use core::mem::take;
+    #[cfg(reexport = "1.40")] pub use core::mem::take;
 
     #[cfg(shim = "1.40")]
     pub use crate::free::v1_40::mem::*;

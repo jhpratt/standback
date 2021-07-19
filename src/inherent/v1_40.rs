@@ -1,8 +1,6 @@
-#[cfg(feature = "alloc")]
-use alloc::vec::Vec;
+#[cfg(feature = "alloc")] use alloc::vec::Vec;
 use core::ops::DerefMut;
-#[cfg(feature = "alloc")]
-use core::ptr;
+#[cfg(feature = "alloc")] use core::ptr;
 
 use easy_ext::ext;
 
@@ -10,8 +8,7 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl<T: DerefMut> Option<T>
-where
-    Self: Sealed<Option<T>>,
+where Self: Sealed<Option<T>>
 {
     fn as_deref_mut(&mut self) -> Option<&mut T::Target> {
         self.as_mut().map(|t| t.deref_mut())
@@ -24,8 +21,7 @@ where
 
 #[ext]
 pub impl<T> Option<Option<T>>
-where
-    Self: Sealed<Option<Option<T>>>,
+where Self: Sealed<Option<Option<T>>>
 {
     fn flatten(self) -> Option<T> {
         self.and_then(core::convert::identity)
@@ -34,8 +30,7 @@ where
 
 #[ext]
 pub impl f32
-where
-    Self: Sealed<f32>,
+where Self: Sealed<f32>
 {
     fn to_be_bytes(self) -> [u8; 4] {
         self.to_bits().to_be_bytes()
@@ -64,8 +59,7 @@ where
 
 #[ext]
 pub impl f64
-where
-    Self: Sealed<f64>,
+where Self: Sealed<f64>
 {
     fn to_be_bytes(self) -> [u8; 8] {
         self.to_bits().to_be_bytes()
@@ -95,8 +89,7 @@ where
 #[cfg(feature = "alloc")]
 #[ext]
 pub impl<T: Copy> [T]
-where
-    Self: Sealed<[T]>,
+where Self: Sealed<[T]>
 {
     fn repeat(&self, n: usize) -> Vec<T> {
         if n == 0 {

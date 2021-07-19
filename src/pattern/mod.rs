@@ -40,9 +40,7 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
     }
 
     fn is_suffix_of(self, haystack: &'a str) -> bool
-    where
-        Self::Searcher: ReverseSearcher<'a>,
-    {
+    where Self::Searcher: ReverseSearcher<'a> {
         match self.into_searcher(haystack).next_back() {
             SearchStep::Match(_, j) if haystack.len() == j => true,
             _ => false,
@@ -62,9 +60,7 @@ pub trait Pattern<'a>: Sized + sealed::Sealed {
     }
 
     fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str>
-    where
-        Self::Searcher: ReverseSearcher<'a>,
-    {
+    where Self::Searcher: ReverseSearcher<'a> {
         if let SearchStep::Match(start, end) = self.into_searcher(haystack).next_back() {
             debug_assert_eq!(
                 end,
@@ -170,10 +166,7 @@ unsafe impl<'a> Searcher<'a> for CharSearcher<'a> {
     }
     fn next_match(&mut self) -> Option<(usize, usize)> {
         loop {
-            let bytes = self
-                .haystack
-                .as_bytes()
-                .get(self.finger..self.finger_back)?;
+            let bytes = self.haystack.as_bytes().get(self.finger..self.finger_back)?;
             let last_byte = unsafe { *self.utf8_encoded.get_unchecked(self.utf8_size - 1) };
             if let Some(index) = memchr::memchr(last_byte, bytes) {
                 self.finger += index + 1;
@@ -270,16 +263,12 @@ impl<'a> Pattern<'a> for char {
     }
 
     fn is_suffix_of(self, haystack: &'a str) -> bool
-    where
-        Self::Searcher: ReverseSearcher<'a>,
-    {
+    where Self::Searcher: ReverseSearcher<'a> {
         self.encode_utf8(&mut [0u8; 4]).is_suffix_of(haystack)
     }
 
     fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str>
-    where
-        Self::Searcher: ReverseSearcher<'a>,
-    {
+    where Self::Searcher: ReverseSearcher<'a> {
         self.encode_utf8(&mut [0u8; 4]).strip_suffix_of(haystack)
     }
 }
@@ -290,8 +279,7 @@ trait MultiCharEq {
 }
 
 impl<F> MultiCharEq for F
-where
-    F: FnMut(char) -> bool,
+where F: FnMut(char) -> bool
 {
     fn matches(&mut self, c: char) -> bool {
         (*self)(c)
@@ -317,11 +305,7 @@ impl<'a, C: MultiCharEq> Pattern<'a> for MultiCharEqPattern<C> {
     type Searcher = MultiCharEqSearcher<'a, C>;
 
     fn into_searcher(self, haystack: &'a str) -> MultiCharEqSearcher<'a, C> {
-        MultiCharEqSearcher {
-            haystack,
-            char_eq: self.0,
-            char_indices: haystack.char_indices(),
-        }
+        MultiCharEqSearcher { haystack, char_eq: self.0, char_indices: haystack.char_indices() }
     }
 }
 
@@ -389,17 +373,13 @@ macro_rules! pattern_methods {
 
         #[allow(clippy::redundant_closure_call)]
         fn is_suffix_of(self, haystack: &'a str) -> bool
-        where
-            $t: ReverseSearcher<'a>,
-        {
+        where $t: ReverseSearcher<'a> {
             ($pmap)(self).is_suffix_of(haystack)
         }
 
         #[allow(clippy::redundant_closure_call)]
         fn strip_suffix_of(self, haystack: &'a str) -> Option<&'a str>
-        where
-            $t: ReverseSearcher<'a>,
-        {
+        where $t: ReverseSearcher<'a> {
             ($pmap)(self).strip_suffix_of(haystack)
         }
     };
@@ -446,22 +426,16 @@ unsafe impl<'a, 'b> ReverseSearcher<'a> for CharSliceSearcher<'a, 'b> {
 }
 
 impl<'a, 'b> Pattern<'a> for &'b [char] {
-    pattern_methods!(
-        CharSliceSearcher<'a, 'b>,
-        MultiCharEqPattern,
-        CharSliceSearcher
-    );
+    pattern_methods!(CharSliceSearcher<'a, 'b>, MultiCharEqPattern, CharSliceSearcher);
 }
 
 #[allow(unreachable_pub)]
 #[derive(Clone)]
 pub struct CharPredicateSearcher<'a, F>(<MultiCharEqPattern<F> as Pattern<'a>>::Searcher)
-where
-    F: FnMut(char) -> bool;
+where F: FnMut(char) -> bool;
 
 impl<F> fmt::Debug for CharPredicateSearcher<'_, F>
-where
-    F: FnMut(char) -> bool,
+where F: FnMut(char) -> bool
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("CharPredicateSearcher")
@@ -471,28 +445,21 @@ where
     }
 }
 unsafe impl<'a, F> Searcher<'a> for CharPredicateSearcher<'a, F>
-where
-    F: FnMut(char) -> bool,
+where F: FnMut(char) -> bool
 {
     searcher_methods!(forward);
 }
 
 unsafe impl<'a, F> ReverseSearcher<'a> for CharPredicateSearcher<'a, F>
-where
-    F: FnMut(char) -> bool,
+where F: FnMut(char) -> bool
 {
     searcher_methods!(reverse);
 }
 
 impl<'a, F> Pattern<'a> for F
-where
-    F: FnMut(char) -> bool,
+where F: FnMut(char) -> bool
 {
-    pattern_methods!(
-        CharPredicateSearcher<'a, F>,
-        MultiCharEqPattern,
-        CharPredicateSearcher
-    );
+    pattern_methods!(CharPredicateSearcher<'a, F>, MultiCharEqPattern, CharPredicateSearcher);
 }
 
 impl<'a, 'b, 'c> Pattern<'a> for &'c &'b str {
@@ -786,9 +753,7 @@ impl TwoWaySearcher {
     }
 
     fn next<S>(&mut self, haystack: &[u8], needle: &[u8], long_period: bool) -> S::Output
-    where
-        S: TwoWayStrategy,
-    {
+    where S: TwoWayStrategy {
         let old_pos = self.position;
         let needle_last = needle.len() - 1;
         'search: loop {
@@ -812,11 +777,8 @@ impl TwoWaySearcher {
                 continue 'search;
             }
 
-            let start = if long_period {
-                self.crit_pos
-            } else {
-                cmp::max(self.crit_pos, self.memory)
-            };
+            let start =
+                if long_period { self.crit_pos } else { cmp::max(self.crit_pos, self.memory) };
             for i in start..needle.len() {
                 if needle[i] != haystack[self.position + i] {
                     self.position += i - self.crit_pos + 1;
@@ -850,9 +812,7 @@ impl TwoWaySearcher {
     }
 
     fn next_back<S>(&mut self, haystack: &[u8], needle: &[u8], long_period: bool) -> S::Output
-    where
-        S: TwoWayStrategy,
-    {
+    where S: TwoWayStrategy {
         let old_end = self.end;
         'search: loop {
             let front_byte = match haystack.get(self.end.wrapping_sub(needle.len())) {
@@ -890,11 +850,7 @@ impl TwoWaySearcher {
                 }
             }
 
-            let needle_end = if long_period {
-                needle.len()
-            } else {
-                self.memory_back
-            };
+            let needle_end = if long_period { needle.len() } else { self.memory_back };
             for i in self.crit_pos_back..needle_end {
                 if needle[i] != haystack[self.end - needle.len() + i] {
                     self.end -= self.period;

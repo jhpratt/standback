@@ -19,17 +19,12 @@ impl<T> Drop for CopyOnDrop<T> {
 }
 
 fn shift_tail<T, F>(v: &mut [T], is_less: &mut F)
-where
-    F: FnMut(&T, &T) -> bool,
-{
+where F: FnMut(&T, &T) -> bool {
     let len = v.len();
     unsafe {
         if len >= 2 && is_less(v.get_unchecked(len - 1), v.get_unchecked(len - 2)) {
             let mut tmp = mem::ManuallyDrop::new(ptr::read(v.get_unchecked(len - 1)));
-            let mut hole = CopyOnDrop {
-                src: &mut *tmp,
-                dest: v.get_unchecked_mut(len - 2),
-            };
+            let mut hole = CopyOnDrop { src: &mut *tmp, dest: v.get_unchecked_mut(len - 2) };
             ptr::copy_nonoverlapping(v.get_unchecked(len - 2), v.get_unchecked_mut(len - 1), 1);
 
             for i in (0..len - 2).rev() {
@@ -45,18 +40,14 @@ where
 }
 
 fn insertion_sort<T, F>(v: &mut [T], is_less: &mut F)
-where
-    F: FnMut(&T, &T) -> bool,
-{
+where F: FnMut(&T, &T) -> bool {
     for i in 1..v.len() {
         shift_tail(&mut v[..i + 1], is_less);
     }
 }
 
 fn partition_in_blocks<T, F>(v: &mut [T], pivot: &T, is_less: &mut F) -> usize
-where
-    F: FnMut(&T, &T) -> bool,
-{
+where F: FnMut(&T, &T) -> bool {
     const BLOCK: usize = 128;
 
     let mut l = v.as_mut_ptr();
@@ -196,19 +187,14 @@ where
 }
 
 fn partition<T, F>(v: &mut [T], pivot: usize, is_less: &mut F) -> (usize, bool)
-where
-    F: FnMut(&T, &T) -> bool,
-{
+where F: FnMut(&T, &T) -> bool {
     let (mid, was_partitioned) = {
         v.swap(0, pivot);
         let (pivot, v) = v.split_at_mut(1);
         let pivot = &mut pivot[0];
 
         let mut tmp = mem::ManuallyDrop::new(unsafe { ptr::read(pivot) });
-        let _pivot_guard = CopyOnDrop {
-            src: &mut *tmp,
-            dest: pivot,
-        };
+        let _pivot_guard = CopyOnDrop { src: &mut *tmp, dest: pivot };
         let pivot = &*tmp;
 
         let mut l = 0;
@@ -224,10 +210,7 @@ where
             }
         }
 
-        (
-            l + partition_in_blocks(&mut v[l..r], pivot, is_less),
-            l >= r,
-        )
+        (l + partition_in_blocks(&mut v[l..r], pivot, is_less), l >= r)
     };
 
     v.swap(0, mid);
@@ -236,18 +219,13 @@ where
 }
 
 fn partition_equal<T, F>(v: &mut [T], pivot: usize, is_less: &mut F) -> usize
-where
-    F: FnMut(&T, &T) -> bool,
-{
+where F: FnMut(&T, &T) -> bool {
     v.swap(0, pivot);
     let (pivot, v) = v.split_at_mut(1);
     let pivot = &mut pivot[0];
 
     let mut tmp = mem::ManuallyDrop::new(unsafe { ptr::read(pivot) });
-    let _pivot_guard = CopyOnDrop {
-        src: &mut *tmp,
-        dest: pivot,
-    };
+    let _pivot_guard = CopyOnDrop { src: &mut *tmp, dest: pivot };
     let pivot = &*tmp;
 
     let mut l = 0;
@@ -276,9 +254,7 @@ where
 }
 
 fn choose_pivot<T, F>(v: &mut [T], is_less: &mut F) -> (usize, bool)
-where
-    F: FnMut(&T, &T) -> bool,
-{
+where F: FnMut(&T, &T) -> bool {
     const SHORTEST_MEDIAN_OF_MEDIANS: usize = 50;
     const MAX_SWAPS: usize = 4 * 3;
 
@@ -391,11 +367,7 @@ where
     use self::cmp::Ordering::{Greater, Less};
 
     if index >= v.len() {
-        panic!(
-            "partition_at_index index {} greater than length of slice {}",
-            index,
-            v.len()
-        );
+        panic!("partition_at_index index {} greater than length of slice {}", index, v.len());
     }
 
     if mem::size_of::<T>() == 0 {

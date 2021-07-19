@@ -2,8 +2,7 @@
 use alloc::collections::btree_map;
 #[cfg(feature = "alloc")]
 use alloc::collections::VecDeque;
-#[cfg(feature = "alloc")]
-use core::cmp::Ordering;
+#[cfg(feature = "alloc")] use core::cmp::Ordering;
 #[cfg(feature = "alloc")]
 use core::iter::FusedIterator;
 #[cfg(feature = "std")]
@@ -17,18 +16,13 @@ use crate::inherent::Sealed;
 #[cfg(feature = "alloc")]
 #[ext]
 pub impl<K, V> btree_map::BTreeMap<K, V>
-where
-    Self: Sealed<btree_map::BTreeMap<K, V>>,
+where Self: Sealed<btree_map::BTreeMap<K, V>>
 {
     fn into_keys(self) -> BTreeMapIntoKeys<K, V> {
-        BTreeMapIntoKeys {
-            inner: self.into_iter(),
-        }
+        BTreeMapIntoKeys { inner: self.into_iter() }
     }
     fn into_values(self) -> BTreeMapIntoValues<K, V> {
-        BTreeMapIntoValues {
-            inner: self.into_iter(),
-        }
+        BTreeMapIntoValues { inner: self.into_iter() }
     }
 }
 
@@ -117,18 +111,13 @@ impl<K, V> FusedIterator for BTreeMapIntoValues<K, V> {}
 #[cfg(feature = "std")]
 #[ext]
 pub impl<K, V> hash_map::HashMap<K, V>
-where
-    Self: Sealed<hash_map::HashMap<K, V>>,
+where Self: Sealed<hash_map::HashMap<K, V>>
 {
     fn into_keys(self) -> HashMapIntoKeys<K, V> {
-        HashMapIntoKeys {
-            inner: self.into_iter(),
-        }
+        HashMapIntoKeys { inner: self.into_iter() }
     }
     fn into_values(self) -> HashMapIntoValues<K, V> {
-        HashMapIntoValues {
-            inner: self.into_iter(),
-        }
+        HashMapIntoValues { inner: self.into_iter() }
     }
 }
 
@@ -186,16 +175,16 @@ impl<K, V> FusedIterator for HashMapIntoValues<K, V> {}
 #[cfg(feature = "alloc")]
 #[ext]
 pub impl<T> VecDeque<T>
-where
-    Self: Sealed<VecDeque<T>>,
+where Self: Sealed<VecDeque<T>>
 {
     fn binary_search(&self, x: &T) -> Result<usize, usize>
-    where
-        T: Ord,
-    {
+    where T: Ord {
         self.binary_search_by(|e| e.cmp(x))
     }
-    fn binary_search_by<'a, F: FnMut(&'a T) -> Ordering>(&'a self, mut f: F) -> Result<usize, usize>
+    fn binary_search_by<'a, F: FnMut(&'a T) -> Ordering>(
+        &'a self,
+        mut f: F,
+    ) -> Result<usize, usize>
     where
         T: 'a,
     {
@@ -205,9 +194,7 @@ where
         if let Some(Ordering::Equal) = cmp_back {
             Ok(front.len())
         } else if let Some(Ordering::Less) = cmp_back {
-            back.binary_search_by(f)
-                .map(|idx| idx + front.len())
-                .map_err(|idx| idx + front.len())
+            back.binary_search_by(f).map(|idx| idx + front.len()).map_err(|idx| idx + front.len())
         } else {
             front.binary_search_by(f)
         }

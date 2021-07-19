@@ -4,8 +4,7 @@ use crate::inherent::Sealed;
 
 #[ext]
 pub impl<T, E> Result<T, E>
-where
-    Self: Sealed<Result<T, E>>,
+where Self: Sealed<Result<T, E>>
 {
     fn map_or<U, F: FnOnce(T) -> U>(self, default: U, f: F) -> U {
         match self {

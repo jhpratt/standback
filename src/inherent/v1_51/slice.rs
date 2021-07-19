@@ -2,8 +2,7 @@ use core::iter::FusedIterator;
 use core::{fmt, mem};
 
 pub struct SplitInclusiveMut<'a, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     v: &'a mut [T],
     pred: P,
@@ -12,17 +11,12 @@ where
 
 impl<'a, T: 'a, P: FnMut(&T) -> bool> SplitInclusiveMut<'a, T, P> {
     pub(super) fn new(slice: &'a mut [T], pred: P) -> Self {
-        Self {
-            v: slice,
-            pred,
-            finished: false,
-        }
+        Self { v: slice, pred, finished: false }
     }
 }
 
 impl<T: fmt::Debug, P> fmt::Debug for SplitInclusiveMut<'_, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("SplitInclusiveMut")
@@ -33,8 +27,7 @@ where
 }
 
 impl<'a, T, P> Iterator for SplitInclusiveMut<'a, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     type Item = &'a mut [T];
 
@@ -58,17 +51,12 @@ where
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
-        if self.finished {
-            (0, Some(0))
-        } else {
-            (1, Some(self.v.len() + 1))
-        }
+        if self.finished { (0, Some(0)) } else { (1, Some(self.v.len() + 1)) }
     }
 }
 
 impl<'a, T, P> DoubleEndedIterator for SplitInclusiveMut<'a, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     fn next_back(&mut self) -> Option<&'a mut [T]> {
         if self.finished {
@@ -96,8 +84,7 @@ where
 impl<T, P> FusedIterator for SplitInclusiveMut<'_, T, P> where P: FnMut(&T) -> bool {}
 
 pub struct SplitInclusive<'a, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     v: &'a [T],
     pred: P,
@@ -106,17 +93,12 @@ where
 
 impl<'a, T: 'a, P: FnMut(&T) -> bool> SplitInclusive<'a, T, P> {
     pub(super) fn new(slice: &'a [T], pred: P) -> Self {
-        Self {
-            v: slice,
-            pred,
-            finished: false,
-        }
+        Self { v: slice, pred, finished: false }
     }
 }
 
 impl<T: fmt::Debug, P> fmt::Debug for SplitInclusive<'_, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("SplitInclusive")
@@ -127,21 +109,15 @@ where
 }
 
 impl<T, P> Clone for SplitInclusive<'_, T, P>
-where
-    P: Clone + FnMut(&T) -> bool,
+where P: Clone + FnMut(&T) -> bool
 {
     fn clone(&self) -> Self {
-        SplitInclusive {
-            v: self.v,
-            pred: self.pred.clone(),
-            finished: self.finished,
-        }
+        SplitInclusive { v: self.v, pred: self.pred.clone(), finished: self.finished }
     }
 }
 
 impl<'a, T, P> Iterator for SplitInclusive<'a, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     type Item = &'a [T];
 
@@ -150,12 +126,8 @@ where
             return None;
         }
 
-        let idx = self
-            .v
-            .iter()
-            .position(|x| (self.pred)(x))
-            .map(|idx| idx + 1)
-            .unwrap_or(self.v.len());
+        let idx =
+            self.v.iter().position(|x| (self.pred)(x)).map(|idx| idx + 1).unwrap_or(self.v.len());
         if idx == self.v.len() {
             self.finished = true;
         }
@@ -165,33 +137,20 @@ where
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
-        if self.finished {
-            (0, Some(0))
-        } else {
-            (1, Some(self.v.len() + 1))
-        }
+        if self.finished { (0, Some(0)) } else { (1, Some(self.v.len() + 1)) }
     }
 }
 
 impl<'a, T, P> DoubleEndedIterator for SplitInclusive<'a, T, P>
-where
-    P: FnMut(&T) -> bool,
+where P: FnMut(&T) -> bool
 {
     fn next_back(&mut self) -> Option<&'a [T]> {
         if self.finished {
             return None;
         }
 
-        let remainder = if self.v.is_empty() {
-            &[]
-        } else {
-            &self.v[..(self.v.len() - 1)]
-        };
-        let idx = remainder
-            .iter()
-            .rposition(|x| (self.pred)(x))
-            .map(|idx| idx + 1)
-            .unwrap_or(0);
+        let remainder = if self.v.is_empty() { &[] } else { &self.v[..(self.v.len() - 1)] };
+        let idx = remainder.iter().rposition(|x| (self.pred)(x)).map(|idx| idx + 1).unwrap_or(0);
         if idx == 0 {
             self.finished = true;
         }
