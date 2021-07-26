@@ -1,6 +1,6 @@
 [package]
 name = "standback"
-version = "0.3.3"
+version = "0.3.5"
 authors = ["Jacob Pratt <open-source@jhpratt.dev>", "The Rust Project Developers"]
 edition = "2018"
 repository = "https://github.com/jhpratt/standback"
