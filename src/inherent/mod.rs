@@ -15,6 +15,7 @@
 #[cfg(shim = "1.52")] mod v1_52;
 #[cfg(shim = "1.53")] mod v1_53;
 #[cfg(shim = "1.54")] mod v1_54;
+#[cfg(shim = "1.55")] mod v1_55;
 
 #[allow(unused_imports)] use sealed::Sealed;
 mod sealed {
@@ -74,3 +75,6 @@ pub use v1_53::*;
 #[cfg(shim = "1.54")]
 #[allow(unreachable_pub)]
 pub use v1_54::*;
+#[cfg(shim = "1.55")]
+#[allow(unreachable_pub)]
+pub use v1_55::*;

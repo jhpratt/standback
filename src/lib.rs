@@ -53,6 +53,18 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
+## 1.55
+
+```text
+prelude::rust_2015
+prelude::rust_2018
+prelude::rust_2021
+Bounded::cloned
+MaybeUninit::assume_init_mut
+MaybeUninit::assume_init_ref
+MaybeUninit::write
+```
+
 ## 1.54
 
 ```text
@@ -310,7 +322,7 @@ iter::once_with // 1.43
 mem::take // 1.40
 ```
 
-# Prelude macros
+# Prelude macros (located in `standback::shim`)
 
 ```text
 matches! // 1.42
@@ -344,8 +356,19 @@ pub mod shim {
 }
 #[doc(hidden)]
 pub mod prelude {
-    // FIXME Remove this in the next breaking change
-    pub use crate::shim::*;
+    #[cfg(not(feature = "std"))]
+    pub use core::prelude::v1 as rust_2015;
+    #[cfg(feature = "std")]
+    pub use std::prelude::v1 as rust_2015;
+
+    pub use rust_2015 as rust_2018;
+
+    pub mod rust_2021 {
+        pub use core::convert::{TryFrom, TryInto};
+        pub use core::iter::FromIterator;
+
+        pub use crate::prelude::rust_2015::*;
+    }
 }
 #[doc(hidden)]
 pub mod mem {

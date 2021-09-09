@@ -1,6 +1,6 @@
 [package]
 name = "standback"
-version = "0.3.5"
+version = "0.4.0"
 authors = ["Jacob Pratt <open-source@jhpratt.dev>", "The Rust Project Developers"]
 edition = "2018"
 repository = "https://github.com/jhpratt/standback"
@@ -38,7 +38,8 @@ msrv-1-50 = ["msrv-1-51"]
 msrv-1-51 = ["msrv-1-52"]
 msrv-1-52 = ["msrv-1-53"]
 msrv-1-53 = ["msrv-1-54"]
-msrv-1-54 = []
+msrv-1-54 = ["msrv-1-55"]
+msrv-1-55 = []
 
 [dependencies]
 easy-ext = "1.0.0"
