@@ -53,6 +53,10 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
+## 1.57
+
+Iterator::map_while
+
 ## 1.56
 
 None :(
@@ -383,11 +387,15 @@ pub mod mem {
 }
 #[doc(hidden)]
 pub mod iter {
+    #[cfg(reexport = "1.57")]
+    pub use core::iter::MapWhile;
     #[cfg(reexport = "1.43")]
     pub use core::iter::{once_with, OnceWith};
 
     #[cfg(shim = "1.43")]
     pub use crate::free::v1_43::iter::*;
+    #[cfg(shim = "1.57")]
+    pub use crate::inherent::MapWhile;
 }
 #[doc(hidden)]
 pub mod task {
