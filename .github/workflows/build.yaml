@@ -38,6 +38,11 @@ jobs:
           - "1.50"
           - "1.51"
           - "1.52"
+          - "1.53"
+          - "1.54"
+          - "1.55"
+          - "1.56"
+          - "1.57"
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -97,6 +102,11 @@ jobs:
           - "1.50"
           - "1.51"
           - "1.52"
+          - "1.53"
+          - "1.54"
+          - "1.55"
+          - "1.56"
+          - "1.57"
 
     steps:
       - name: Checkout sources
