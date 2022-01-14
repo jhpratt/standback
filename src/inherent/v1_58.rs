@@ -1,5 +1,6 @@
 use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize};
-#[cfg(feature = "std")] use std::fs::Metadata;
+#[cfg(feature = "std")]
+use std::fs::{File, Metadata, OpenOptions};
 #[cfg(feature = "std")] use std::path::Path;
 
 use easy_ext::ext;
@@ -97,3 +98,13 @@ macro_rules! impl_nonzero_v1_58 {
 }
 
 impl_nonzero_v1_58![NonZeroU8 NonZeroU16 NonZeroU32 NonZeroU64 NonZeroU128 NonZeroUsize];
+
+#[cfg(feature = "std")]
+#[ext]
+pub impl File
+where Self: Sealed<File>
+{
+    fn with_options() -> OpenOptions {
+        OpenOptions::new()
+    }
+}

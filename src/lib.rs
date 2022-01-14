@@ -50,7 +50,7 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 
 # Inherent items
 
-The following methods and constants are available via the prelude. For brevity, `i*` is `i8`, `i16`,
+The following methods and constants are available via the shim. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
 ## 1.58
@@ -63,6 +63,7 @@ Option::unwrap_unchecked
 Result::unwrap_unchecked
 Result::unwrap_err_unchecked
 NonZeroU*::is_power_of_two
+File::options
 ```
 
 ## 1.57
