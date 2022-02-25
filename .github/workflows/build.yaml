@@ -16,99 +16,15 @@ on:
 
 jobs:
   check:
-    name: Type checking (Rust ${{ matrix.version }}, ${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        version:
-          - "1.36"
-          - "1.37"
-          - "1.38"
-          - "1.39"
-          - "1.40"
-          - "1.41"
-          - "1.42"
-          - "1.43"
-          - "1.44"
-          - "1.45"
-          - "1.46"
-          - "1.47"
-          - "1.48"
-          - "1.49"
-          - "1.50"
-          - "1.51"
-          - "1.52"
-          - "1.53"
-          - "1.54"
-          - "1.55"
-          - "1.56"
-          - "1.57"
-          - "1.58"
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.version }}
-
-      - name: Install cargo-hack
-        shell: bash
-        run: |
-          host=$(rustc -Vv | grep host | sed 's/host: //')
-          if [[ $host =~ windows ]]; then
-              curl -LsSf https://github.com/taiki-e/cargo-hack/releases/latest/download/cargo-hack-${host}.zip -o cargo-hack.zip
-              7z x cargo-hack.zip -o$HOME/.cargo/bin
-          elif [[ $host =~ darwin|linux ]]; then
-              curl -LsSf https://github.com/taiki-e/cargo-hack/releases/latest/download/cargo-hack-${host}.tar.gz | tar xzf - -C ~/.cargo/bin
-          else
-              echo "unsupported operating system"
-              exit 1
-          fi
-
-      - name: Check powerset
-        uses: actions-rs/cargo@v1
-        with:
-          command: hack
-          args: |
-            check
-            --feature-powerset
-            --exclude-features default
-            --exclude-no-default-features
-
-  check-embedded:
-    name: Type checking on embedded (Rust ${{ matrix.version }})
+    name: Type checking (${{ matrix.target.triple }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version:
-          - "1.36"
-          - "1.37"
-          - "1.38"
-          - "1.39"
-          - "1.40"
-          - "1.41"
-          - "1.42"
-          - "1.43"
-          - "1.44"
-          - "1.45"
-          - "1.46"
-          - "1.47"
-          - "1.48"
-          - "1.49"
-          - "1.50"
-          - "1.51"
-          - "1.52"
-          - "1.53"
-          - "1.54"
-          - "1.55"
-          - "1.56"
-          - "1.57"
-          - "1.58"
+        target:
+          - { triple: x86_64-unknown-linux-gnu, std: true }
+          - { triple: x86_64-pc-windows-msvc, std: true }
+          - { triple: x86_64-apple-darwin, std: true }
+          - { triple: thumbv7em-none-eabihf, std: false }
 
     steps:
       - name: Checkout sources
@@ -118,9 +34,8 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.version }}
-          target: thumbv7em-none-eabihf
-          override: true
+          toolchain: stable
+          target: ${{ matrix.target.triple }}
 
       - name: Install cargo-hack
         shell: bash
@@ -133,10 +48,27 @@ jobs:
           command: hack
           args: |
             check
+            --target ${{ matrix.target.triple }}
+            --version-range 1.36..
+            --clean-per-version
+            --feature-powerset
+            --exclude-features default
+            --exclude-no-default-features
+        if: matrix.target.std == true
+
+      - name: Check powerset
+        uses: actions-rs/cargo@v1
+        with:
+          command: hack
+          args: |
+            check
+            --target ${{ matrix.target.triple }}
+            --version-range 1.36..
+            --clean-per-version
             --feature-powerset
             --exclude-features default,std
             --exclude-no-default-features
-            --target thumbv7em-none-eabihf
+        if: matrix.target.std == false
 
   fmt:
     name: Formatting
