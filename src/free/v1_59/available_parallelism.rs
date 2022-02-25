@@ -88,12 +88,12 @@ pub fn available_parallelism() -> io::Result<NonZeroUsize> {
     target_os = "illumos",
 ))]
 pub fn available_parallelism() -> io::Result<NonZeroUsize> {
-    use core::mem;
-
     #[cfg(any(target_os = "android", target_os = "linux"))]
     {
-        let mut set: libc::cpu_set_t = unsafe { mem::zeroed() };
-        if unsafe { libc::sched_getaffinity(0, mem::size_of::<libc::cpu_set_t>(), &mut set) } == 0 {
+        let mut set: libc::cpu_set_t = unsafe { core::mem::zeroed() };
+        if unsafe { libc::sched_getaffinity(0, core::mem::size_of::<libc::cpu_set_t>(), &mut set) }
+            == 0
+        {
             let count = unsafe { libc::CPU_COUNT(&set) };
             return Ok(unsafe { NonZeroUsize::new_unchecked(count as usize) });
         }
