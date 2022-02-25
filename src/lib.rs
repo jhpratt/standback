@@ -53,6 +53,14 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 The following methods and constants are available via the shim. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
+## 1.59
+
+```text
+Result::copied
+Result::cloned
+NonZeroU*::is_power_of_two
+```
+
 ## 1.58
 
 ```text
@@ -328,6 +336,8 @@ slice::copy_within
 # Free items
 
 ```text
+thread::available_parallelism // 1.59
+iter::zip // 1.59
 array::from_ref // 1.53
 array::from_mut // 1.53
 cmp::min_by // 1.53
@@ -336,6 +346,8 @@ cmp::min_by_key // 1.53
 cmp::max_by_key // 1.53
 task::Wake // 1.51
 future::pending // 1.48
+iter::zip // 1.59
+thread::available_parallelism // 1.59
 future::ready // 1.48
 {f32, f64}::consts::TAU // 1.47
 char::UNICODE_VERSION // 1.45
@@ -367,6 +379,7 @@ mod free {
     #[cfg(shim = "1.48")] pub(crate) mod v1_48;
     #[cfg(shim = "1.51")] pub(crate) mod v1_51;
     #[cfg(shim = "1.53")] pub(crate) mod v1_53;
+    #[cfg(shim = "1.59")] pub(crate) mod v1_59;
 }
 
 #[doc(hidden)]
@@ -406,9 +419,13 @@ pub mod iter {
     pub use core::iter::MapWhile;
     #[cfg(reexport = "1.43")]
     pub use core::iter::{once_with, OnceWith};
+    #[cfg(reexport = "1.59")]
+    pub use core::iter::{zip, Zip};
 
     #[cfg(shim = "1.43")]
     pub use crate::free::v1_43::iter::*;
+    #[cfg(shim = "1.59")]
+    pub use crate::free::v1_59::{zip, Zip};
     #[cfg(shim = "1.57")]
     pub use crate::inherent::MapWhile;
 }
@@ -482,4 +499,12 @@ pub mod cmp {
 
     #[cfg(shim = "1.53")]
     pub use crate::free::v1_53::cmp::*;
+}
+#[doc(hidden)]
+pub mod thread {
+    #[cfg(all(feature = "std", reexport = "1.59"))]
+    pub use std::thread::available_parallelism;
+
+    #[cfg(all(feature = "std", shim = "1.59"))]
+    pub use crate::free::v1_59::available_parallelism;
 }

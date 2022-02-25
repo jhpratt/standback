@@ -1,6 +1,6 @@
 [package]
 name = "standback"
-version = "0.4.2"
+version = "0.4.3"
 authors = ["Jacob Pratt <open-source@jhpratt.dev>", "The Rust Project Developers"]
 edition = "2018"
 repository = "https://github.com/jhpratt/standback"
@@ -20,6 +20,7 @@ default = ["std", "msrv-1-36"]
 std = ["alloc"]
 alloc = []
 
+# List all versions from the MSRV to one before the current release.
 msrv-1-36 = ["msrv-1-37"]
 msrv-1-37 = ["msrv-1-38"]
 msrv-1-38 = ["msrv-1-39"]
@@ -41,10 +42,14 @@ msrv-1-53 = ["msrv-1-54"]
 msrv-1-54 = ["msrv-1-55"]
 msrv-1-55 = ["msrv-1-56"]
 msrv-1-56 = ["msrv-1-57"]
-msrv-1-57 = []
+msrv-1-57 = ["msrv-1-58"]
+msrv-1-58 = []
 
 [dependencies]
 easy-ext = "1.0.0"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2.119"
 
 [build-dependencies]
 version_check = "0.9.3"
