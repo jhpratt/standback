@@ -53,6 +53,16 @@ Note that items stabilized prior to the declared MSRV _will not_ be re-exported.
 The following methods and constants are available via the shim. For brevity, `i*` is `i8`, `i16`,
 `i32`, `i64`, `i128`, and `isize`; `u*` is `u8`, `u16`, `u32`, `u64`, `u128`, and `usize`.
 
+## 1.60
+
+```text
+u8::escape_ascii
+Vec::spare_capacity_mut
+MaybeUninit::assume_init_drop
+MaybeUninit::assume_init_read
+{i*, u*}::abs_diff
+```
+
 ## 1.59
 
 ```text
