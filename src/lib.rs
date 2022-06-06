@@ -31,7 +31,7 @@ of this crate. Just be extra-careful to not do it for anything that _can't_ be b
 
 # `#![no_std]` support
 
-By default, their standard library is used where necessary. If support for `#![no_std]` is required,
+By default, the standard library is used where necessary. If support for `#![no_std]` is required,
 use `default-features = false`.
 
 Items that require an allocator are gated under the `alloc` feature, which is enabled by default via
